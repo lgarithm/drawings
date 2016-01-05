@@ -34,7 +34,7 @@ beginfig(1);
   draw_arc(r - dd, 2th0 + t + 40, 3th0 - t - 5);
   draw_radius(3th0 - t - 5, r - dd, rr - dd);
   draw_arc(rr - dd, 3th0 - t - 5, 3th0 + t - 5);
-  draw_radius(3th0 + t - 3, rr - dd, 0);
+  draw_radius(3th0 + t - 5, rr - dd, 0);
 
   draw_sector(rr, rr + dd, 3th0 - t - 15, 3th0 - t - 30);
 endfig;
