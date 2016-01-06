@@ -1,17 +1,4 @@
 beginfig(3);
-  u := 1cm;
-  n := 4;
-  pair o;
-  o := origin;
-
-  th0 := 360 / n;
-  R := 4u;
-  r := 3u;
-  rr := 1.8u;
-  draw fullcircle scaled (2 * R);
-
-  t := 9;
-  dd := .2u;
   draw_main(n, t);
   draw_arc(rr - dd, t + 10, th0 + t + 15);
   draw_radius(th0 + t + 15, rr - dd, r - 2dd);

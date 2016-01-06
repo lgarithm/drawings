@@ -1,19 +1,6 @@
 beginfig(1);
-  u := 1cm;
-  n := 4;
-  pair o;
-  o := origin;
-
-  th0 := 360 / n;
-  R := 4u;
-  r := 3u;
-  rr := 1.8u;
-  draw fullcircle scaled (2 * R);
-
-  t := 9;
   draw_main(n, t);
 
-  dd := 0.2u;
   draw_sector(rr + dd, r - dd, th0 - t, th0 - t - 36);
   draw_sector(rr + dd, rr + 2dd, th0 - t - 36 - 5, th0 - t - 36 - 15);
   draw_sector(rr + 3dd , rr + 4dd, th0 - t - 36 - 5, th0 - t - 36 - 15);

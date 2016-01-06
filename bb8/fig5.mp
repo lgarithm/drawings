@@ -1,18 +1,6 @@
 beginfig(5);
-  u := 1cm;
-  n := 4;
-  pair o;
-  o := origin;
+  draw_filled_main(n, t, rr, r, R);
 
-  th0 := 360 / n;
-  R := 4u;
-  r := 3u;
-  rr := 1.8u;
-
-  t := 9;
-  draw_filled_main(n, t, r, R);
-
-  dd := 0.2u;
   draw_filled_sector(rr + dd, r - dd, th0 - t, th0 - t - 36);
   draw_filled_sector(rr + dd, rr + 2dd, th0 - t - 36 - 5, th0 - t - 36 - 15);
   draw_filled_sector(rr + 3dd , rr + 4dd, th0 - t - 36 - 5, th0 - t - 36 - 15);
