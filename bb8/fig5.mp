@@ -23,5 +23,5 @@ beginfig(5);
   draw_arc(rr - dd, 3th0 - t - 5, 3th0 + t - 5);
   draw_radius(3th0 + t - 5, rr - dd, 0);
 
-  draw_sector(rr, rr + dd, 3th0 - t - 15, 3th0 - t - 30);
+  draw_filled_sector(rr, rr + dd, 3th0 - t - 15, 3th0 - t - 30);
 endfig;

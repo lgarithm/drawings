@@ -11,6 +11,8 @@ etex
 \input fig4
 \input fig5
 \input fig6
+\input fig7
+\input fig8
 
 verbatimtex
 \end{document}
