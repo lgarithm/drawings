@@ -10,6 +10,7 @@ etex
 \input fig3
 \input fig4
 \input fig5
+\input fig6
 
 verbatimtex
 \end{document}
