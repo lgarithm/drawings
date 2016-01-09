@@ -1,16 +1,4 @@
 beginfig(1);
   draw_main(n, t);
-
-  draw_sector(rr + dd, r - dd, th0 - t, th0 - t - 36);
-  draw_sector(rr + dd, rr + 2dd, th0 - t - 36 - 5, th0 - t - 36 - 15);
-  draw_sector(rr + 3dd , rr + 4dd, th0 - t - 36 - 5, th0 - t - 36 - 15);
-
-  draw_sector(rr + dd, r - dd, -th0 + t + ts, -t - ts);
-  draw_sector(r - 2dd, r - dd, -th0 + t + 5, -th0 + t + 30);
-  draw_sector(r - 2dd, r - dd, -t - 4ts, -t - 3ts);
-  draw_sector(r - 2dd, r - dd, -t - 2ts, -t - ts);
-
-  draw ss_p;
-
-  draw_sector(rr, rr + dd, 3th0 - t - 15, 3th0 - t - 30);
+  draw_face_i;
 endfig;
