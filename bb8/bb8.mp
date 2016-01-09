@@ -1,5 +1,8 @@
 vardef direction(expr th) = (cosd th, sind th) enddef;
 
+vardef radius_p(expr th, r, R) = r * direction(th) -- R * direction(th) enddef;
+vardef arc_p(expr r, s, t) = r * direction(s) .. r * direction(.5 (s + t)) .. r * direction(t) enddef;
+
 def draw_radius(expr th, r, R) =
   pair d;
   d := direction(th);
@@ -117,3 +120,19 @@ r := 3u;
 rr := 1.8u;
 dd := 0.2u;
 t := 9;
+tt := 9;
+
+
+path bsp;
+bsp :=
+  arc_p(rr - dd, t + tt, th0 + t + tt) --
+  radius_p(th0 + t + tt, rr - dd, r - 2dd) --
+  arc_p(r - 2dd, th0 + t + tt, 1.5 th0 - tt)
+  -- (r - 2dd) * direction(1.5 th0 - tt)
+  -- (r - 2dd) * direction(1.5 th0 - tt)
+  .. (r - 4dd) * direction(1.5 th0)
+  .. (r - 2dd) * direction(1.5 th0 + tt)
+  -- (r - 2dd) * direction(1.5 th0 + tt)
+  -- arc_p(r - 2dd, 1.5th0 + tt, 2th0 - t - tt) --
+  radius_p(2th0 - t - tt, r - 2dd, rr - dd)
+  -- cycle;
