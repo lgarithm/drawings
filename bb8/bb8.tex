@@ -1,8 +1,10 @@
 \documentclass[a4paper,landscape]{article}
+\usepackage{nopageno}
 \usepackage[margin=0.5in]{geometry}
 \usepackage{graphics}
 \DeclareGraphicsRule{*}{mps}{*}{}
 \input table
+\def\f1#1{\includegraphics{fig.#1}}
 \def\fig4#1#2#3#4{\table2x2
   {\includegraphics{fig.#1}}
   {\includegraphics{fig.#2}}
@@ -11,9 +13,11 @@
 }
 
 \begin{document}
-\thispagestyle{empty}
 \fig4 1 2 3 4
 \newpage
-\thispagestyle{empty}
 \fig4 5 6 7 8
+\newpage
+\f1 9
+\newpage
+\f1 0
 \end{document}

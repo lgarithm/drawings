@@ -4,7 +4,9 @@ verbatimtex
 \begin{document}
 etex
 
+\input units
 \input bb8
+\input fig0
 \input fig1
 \input fig2
 \input fig3
@@ -13,6 +15,7 @@ etex
 \input fig6
 \input fig7
 \input fig8
+\input fig9
 
 verbatimtex
 \end{document}
