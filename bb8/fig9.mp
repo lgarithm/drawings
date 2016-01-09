@@ -16,7 +16,7 @@ beginfig(9);
   draw origin -- RR * direction(-Rth) dashed evenly;
   draw arc_p(.5u, -Rth, Rth) dashed evenly;
   draw arc_p(.7u, -Rth, Rth) dashed evenly;
-  % label.rt(btex $30\degree$ etx, (.7u, 0));
+  label.rt(btex $30^\circ$ etex, (.7u, 0));
 
   def f(expr r, t, d) =
     draw r * direction(t - d) -- r * direction(t + d);
