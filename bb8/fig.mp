@@ -1,5 +1,5 @@
 verbatimtex
-&latex
+%&latex
 \documentclass{article}
 \begin{document}
 etex
