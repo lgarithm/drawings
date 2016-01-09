@@ -2,47 +2,18 @@
 \usepackage[margin=0.5in]{geometry}
 \usepackage{graphics}
 \DeclareGraphicsRule{*}{mps}{*}{}
+\input table
+\def\fig4#1#2#3#4{\table2x2
+  {\includegraphics{fig.#1}}
+  {\includegraphics{fig.#2}}
+  {\includegraphics{fig.#3}}
+  {\includegraphics{fig.#4}}
+}
+
 \begin{document}
 \thispagestyle{empty}
-\begin{tabular}{ c c } % \hline
-\begin{minipage}[t]{.5\textwidth}
-    \begin{center}
-    \includegraphics{fig.1}
-    \end{center}
-    \bigskip
-\end{minipage}&
-\begin{minipage}[t]{.5\textwidth}
-    \begin{center}\includegraphics{fig.2}\end{center}
-    \bigskip
-\end{minipage}\\ % \hline
-\begin{minipage}[t]{.5\textwidth}
-    \bigskip
-    \begin{center}\includegraphics{fig.3}\end{center}
-\end{minipage}&
-\begin{minipage}[t]{.5\textwidth}
-    \bigskip
-    \begin{center}\includegraphics{fig.4}\end{center}
-\end{minipage}\\ % \hline
-\end{tabular}
+\fig4 1 2 3 4
 \newpage
-
 \thispagestyle{empty}
-\begin{tabular}{ c c } % \hline
-\begin{minipage}[t]{.5\textwidth}
-    \bigskip
-    \begin{center}\includegraphics{fig.5}\end{center}
-\end{minipage}&
-\begin{minipage}[t]{.5\textwidth}
-    \bigskip
-    \begin{center}\includegraphics{fig.6}\end{center}
-\end{minipage}\\ % \hline
-\begin{minipage}[t]{.5\textwidth}
-    \bigskip
-    \begin{center}\includegraphics{fig.7}\end{center}
-\end{minipage}&
-\begin{minipage}[t]{.5\textwidth}
-    \bigskip
-    \begin{center}\includegraphics{fig.8}\end{center}
-\end{minipage}\\ % \hline
-\end{tabular}
+\fig4 5 6 7 8
 \end{document}
