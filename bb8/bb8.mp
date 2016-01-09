@@ -136,3 +136,17 @@ bsp :=
   -- arc_p(r - 2dd, 1.5th0 + tt, 2th0 - t - tt) --
   radius_p(2th0 - t - tt, r - 2dd, rr - dd)
   -- cycle;
+
+path ss_p;
+ss_p := radius_p(th0, 0, rr - dd)
+  -- arc_p(rr - dd, th0, 2th0 + t + 5)
+  -- radius_p(2th0 + t + 5, rr - dd, r - dd)
+  -- arc_p(r - dd, 2th0 + t + 5, 2th0 + t + 20)
+  -- radius_p(2th0 + t + 20, r - dd, r - 2dd)
+  -- arc_p(r - 2dd, 2th0 + t + 20, 2th0 + t + 40)
+  -- radius_p(2th0 + t + 40, r - dd, r - 2dd)
+  -- arc_p(r - dd, 2th0 + t + 40, 3th0 - t - 5)
+  -- radius_p(3th0 - t - 5, r - dd, rr - dd)
+  -- arc_p(rr - dd, 3th0 - t - 5, 3th0 + t - 5)
+  -- radius_p(3th0 + t - 5, rr - dd, 0)
+  -- cycle;
