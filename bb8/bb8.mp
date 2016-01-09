@@ -110,30 +110,29 @@ def draw_filled_main(expr n, t, rr, r, R) =
   draw_main(n, t);
 enddef;
 
-path bsp;
-bsp :=
-  arc_p(rr - dd, t + tt, th0 + t + tt) --
-  radius_p(th0 + t + tt, rr - dd, r - 2dd) --
-  arc_p(r - 2dd, th0 + t + tt, 1.5 th0 - tt)
+path bs_p;
+bs_p := arc_p(rr - dd, t + tt, th0 + t + tt)
+  -- radius_p(th0 + t + tt, rr - dd, r - 2dd)
+  -- arc_p(r - 2dd, th0 + t + tt, 1.5 th0 - tt)
   -- (r - 2dd) * direction(1.5 th0 - tt)
   -- (r - 2dd) * direction(1.5 th0 - tt)
   .. (r - 4dd) * direction(1.5 th0)
   .. (r - 2dd) * direction(1.5 th0 + tt)
   -- (r - 2dd) * direction(1.5 th0 + tt)
-  -- arc_p(r - 2dd, 1.5th0 + tt, 2th0 - t - tt) --
-  radius_p(2th0 - t - tt, r - 2dd, rr - dd)
+  -- arc_p(r - 2dd, 1.5th0 + tt, 2th0 - t - tt)
+  -- radius_p(2th0 - t - tt, r - 2dd, rr - dd)
   -- cycle;
 
 path ss_p;
 ss_p := radius_p(th0, 0, rr - dd)
-  -- arc_p(rr - dd, th0, 2th0 + t + 5)
-  -- radius_p(2th0 + t + 5, rr - dd, r - dd)
-  -- arc_p(r - dd, 2th0 + t + 5, 2th0 + t + 20)
+  -- arc_p(rr - dd, th0, 2th0 + t + ts)
+  -- radius_p(2th0 + t + ts, rr - dd, r - dd)
+  -- arc_p(r - dd, 2th0 + t + ts, 2th0 + t + 20)
   -- radius_p(2th0 + t + 20, r - dd, r - 2dd)
   -- arc_p(r - 2dd, 2th0 + t + 20, 2th0 + t + 40)
   -- radius_p(2th0 + t + 40, r - dd, r - 2dd)
-  -- arc_p(r - dd, 2th0 + t + 40, 3th0 - t - 5)
-  -- radius_p(3th0 - t - 5, r - dd, rr - dd)
-  -- arc_p(rr - dd, 3th0 - t - 5, 3th0 + t - 5)
-  -- radius_p(3th0 + t - 5, rr - dd, 0)
+  -- arc_p(r - dd, 2th0 + t + 40, 3th0 - t - ts)
+  -- radius_p(3th0 - t - ts, r - dd, rr - dd)
+  -- arc_p(rr - dd, 3th0 - t - ts, 3th0 + t - ts)
+  -- radius_p(3th0 + t - ts, rr - dd, 0)
   -- cycle;

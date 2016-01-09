@@ -12,3 +12,7 @@ rr := RR * sind(rrth);
 dd := 0.2u;
 t := 9;
 tt := 9;
+ts := 5;
+
+hr := r;
+Hr := sqrt(1 + (hr/RR)*(hr/RR)) * RR;

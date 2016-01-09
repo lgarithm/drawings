@@ -1,7 +1,7 @@
 beginfig(3);
   draw_main(n, t);
 
-  draw bsp;
+  draw bs_p;
   draw fullcircle scaled 2dd shifted ((r - 2dd) * direction(1.5 th0));
 
   draw_equator(rr - dd, t);

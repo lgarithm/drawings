@@ -1,7 +1,7 @@
 beginfig(7);
   draw_filled_main(n, t, rr, r, R);
-  fill bsp withcolor .8white;
-  draw bsp;
+  fill bs_p withcolor .8white;
+  draw bs_p;
   draw fullcircle scaled 2dd shifted ((r - 2dd) * direction(1.5 th0));
   draw_filled_equator(rr - dd, t);
   draw_filled_bow(rr - dd, -t - tt, -180 + t + tt);
