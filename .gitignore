@@ -128,3 +128,4 @@ sympy-plots-for-*.tex/
 *~
 *.pdf
 *.ptc*
+fig.[0-9]
