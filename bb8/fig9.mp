@@ -18,19 +18,7 @@ beginfig(9);
   draw arc_p(.7u, -Rth, Rth) dashed evenly;
   label.rt(btex $30^\circ$ etex, (.7u, 0));
 
-  def f(expr r, t, d) =
-    draw r * direction(t - d) -- r * direction(t + d);
-  enddef;
-
-  draw fullcircle scaled 2RR;
-  for i := 0 upto 3:
-    f(RR, i * 90, Rth);
-    f(RR, i * 90, rth);
-    fill_subtropic(RR, i * 90, 90 - Rth, 90 - rth, C_main);
-    % draw_radius(i * 90 + 45, R, RR);
-    draw_radius(i * 90, R, RR * cosd(Rth));
-  endfor;
-
   draw_filled_main(n, t, rr, r, R);
   draw_filled_face_i;
+  draw_body_projection;
 endfig;

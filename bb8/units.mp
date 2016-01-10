@@ -14,5 +14,5 @@ t := 9;
 tt := 9;
 ts := 5;
 
-hr := r;
+hr := RR * sind(25);
 Hr := sqrt(1 + (hr/RR)*(hr/RR)) * RR;

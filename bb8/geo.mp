@@ -3,6 +3,15 @@ vardef direction(expr th) = (cosd th, sind th) enddef;
 vardef radius_p(expr th, r, R) = r * direction(th) -- R * direction(th) enddef;
 vardef arc_p(expr r, s, t) = r * direction(s) .. r * direction(.5 (s + t)) .. r * direction(t) enddef;
 
+vardef subtropic_p(expr r, p, s, t) =
+  r * direction(p - 90 + s) ..
+  r * direction(p - 90 + .5(s + t)) ..
+  r * direction(p - 90 + t) --
+  r * direction(p + 90 - t) ..
+  r * direction(p + 90 - .5(s + t)) ..
+  r * direction(p + 90 - s)
+enddef;
+
 def draw_radius(expr th, r, R) =
   pair d;
   d := direction(th);
@@ -84,13 +93,6 @@ def draw_filled_equator(expr r, t) =
   draw_equator(r, t);
 enddef;
 
-def fill_subtropic(expr r, p, s, t, C) = 
-  pair numeric a, b, c, d, ab, cd;
-  a := r * direction(p - 90 + s);
-  ab := r * direction(p - 90 + s);
-  b := r * direction(p - 90 + t);
-  c := r * direction(p + 90 - t);
-  cd := r * direction(p + 90 - .5(s + t));
-  d := r * direction(p + 90 - s);
-  fill a .. ab .. b -- c .. cd .. d -- cycle withcolor C;
+def fill_subtropic(expr r, p, s, t, C) =
+  fill subtropic_p(r, p, s, t) -- cycle withcolor C;
 enddef;
