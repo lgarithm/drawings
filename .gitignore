@@ -131,3 +131,4 @@ sympy-plots-for-*.tex/
 fig.[0-9]
 *.mpx
 mpxerr.tex
+*.png

@@ -26,3 +26,4 @@ enddef;
 \input face2
 \input face3
 \input body
+\input head
