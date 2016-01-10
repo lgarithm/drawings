@@ -4,14 +4,21 @@ def draw_head(expr hp) =
   draw (arc_p(hr, -t, 45)
     .. arc_p(hr, 45, 45 * 3)
     .. arc_p(hr, 45 * 3, 180 + t)) shifted hp;
-  draw hr * direction(-t) shifted hp -- RR * direction(90 - rth);
-  draw hr * direction(180 + t) shifted hp -- RR * direction(90 + rth);
+
+  draw (hr * direction(-t) -- RR * direction(90 - rth) shifted (0, -Hr)) shifted hp;
+  draw (hr * direction(180 + t) -- RR * direction(90 + rth) shifted (0, -Hr)) shifted hp;
+  draw arc_p(RR, 90 - rth, 90 + rth) shifted (0, -Hr) shifted hp;
+  %draw arc_p(RR + .05u, 90 - rth, 90 + rth) shifted (0, -Hr) shifted hp;
 
   draw ((-hr, 0) -- (hr, 0)) shifted hp;
   draw (hr * direction(-t) -- hr * direction(180 + t)) shifted hp;
 
+  fill subtropic_p(hr, 90, 60, 75) shifted hp -- cycle withcolor C_minor;
+  fill subtropic_p(hr, 90, 45, 50) shifted hp -- cycle withcolor C_main;
+
   pair Ep;
   Ep := (0, hr * .6);
+  fill fullcircle scaled 8dd shifted (hp + Ep) withcolor white;
   draw fullcircle scaled 6dd shifted (hp + Ep);
   fill fullcircle scaled 2dd shifted (hp + Ep + (-dd, -dd)) withcolor .5red;
   fill (fullcircle scaled 6dd -- reverse(fullcircle) scaled 7dd -- cycle) shifted (hp + Ep);
