@@ -4,9 +4,9 @@ verbatimtex
 \begin{document}
 etex
 
+\input colors
 \input geo
 \input units
-\input colors
 \input bb8
 \input fig0
 \input fig1

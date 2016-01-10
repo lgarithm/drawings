@@ -16,12 +16,21 @@ beginfig(0);
   pair Ep;
   Ep := (0, hr * .6);
   draw fullcircle scaled 6dd shifted (hp + Ep);
-  
+  fill fullcircle scaled 2dd shifted (hp + Ep + (-dd, -dd)) withcolor .5red;
+  fill (fullcircle scaled 6dd -- reverse(fullcircle) scaled 7dd -- cycle) shifted (hp + Ep);
+
   pair ep;
   ep := (hr * .5, hr * .3);
   fill fullcircle scaled 3dd shifted (hp + ep);
-  draw fullcircle scaled 4dd shifted (hp + ep);
-  draw fullcircle scaled 5dd shifted (hp + ep);
+  fill (fullcircle scaled 4dd -- reverse(fullcircle) scaled 5dd -- cycle) shifted (hp + ep);
 
+  pair tp, Tp;
+  Tp := hr * direction(90 - 10);
+  tp := hr * direction(90 + 5);
+  draw (Tp -- (Tp + (0, .6hr))) shifted hp;
+  draw (tp -- (tp + (0, .3hr))) shifted hp;
+  
+  draw_filled_main(n, t, rr, r, R);
+  draw_filled_face_iii;
   draw_body_projection;
 endfig;

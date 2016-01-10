@@ -24,4 +24,5 @@ enddef;
 
 \input face1
 \input face2
+\input face3
 \input body

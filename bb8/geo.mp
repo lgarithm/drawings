@@ -78,21 +78,21 @@ def fill_equator(expr r, t, C) =
   fill a .. r * direction(0) ..  b -- c .. r * direction(180) .. d -- cycle withcolor C;
 enddef;
 
+def fill_subtropic(expr r, p, s, t, C) =
+  fill subtropic_p(r, p, s, t) -- cycle withcolor C;
+enddef;
+
 def draw_filled_bow(expr r, s, t) =
-  fill_bow(r, s, t, .8white);
+  fill_bow(r, s, t, C_minor);
   draw_bow(r, s, t);
 enddef;
 
 def draw_filled_sector(expr r, R, s, t) =
-  fill_sector(r, R, s, t, .8white);
+  fill_sector(r, R, s, t, C_minor);
   draw_sector(r, R, s, t);
 enddef;
 
 def draw_filled_equator(expr r, t) =
-  fill_equator(r, t, .8white);
+  fill_equator(r, t, C_minor);
   draw_equator(r, t);
-enddef;
-
-def fill_subtropic(expr r, p, s, t, C) =
-  fill subtropic_p(r, p, s, t) -- cycle withcolor C;
 enddef;

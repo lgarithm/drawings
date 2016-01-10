@@ -37,7 +37,7 @@ def draw_filled_face_i =
   draw_sector(r - 2dd, r - dd, -t - 4ts, -t - 3ts);
   draw_sector(r - 2dd, r - dd, -t - 2ts, -t - ts);
 
-  fill ss_p withcolor .8white;
+  fill ss_p withcolor C_minor;
   draw ss_p;
 
   draw_filled_sector(rr, rr + dd, 3th0 - t - 15, 3th0 - t - 30);
