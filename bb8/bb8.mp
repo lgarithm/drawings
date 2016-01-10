@@ -22,8 +22,9 @@ def draw_filled_main(expr n, t, rr, r, R) =
   draw_main(n, t);
 enddef;
 
-\input face1
-\input face2
-\input face3
-\input body
-\input head
+
+\input components/face1
+\input components/face2
+\input components/face3
+\input components/body
+\input components/head

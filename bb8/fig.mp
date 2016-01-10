@@ -8,16 +8,16 @@ etex
 \input geo
 \input units
 \input bb8
-\input fig0
-\input fig1
-\input fig2
-\input fig3
-\input fig4
-\input fig5
-\input fig6
-\input fig7
-\input fig8
-\input fig9
+\input figs/fig0
+\input figs/fig1
+\input figs/fig2
+\input figs/fig3
+\input figs/fig4
+\input figs/fig5
+\input figs/fig6
+\input figs/fig7
+\input figs/fig8
+\input figs/fig9
 
 verbatimtex
 \end{document}
