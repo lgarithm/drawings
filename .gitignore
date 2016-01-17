@@ -133,3 +133,5 @@ fig.[0-9]
 mpxerr.tex
 *.png
 *.eps
+*.ppm
+*.gif

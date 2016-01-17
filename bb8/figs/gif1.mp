@@ -1,5 +1,5 @@
 % outputformat := "png";
-% outputtemplate := "%j-%c.%o";
+outputtemplate := "%j-%02c.%o";
 
 def frame(expr j) =
     if j mod 2 = 0:
