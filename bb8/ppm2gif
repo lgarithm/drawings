@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for i in `ls *.ppm | sed 's/.ppm$//g'`; do
+    ppmtogif $i.ppm > $i.gif
+done
+
+gifmerge pic-[0-9]*.gif > a.gif
