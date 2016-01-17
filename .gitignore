@@ -132,3 +132,4 @@ fig.[0-9]
 *.mpx
 mpxerr.tex
 *.png
+*.eps
