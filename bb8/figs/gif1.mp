@@ -1,3 +1,6 @@
+% outputformat := "png";
+% outputtemplate := "%j-%c.%o";
+
 def frame(expr j) =
     if j mod 2 = 0:
         draw_main(n, t);
