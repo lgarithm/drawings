@@ -11,7 +11,7 @@ pdf2png: pdf
 png:
 	ghostscript -dNOPAUSE -dBATCH -sDEVICE=png16m -r400 -dDownScaleFactor=1 -sOutputFile=pic-%02d.png gif-[0-9]*.eps
 ppm: gif_frames
-       ghostscript -dNOPAUSE -dBATCH -sDEVICE=ppm -sOutputFile=pic-%02d.ppm gif-[0-9]*.eps
+	ghostscript -dNOPAUSE -dBATCH -sDEVICE=ppm -sOutputFile=pic-%02d.ppm gif-[0-9]*.eps
 gif: ppm
 	./ppm2gif
 clean:
