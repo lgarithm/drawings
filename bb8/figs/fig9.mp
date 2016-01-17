@@ -12,8 +12,8 @@ beginfig(9);
   drawarrow (RR + u, -.5u) -- (RR + u, -R) dashed evenly;
   label.top("20cm", (0, -.2u)) rotated -90 shifted (RR + u, 0);
 
-  draw origin -- RR * direction(Rth) dashed evenly;
-  draw origin -- RR * direction(-Rth) dashed evenly;
+  draw origin -- RR * dir(Rth) dashed evenly;
+  draw origin -- RR * dir(-Rth) dashed evenly;
   draw arc_p(.5u, -Rth, Rth) dashed evenly;
   draw arc_p(.7u, -Rth, Rth) dashed evenly;
   label.rt(btex $30^\circ$ etex, (.7u, 0));

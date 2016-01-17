@@ -7,8 +7,8 @@ def draw_main(expr n, t) =
     draw_radius(th + t, rr, r);
     draw_arc(rr, th - t, th + t);
     draw_arc(r, th + t, th + th0 - t);
-    draw fullcircle scaled 2dd shifted ((rr + 2dd) * direction(th));
-    draw fullcircle scaled 1.2dd shifted ((rr + 2dd) * direction(th));
+    draw fullcircle scaled 2dd shifted ((rr + 2dd) * dir(th));
+    draw fullcircle scaled 1.2dd shifted ((rr + 2dd) * dir(th));
   endfor;
 enddef;
 

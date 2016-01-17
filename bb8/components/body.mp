@@ -2,7 +2,7 @@ def draw_body_projection =
   draw fullcircle scaled 2RR;
   draw fullcircle scaled 2R;
 
-  def f(expr r, t, d) = draw r * direction(t - d) -- r * direction(t + d); enddef;
+  def f(expr r, t, d) = draw r * dir(t - d) -- r * dir(t + d); enddef;
   for i := 0 upto 3:
     f(RR, i * 90, Rth);
     f(RR, i * 90, rth);

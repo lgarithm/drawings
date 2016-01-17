@@ -1,32 +1,30 @@
-vardef direction(expr th) = (cosd th, sind th) enddef;
-
-vardef radius_p(expr th, r, R) = r * direction(th) -- R * direction(th) enddef;
-vardef arc_p(expr r, s, t) = r * direction(s) .. r * direction(.5 (s + t)) .. r * direction(t) enddef;
+vardef radius_p(expr th, r, R) = r * dir(th) -- R * dir(th) enddef;
+vardef arc_p(expr r, s, t) = r * dir(s) .. r * dir(.5 (s + t)) .. r * dir(t) enddef;
 
 vardef subtropic_p(expr r, p, s, t) =
-  r * direction(p - 90 + s) ..
-  r * direction(p - 90 + .5(s + t)) ..
-  r * direction(p - 90 + t) --
-  r * direction(p + 90 - t) ..
-  r * direction(p + 90 - .5(s + t)) ..
-  r * direction(p + 90 - s)
+  r * dir(p - 90 + s) ..
+  r * dir(p - 90 + .5(s + t)) ..
+  r * dir(p - 90 + t) --
+  r * dir(p + 90 - t) ..
+  r * dir(p + 90 - .5(s + t)) ..
+  r * dir(p + 90 - s)
 enddef;
 
 def draw_radius(expr th, r, R) =
   pair d;
-  d := direction(th);
+  d := dir(th);
   draw (r * d) -- (R * d);
 enddef;
 
 def draw_arc(expr r, s, t) =
-  draw r * direction(s) .. r * direction(.5 (s + t)) .. r * direction(t);
+  draw r * dir(s) .. r * dir(.5 (s + t)) .. r * dir(t);
 enddef;
 
 def draw_bow(expr r, s, t) =
   pair a, b, c;
-  a := r * direction(s);
-  b := r * direction(.5 (s + t));
-  c := r * direction(t);
+  a := r * dir(s);
+  b := r * dir(.5 (s + t));
+  c := r * dir(t);
   draw a .. b .. c -- a;
 enddef;
 
@@ -39,43 +37,43 @@ enddef;
 
 def draw_equator(expr r, t) =
   pair a, b, c, d;
-  a := r * direction(-t);
-  b := r * direction(t);
-  c := r * direction(180 - t);
-  d := r * direction(180 + t);
-  draw a .. r * direction(0) ..  b -- c .. r * direction(180) .. d -- cycle;
+  a := r * dir(-t);
+  b := r * dir(t);
+  c := r * dir(180 - t);
+  d := r * dir(180 + t);
+  draw a .. r * dir(0) ..  b -- c .. r * dir(180) .. d -- cycle;
 enddef;
 
 def fill_bow(expr r, s, t, C) =
   pair a, b, c;
-  a := r * direction(s);
-  b := r * direction(.5 (s + t));
-  c := r * direction(t);
+  a := r * dir(s);
+  b := r * dir(.5 (s + t));
+  c := r * dir(t);
   fill a .. b .. c -- cycle withcolor C;
 enddef;
 
 def fill_sector(expr r, R, s, t, C) =
   tm := .5 (s + t);
   pair ds, dt;
-  ds := direction(s);
-  dt := direction(t);
+  ds := dir(s);
+  dt := dir(t);
   pair a, b, c, d, m, M;
   a := r * ds;
   b := R * ds;
-  M := R * direction(tm);
+  M := R * dir(tm);
   c := R * dt;
-  m := r * direction(tm);
+  m := r * dir(tm);
   d := r * dt;
   fill a -- b .. M .. c -- d .. m .. cycle withcolor C;
 enddef;
 
 def fill_equator(expr r, t, C) =
   pair a, b, c, d;
-  a := r * direction(-t);
-  b := r * direction(t);
-  c := r * direction(180 - t);
-  d := r * direction(180 + t);
-  fill a .. r * direction(0) ..  b -- c .. r * direction(180) .. d -- cycle withcolor C;
+  a := r * dir(-t);
+  b := r * dir(t);
+  c := r * dir(180 - t);
+  d := r * dir(180 + t);
+  fill a .. r * dir(0) ..  b -- c .. r * dir(180) .. d -- cycle withcolor C;
 enddef;
 
 def fill_subtropic(expr r, p, s, t, C) =
