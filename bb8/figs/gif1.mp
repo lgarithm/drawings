@@ -1,17 +1,16 @@
 % outputformat := "png";
 outputtemplate := "%j-%02c.%o";
 
+nf := 24;
+dr := 360 / nf;
+
 def frame(expr j) =
-    if j mod 2 = 0:
-        draw_main(n, t);
-        draw_face_i;
-    else:
-        draw_main(n, t);
-    fi;
+    draw_main(n, t);
 enddef;
 
-for j:=1 upto 16:
+for j:=1 upto nf:
     beginfig(j);
+        th0 := th0 + dr;
         frame(j);
     endfig;
 endfor;
