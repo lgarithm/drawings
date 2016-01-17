@@ -1,0 +1,14 @@
+#!/bin/sh
+
+mpost gif.mp
+pdflatex gif.tex
+
+# ghostscript -dNOPAUSE -dBATCH -sDEVICE=png16m -r400 -dDownScaleFactor=1 -sOutputFile=pic-%02d.png gif-[0-9]*-eps-converted-to.pdf
+ghostscript -dNOPAUSE -dBATCH -sDEVICE=ppm -r400 -dDownScaleFactor=1 -sOutputFile=pic-%02d.ppm gif-[0-9]*-eps-converted-to.pdf
+
+for i in `ls pic-[0-9]*.ppm | sed 's/.ppm//'`; do
+    echo $i
+    ppmtogif $i.ppm > $i.gif
+done
+
+gifmerge -l0 pic-[0-9]*.gif > a.gif

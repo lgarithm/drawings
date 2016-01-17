@@ -1,0 +1,26 @@
+% \documentclass[a4paper,landscape]{article}
+\documentclass{article}
+\usepackage{nopageno}
+\usepackage[margin=.2in]{geometry}
+\usepackage{graphics}
+\DeclareGraphicsRule{*}{mps}{*}{}
+
+\setlength{\hoffset}{0in}
+\setlength{\marginparwidth}{0in}
+
+\input table
+\def\f1#1{\includegraphics{gif-#1.eps}}
+
+\begin{document}
+\f1{01}
+
+\f1{02}
+
+\f1{03}
+
+\f1{04}
+
+\f1{05}
+
+\f1{06}
+\end{document}
