@@ -9,13 +9,9 @@
 \setlength{\marginparwidth}{0in}
 
 \input table
+% \def\f1#1{\includegraphics{fig-#1.eps}}
 \def\f1#1{\includegraphics{fig.#1}}
-\def\fig4#1#2#3#4{\table2x2
-  {\includegraphics{fig.#1}}
-  {\includegraphics{fig.#2}}
-  {\includegraphics{fig.#3}}
-  {\includegraphics{fig.#4}}
-}
+\def\fig4#1#2#3#4{\table2x2{\f1{#1}}{\f1{#2}}{\f1{#3}}{\f1{#4}}}
 
 \begin{document}
 \f1{10}

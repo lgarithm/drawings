@@ -13,4 +13,4 @@ png:
 ppm: gif
 	ghostscript -dNOPAUSE -dBATCH -sDEVICE=ppm -sOutputFile=pic-%02d.ppm gif.[0-9]*
 clean:
-	-rm *.aux *.log *.pdf fig.? *.mpx
+	-rm *.aux *.log *.pdf fig.? *.mpx *.eps
