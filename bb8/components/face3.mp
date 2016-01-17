@@ -12,20 +12,17 @@ bs_p := arc_p(rr - dd, t + tt, Th + t + tt)
   -- cycle;
 
 def draw_face_iii = 
-  draw bs_p;
-  draw fullcircle scaled 2dd shifted ((r - 2dd) * dir(1.5 Th));
-
-  draw_equator(rr - dd, t);
-  draw_bow(rr - dd, -t - tt, -180 + t + tt);
-
-  draw_sector(rr + dd, r - dd, -Th + t + 5, -t - 5);
+  draw bs_p rotated th0;
+  draw fullcircle scaled 2dd shifted ((r - 2dd) * dir(1.5 Th)) rotated th0;
+  draw equator_p(rr - dd, t) rotated th0;
+  draw bow_p(rr - dd, -t - tt, -180 + t + tt) rotated th0;
+  draw sector_p(rr + dd, r - dd, -Th + t + 5, -t - 5) rotated th0;
 enddef;
 
 def draw_filled_face_iii = 
-  fill bs_p withcolor C_minor;
-  draw bs_p;
-  draw fullcircle scaled 2dd shifted ((r - 2dd) * dir(1.5 Th));
-  draw_filled_equator(rr - dd, t);
-  draw_filled_bow(rr - dd, -t - tt, -180 + t + tt);
-  draw_filled_sector(rr + dd, r - dd, -Th + t + 5, -t - 5);
+  draw_filled_p(bs_p rotated th0, C_minor);
+  draw fullcircle scaled 2dd shifted ((r - 2dd) * dir(1.5 Th)) rotated th0;
+  draw_filled_p(equator_p(rr - dd, t) rotated th0, C_minor);
+  draw_filled_p(bow_p(rr - dd, -t - tt, -180 + t + tt) rotated th0, C_minor);
+  draw_filled_p(sector_p(rr + dd, r - dd, -Th + t + 5, -t - 5) rotated th0, C_minor);
 enddef;

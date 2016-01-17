@@ -11,4 +11,4 @@ for i in `ls pic-[0-9]*.ppm | sed 's/.ppm//'`; do
     ppmtogif $i.ppm > $i.gif
 done
 
-gifmerge -l0 pic-[0-9]*.gif > a.gif
+gifmerge -10 -l0 pic-[0-9]*.gif > a.gif

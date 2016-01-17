@@ -1,5 +1,5 @@
 def draw_head(expr hp) =
-  fill subtropic_p(hr, 90, -ts, 0) -- cycle shifted hp withcolor C_minor;
+  fill subtropic_p(hr, 90, -ts, 0) shifted hp withcolor C_minor;
 
   draw (arc_p(hr, -t, 45)
     .. arc_p(hr, 45, 45 * 3)
@@ -13,8 +13,8 @@ def draw_head(expr hp) =
   draw ((-hr, 0) -- (hr, 0)) shifted hp;
   draw (hr * dir(-t) -- hr * dir(180 + t)) shifted hp;
 
-  fill subtropic_p(hr, 90, 60, 75) shifted hp -- cycle withcolor C_minor;
-  fill subtropic_p(hr, 90, 45, 50) shifted hp -- cycle withcolor C_main;
+  fill subtropic_p(hr, 90, 60, 75) shifted hp withcolor C_minor;
+  fill subtropic_p(hr, 90, 45, 50) shifted hp withcolor C_main;
 
   pair Ep;
   Ep := (0, hr * .6);

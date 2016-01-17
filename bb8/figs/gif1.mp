@@ -5,7 +5,16 @@ nf := 24;
 dr := 360 / nf;
 
 def frame(expr j) =
-    draw_main(n, t);
+    draw_filled_main(n, t, rr, r, R);
+    if j mod 3 = 0:
+      draw_filled_face_i;
+    else:
+      if j mod 3 = 1:
+        draw_filled_face_ii;
+      else:
+	draw_filled_face_iii;
+      fi;
+    fi;
 enddef;
 
 for j:=1 upto nf:
