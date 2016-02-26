@@ -28,8 +28,24 @@ void test_1()
   }
 }
 
+void test_2()
+{
+  intersection i;
+  auto a = point3{1,0,0};
+  auto b = point3{0,1,0};
+  auto c = point3{0,0,1};
+  auto t = triangle(a,b,c);
+
+  {
+    auto r = ray{point3{0,0,0}, norm(vec3(1,1,1))};
+    bool f = t.intersect(r, i);
+    assert(f);
+  }
+}
+
 int main()
 {
   test_1();
+  // test_2();
   return 0;
 }

@@ -13,7 +13,7 @@ struct frame
   point3 trans(const point3& p);
 };
 
-struct oframe { point3 O; frame F; };
+struct oframe{ point3 O; frame F; };
 
 struct t_vector{ point3 pos; vector3 norm; };
 
@@ -54,10 +54,8 @@ struct intersection
   bool operator<(const intersection& i) const;
 };
 
-struct object { virtual bool intersect(const ray&, intersection&) const = 0; };
-
+struct object{ virtual bool intersect(const ray&, intersection&) const = 0; };
 struct world{ std::vector<std::unique_ptr<object>> objects; };
-
 bool nearest(const world&, const ray&, intersection&);
 
 struct sphere : object
@@ -68,10 +66,16 @@ struct sphere : object
   bool intersect(const ray&, intersection&) const /* override */;
 };
 
-struct light { point3 pos; color col; };
+struct triangle : object
+{
+  point3 a,b,c;
+  triangle(const point3&, const point3&, const point3&);
+  bool intersect(const ray&, intersection&) const /* override */;
+};
 
+struct light{ point3 pos; color col; };
 struct env{ std::vector<light> lights; };
 
-struct scene { world w; env e; camera cam; };
+struct scene{ world w; env e; camera cam; };
 
 #endif  // MODEL_H

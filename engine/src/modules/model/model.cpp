@@ -58,3 +58,11 @@ bool sphere::intersect(const ray& r, intersection& cut) const
   }
   return false;
 }
+
+triangle::triangle(const point3& a, const point3& b, const point3& c): a(a), b(b), c(c) {}
+
+bool triangle::intersect(const ray&, intersection& o) const
+{
+
+  return false;
+}

@@ -18,17 +18,53 @@ prepare_source(){
     move src/apps/ray
 }
 
+gen_object_target(){
+    g++ -MM $1
+    echo -e "\tgcc $opts -c $1"
+    echo
+}
+
+gen_dep_objets(){
+    for c in `gcc -MM $1 | tr " " "\n" | grep ".h$" | sed 's/.h$/.cpp/g'`; do
+	if [ ! -z `ls | grep $c` ]; then
+	    echo `basename $c .cpp`.o
+	fi
+    done
+}
+
+gen_out_target(){
+    base=`basename $1 .cpp`
+    deps=`gen_dep_objets $1 | tr "\n" " "`
+    echo $base".out: $deps"
+    echo -e "\tg++ $opts $deps $1 -o $base.out"
+    echo
+}
+
 gen_build_makefile(){
-    echo "default: binary"
+    echo "default: binary alltests"
+    echo
+
+    echo "alltests: "`ls *_test.cpp | sed 's/.cpp$/.out/' | tr "\n" " "`
+    echo
 
     echo "objects:"
     for c in `ls *.cpp | grep -v _test.cpp`; do
 	echo -e "\tg++ $opts -c $c"
     done
+    echo
 
     echo "binary: objects"
     echo -e "\tmkdir -p ../bin"
     echo -e "\tg++ $opts *.o -o ../bin/ray"
+    echo
+
+    for c in `ls *.cpp`; do
+	gen_object_target $c
+    done
+
+    for t in `ls *_test.cpp`; do
+	gen_out_target $t
+    done
 }
 
 gen_makefile(){
@@ -37,6 +73,9 @@ gen_makefile(){
 
     echo "check:"
     echo -e "\t./bin/ray -t"
+    for t in `ls build/*_test.cpp`; do
+	echo -e "\t./build/`basename $t .cpp`".out
+    done
 }
 
 config(){
