@@ -5,16 +5,14 @@ set -e
 opts='-std=c++0x'
 
 move(){
-    cp $1/*.cpp build
-    cp $1/*.h build
+    cp -v $1/*.h build 2> /dev/null || true
+    cp -v $1/*.cpp build 2> /dev/null || true
 }
 
 prepare_source(){
     for m in `ls src/modules`; do
-	echo "preparing module $m"
 	move src/modules/$m
     done
-
     move src/apps/ray
 }
 
@@ -41,29 +39,32 @@ gen_out_target(){
 }
 
 gen_build_makefile(){
-    echo "default: binary alltests"
+    echo "default: binary alltests allbinaries"
     echo
 
     echo "alltests: "`ls *_test.cpp | sed 's/.cpp$/.out/' | tr "\n" " "`
     echo
-
-    echo "objects:"
-    for c in `ls *.cpp | grep -v _test.cpp`; do
-	echo -e "\tg++ $opts -c $c"
-    done
+    echo "allbinaries:"`ls *_main.cpp | sed s'/.cpp/.out/' | tr "\n" " "`
+    echo -e "\t cp *_main.out ../bin"
     echo
 
-    echo "binary: objects"
+    echo "binary: render.out"
     echo -e "\tmkdir -p ../bin"
-    echo -e "\tg++ $opts *.o -o ../bin/ray"
+    echo -e "\tcp render.out ../bin/ray"
     echo
 
-    for c in `ls *.cpp`; do
-	gen_object_target $c
+    gen_out_target render.cpp
+
+    for m in `ls *_main.cpp`; do
+	gen_out_target $m
     done
 
     for t in `ls *_test.cpp`; do
 	gen_out_target $t
+    done
+
+    for c in `ls *.cpp`; do
+	gen_object_target $c
     done
 }
 
@@ -72,10 +73,13 @@ gen_makefile(){
     echo -e "\tcd build && make"
 
     echo "check:"
-    echo -e "\t./bin/ray -t"
     for t in `ls build/*_test.cpp`; do
-	echo -e "\t./build/`basename $t .cpp`".out
+	echo -e "\t./build/`basename $t .cpp`.out"
     done
+    for m in `ls build/*_main.cpp`; do
+	echo -e "\t./bin/`basename $m .cpp`.out -t"
+    done
+    echo -e "\t./bin/ray -t"
 }
 
 config(){

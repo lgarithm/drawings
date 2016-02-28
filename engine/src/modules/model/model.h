@@ -6,32 +6,17 @@
 
 #include "color.h"
 #include "point.h"
-
-struct frame
-{
-  vector3 X, Y, Z;
-  point3 trans(const point3& p);
-};
-
-struct oframe{ point3 O; frame F; };
-
-struct t_vector{ point3 pos; vector3 norm; };
+#include "linear.h"
 
 struct camera
 {
-  vector3 forward, right, up;
-  point3 pos;
-
-  camera(){}
-  camera(point3 pos, point3 lookAt);
+  oframe of;
+  pointT near;
+  // TODO: AOV
+  // TODO: pointT far;
 };
 
-struct ray
-{
-  point3 start;
-  vector3 dir;
-  point3 advance(pointT d) const;
-};
+typedef t_vector ray;
 
 struct itsec
 {
@@ -47,16 +32,17 @@ struct itsec
 
 struct intersection
 {
-  ray r;
+  t_vector n;
+  vector3 i;
   double d;
-  vector3 n;
-
-  bool operator<(const intersection& i) const;
 };
 
 struct object{ virtual bool intersect(const ray&, intersection&) const = 0; };
 struct world{ std::vector<std::unique_ptr<object>> objects; };
 bool nearest(const world&, const ray&, intersection&);
+
+struct Floor : object
+{ bool intersect(const ray&, intersection&) const /* override */; };
 
 struct sphere : object
 {
@@ -76,6 +62,6 @@ struct triangle : object
 struct light{ point3 pos; color col; };
 struct env{ std::vector<light> lights; };
 
-struct scene{ world w; env e; camera cam; };
+struct scene{ world w; env e; };
 
 #endif  // MODEL_H

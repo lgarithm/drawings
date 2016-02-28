@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include "model.h"
+#include "testing.h"
 
 void test_1()
 {
@@ -19,6 +20,13 @@ void test_1()
     bool f = parse(3, argv, cfg);
     assert(f);
     assert(cfg.d.width == 2560);
+  }
+  static const char * argv2[] = {"", "-d", "10X10"};
+  {
+    bool f = parse(3, argv2, cfg);
+    assert(f);
+    assert(cfg.d.width == 10);
+    assert(cfg.d.height == 10);
   }
 }
 
@@ -89,10 +97,10 @@ void test_5()
 
 int main()
 {
-  test_1();
-  test_2();
-  test_3();
-  test_4();
-  test_5();
+  test(1);
+  test(2);
+  test(3);
+  test(4);
+  test(5);
   return 0;
 }

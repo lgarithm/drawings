@@ -1,69 +1,63 @@
 #include "ray.h"
 
-double sample(const interval& r, int i, int n)
-{ return ((n - i) * r.lo + i * r.hi) / n; }
-
-unsigned char cscale(double s)
-{ return (unsigned char) (255 * (s > 1 ? 1 : s)); }
-
-RGB from_color(const color& c) { return RGB{cscale(c.r), cscale(c.g), cscale(c.b)}; }
-
-bool test(const ray& r, const world& w, intersection& i) { return nearest(w, r, i); }
-
-color shade(const intersection& i, const scene& s, int dep)
+RGB from_color(const color& c)
 {
-  auto pos = i.r.advance(i.d);
-  auto rid = reflect(i.n, i.r.dir);
-  auto nc = defaultColor;
-  {
-    //for (const auto& l : s.lights) {
-    for (int idx = 0; idx < s.e.lights.size(); ++idx) {
-      const auto& l = s.e.lights[idx];
-      auto tol = l.pos - pos;
-      auto ldir = norm(tol);
-      intersection j;
-      if (not test(ray{pos, ldir}, s.w, j) || len(tol) < j.d) {
-	auto f = dot(ldir, i.n);
-	auto lc = f > 0 ? f * l.col : defaultColor;
-	auto df = white;
-	nc = nc + df * lc;
-      }
-    }
-  }
-  auto rc = dep > 0 ? trace(ray{pos, rid}, s, dep - 1) : grey;
-  return nc + rc;
+  static const auto f = [](double s)
+    { return (unsigned char) (255 * (s > 1 ? 1 : s)); };
+  return RGB{f(c.r), f(c.g), f(c.b)};
 }
+
+static const shader default_shader(black, black);
 
 color trace(const ray& r, const scene& s, int dep)
 {
   intersection i;
-  return test(r, s.w, i) ? shade(i, s, dep) : background;
+  return nearest(s.w, r, i) ? default_shader(i, s, dep) : default_shader.bgc;
 }
 
-struct tracer
-{
-  const int dep; // = 0;
-  tracer(int dep) : dep(dep) {}
-  color operator()(const ray& tr, const scene& s) const
-  { return trace(tr, s, dep); }
-};
+shader::shader(const color& b, const color& d) : bgc(b), def(d) {}
 
-tracer default_trace(2);
-
-color rasterize(const scene& s, const viewport& v, const display& d, int i, int j)
+color shader::operator()(const intersection& i, const scene& s, int dep) const
 {
-  auto fc = point2{sample(v.xr, i, d.width - 1), sample(v.yr, j, d.height - 1)};
-  auto rd = norm(s.cam.forward + fc.x * s.cam.right + fc.y * s.cam.up);
-  auto tr = ray{s.cam.pos, rd};
-  return default_trace(tr, s);
+  auto nc = def;
+  {
+    for (const auto& l : s.e.lights) {
+      auto tol = l.pos - i.n.o;
+      auto ldir = norm(tol);
+      intersection j;
+      if (not nearest(s.w, ray{i.n.o, ldir}, j) || len(tol) < j.d) {
+        auto f = dot(ldir, i.n.v);
+        auto lc = f > 0 ? f * l.col : def;
+        auto df = white;
+        nc = nc + df * lc;
+      }
+    }
+  }
+  auto rc = dep > 0 ? trace(ray{i.n.o, reflect(i.n.v, i.i)}, s, dep - 1) : grey;
+  return nc + rc;
 }
 
-void render(const scene& s, const viewport& v, const display& d, unsigned char* buffer)
+color rasterize(const scene& s, const camera& cam,
+                const viewport& v, const display& d,
+                int i, int j, int dep)
+{
+  static const auto f = [](const interval& r, int i, int n)
+    { return ((n - i) * r.lo + i * r.hi) / n; };
+  auto fc = point2{f(v.xr, i, d.width - 1), f(v.yr, j, d.height - 1)};
+  auto cc = global(cam.of, point3{fc.x, cam.near, fc.y});
+  return trace(ray{cc, norm(cc - cam.of.o)}, s, dep);
+}
+
+engine::engine(int dep) : dep(dep) { }
+
+void engine::render(const scene& s, const camera& cam,
+                    const viewport& v, const display& d,
+                    unsigned char* buffer) const
 {
   unsigned char *p = buffer;
   for (int j=0; j < d.height; ++j) {
     for (int i=0; i < d.width; ++i) {
-      auto c = rasterize(s, v, d, i, j);
+      auto c = rasterize(s, cam, v, d, i, j, dep);
       auto pix = from_color(c);
       *p++ = pix.b;
       *p++ = pix.g;

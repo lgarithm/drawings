@@ -6,6 +6,9 @@
 #include "model.h"
 #include "ray.h"
 
+static const int max_width = 2560;
+static const int max_height = 2560;
+
 struct config
 {
   display d;
@@ -14,6 +17,8 @@ struct config
   camera cam;
   env lights;
   std::vector<object*> oo;
+
+  int dep;
 
   bool t;
 };

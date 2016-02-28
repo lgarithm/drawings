@@ -28,4 +28,11 @@ color operator*(const color&, const color&);
 
 #endif  // USE_TEMPLATE
 
+static const auto black = color{0, 0, 0};
+static const auto red = color{1, 0, 0};
+static const auto green = color{0, 1, 0};
+static const auto blue = color{0, 0, 1};
+static const auto white = red + green + blue;
+static const auto grey = .5 * (black + white);
+
 #endif  // COLOR_H

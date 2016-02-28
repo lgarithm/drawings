@@ -3,7 +3,7 @@
 
 #include "tuple.h"
 
-#define DEFINE_DET_2X2(T) T det(T A, T B, T C, T D) {return A * D - B * C; }
+#define DEFINE_DET_2X2(T) T det(T A, T B, T C, T D) { return A * D - B * C; }
 
 #define DEFINE_DOT_3(T, P, X, Y, Z) \
   T dot(const P& p, const P& q) \
@@ -22,6 +22,9 @@
 typedef double pointT;
 DEFINE_TUPLE_2(point2, pointT, x, y);
 DEFINE_TUPLE_3(point3, pointT, x, y, z);
+DEFINE_TUPLE_4(point4, pointT, x, y, z, w);
 typedef point3 vector3;
-
+typedef point4 vector4;
+DEFINE_TUPLE_3(simplex2, point3, a, b, c);
+DEFINE_TUPLE_4(matrix4, vector4, o, p, q, r);
 #endif  // POINT_IMPL_MACRO_H

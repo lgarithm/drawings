@@ -1,9 +1,11 @@
 #ifndef TUPLE_H
 #define TUPLE_H
 
-#define DEFINE_TUPLE_2(NAME, TYPE, X, Y) struct NAME { TYPE X,Y; }
+#define DEFINE_TUPLE_2(NAME, T, X, Y) struct NAME { T X,Y; }
 
-#define DEFINE_TUPLE_3(NAME, TYPE, X, Y, Z) struct NAME { TYPE X,Y,Z; }
+#define DEFINE_TUPLE_3(NAME, T, X, Y, Z) struct NAME { T X,Y,Z; }
+
+#define DEFINE_TUPLE_4(NAME, T, X, Y, Z, W) struct NAME { T X,Y,Z,W; }
 
 #define DEFINE_TUPLE3_EQUAL(T, X, Y, Z) \
   bool operator==(const T& p, const T& q) \
