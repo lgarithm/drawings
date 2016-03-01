@@ -11,9 +11,9 @@
 struct camera
 {
   oframe of;
-  pointT near;
+  scalarT near;
   // TODO: AOV
-  // TODO: pointT far;
+  // TODO: scalarT far;
 };
 
 typedef t_vector ray;
@@ -22,26 +22,39 @@ struct itsec
 {
   t_vector t;
   vector3 in;
+};
 
-  double alpha;
-  double refraction_ratio;
-
-  double reflect;
-  double diffuse;
+struct material
+{
+  color diffuse;
+  color specular;
+  unsigned char roughness;
+  double reflection;
+  material();
 };
 
 struct intersection
 {
   t_vector n;
   vector3 i;
+  material m;
   double d;
+  // intersection();
 };
+
+bool operator<(const intersection& i, const intersection& j);
 
 struct object{ virtual bool intersect(const ray&, intersection&) const = 0; };
 struct world{ std::vector<std::unique_ptr<object>> objects; };
 bool nearest(const world&, const ray&, intersection&);
 
 struct Floor : object
+{ bool intersect(const ray&, intersection&) const /* override */; };
+
+struct Chessboard : object
+{ bool intersect(const ray&, intersection&) const /* override */; };
+
+struct Mirror : object
 { bool intersect(const ray&, intersection&) const /* override */; };
 
 struct sphere : object

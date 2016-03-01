@@ -34,9 +34,9 @@ template <typename T>
 point3_t<T> reflect(const point3_t<T>& n, const point3_t<T>& d)
 { return d - T(2) * dot(n, d) * n; }
 
-using pointT = double;
-using point2 = point2_t<pointT>;
-using point3 = point3_t<pointT>;
+using scalarT = double;
+using point2 = point2_t<scalarT>;
+using point3 = point3_t<scalarT>;
 using vector2 = point2;
 using vector3 = point3;
 

@@ -12,6 +12,6 @@ world* example_1()
   auto c = point3{0, 1, 0};
 
   w->objects.push_back(unique_ptr<object>(new triangle(a,b,c)));
-  //w->objects.push_back(unique_ptr<object>(new Floor));
+  //w->objects.push_back(unique_ptr<object>(new Chessboard));
   return w;
 }

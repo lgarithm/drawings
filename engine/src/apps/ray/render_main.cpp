@@ -1,9 +1,11 @@
+#include <cstdio>
+
+#include <algorithm>
 #include <memory>
 
 #include "app.h"
 #include "debug.h"
-#include "examples.h"
-#include "model.h"
+#include "display.h"
 #include "params.h"
 #include "ray.h"
 
@@ -20,9 +22,8 @@ int main(int argc, char* argv[])
 
   scene s;
   s.e = cfg.lights;
-  unique_ptr<world> w(example_1());
-  for (auto& it : w->objects) {
-    s.w.objects.push_back(unique_ptr<object>(std::move(it)));
+  for (auto it : cfg.oo) {
+    s.w.objects.push_back(unique_ptr<object>(it));
   }
 
   run(cfg, s);

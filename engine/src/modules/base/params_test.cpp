@@ -7,14 +7,14 @@
 
 void test_1()
 {
-  auto cfg = def_config();
+  config cfg;
   static const char * argv[] = {"name", "-d", "wqxga"};
   {
     bool f = parse(2, argv, cfg);
     assert(not f);
     assert(cfg.d.width == 1024);
-    assert(cfg.v.xr.lo == -5);
-    assert(cfg.v.yr.hi == 5);
+    assert(cfg.v.xr.lo == -1);
+    assert(cfg.v.yr.hi == 1);
   }
   {
     bool f = parse(3, argv, cfg);
@@ -59,18 +59,18 @@ void test_4()
     "-m", "sphere(1,(1,1,1))",
   };
   {
-    auto cfg = def_config();
+    config cfg;
     bool f = parse(3, argv, cfg);
     assert(f);
     assert(cfg.oo.size() == 1);
   }
   {
-    auto cfg = def_config();
+    config cfg;
     bool f = parse(4, argv, cfg);
     assert(not f);
   }
   {
-    auto cfg = def_config();
+    config cfg;
     bool f = parse(5, argv, cfg);
     assert(f);
     assert(cfg.oo.size() == 2);
@@ -84,12 +84,12 @@ void test_5()
     "-l", "light((0,0,0), (.5, .5, .5))",
   };
   {
-    auto cfg = def_config();
+    config cfg;
     bool f = parse(2, argv, cfg);
     assert(not f);
   }
   {
-    auto cfg = def_config();
+    config cfg;
     bool f = parse(3, argv, cfg);
     assert(f);
   }

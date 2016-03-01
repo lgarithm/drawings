@@ -1,13 +1,15 @@
 #ifndef PARAMS_H
 #define PARAMS_H
 
+#include <string>
 #include <vector>
 
 #include "model.h"
 #include "ray.h"
 
-static const int max_width = 2560;
-static const int max_height = 2560;
+static const int max_width = 4096;
+static const int max_height = 4096;
+static const int max_dep = 6;
 
 struct config
 {
@@ -21,9 +23,11 @@ struct config
   int dep;
 
   bool t;
+  std::string outfile;
+
+  config();
 };
 
-config def_config();
 env def_env();
 
 bool parse(int argc, const char * const argv[], config& cfg);

@@ -3,12 +3,12 @@
 
 #include "bmp.h"
 #include "color.h"
+#include "display.h"
+#include "guard.h"  // For transitive closure
 #include "model.h"
 
-struct display{ unsigned short width, height; };
 struct interval{ double lo, hi; };
 struct viewport{ interval xr, yr; };
-struct RGB{ unsigned char r, g, b; };
 
 struct shader
 {

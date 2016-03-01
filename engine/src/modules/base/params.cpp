@@ -32,14 +32,12 @@ viewport center(double width, double height)
   return viewport{c(.5 * width), c(.5 * height)};
 }
 
-config def_config() {
-  config cfg;
-  cfg.d = XGA;
-  cfg.v = center(10, 10);
-  cfg.cam = camera{observer(point3{0,-20,10}, origin, z_axis), 1};
-  cfg.dep = 0;
-  return cfg;
-}
+config::config() : d(XGA),
+                   v(center(2, 2)),
+                   cam(camera{observer(point3{0,-20,10}, origin, z_axis), 1}),
+                   dep(0),
+                   t(false),
+                   outfile("output.bmp") {}
 
 env def_env()
 {
@@ -69,14 +67,15 @@ bool parse_display(const char * str, display& d)
 
 bool parse_viewport(const char * str, viewport& v)
 {
-  return sscanf(str, "[[%lf, %lf], [%lf, %lf]]", &v.xr.lo, &v.xr.hi, &v.yr.lo, &v.yr.hi) == 4;
+  return sscanf(str, "[[%lf, %lf], [%lf, %lf]]",
+                &v.xr.lo, &v.xr.hi, &v.yr.lo, &v.yr.hi) == 4;
 }
 
 bool parse_camera(const char * str, camera& c)
 {
   point3 p, l, u;
   if (sscanf(str, "((%lf, %lf, %lf), (%lf, %lf, %lf), (%lf, %lf, %lf))",
-	     &p.x, &p.y, &p.z, &l.x, &l.y, &l.z, &u.x, &u.y, &u.z) == 9) {
+             &p.x, &p.y, &p.z, &l.x, &l.y, &l.z, &u.x, &u.y, &u.z) == 9) {
     c.of = observer(p, l, u);
     return true;
   }
@@ -85,7 +84,7 @@ bool parse_camera(const char * str, camera& c)
 
 bool parse_depth(const char * str, int& n)
 {
-  if (sscanf(str, "%d", &n) == 1) return 0 <= n && n <= 5;
+  if (sscanf(str, "%d", &n) == 1) return 0 <= n && n <= max_dep;
   return false;
 }
 
@@ -96,7 +95,7 @@ object* parse_model(const char * str)
     if (s > 0) return new sphere{s, vec3(x, y, z)};
   }
   if (strcmp(str, "floor") == 0) {
-    return new Floor;
+    return new Chessboard;
   }
   return nullptr;
 }
@@ -104,8 +103,8 @@ object* parse_model(const char * str)
 bool parse_light(const char * str, light& l)
 {
   if (sscanf(str, "light((%lf, %lf, %lf), (%lf, %lf, %lf))",
-	     &l.pos.x, &l.pos.y, &l.pos.z,
-	     &l.col.r, &l.col.g, &l.col.b) == 6) {
+             &l.pos.x, &l.pos.y, &l.pos.z,
+             &l.col.r, &l.col.g, &l.col.b) == 6) {
     auto f = [](double s) { return 0 <= s && s <= 1; };
     if (f(l.col.r) && f(l.col.g) && f(l.col.b)) return true;
   }
@@ -162,6 +161,11 @@ bool parse(int argc, const char * const argv[], config& cfg)
       cfg.t = true;
       continue;
     }
+    if (strcmp(argv[i], "-o") == 0) {
+      if (++i >= argc) return false;
+      cfg.outfile = argv[i];
+      continue;
+    }
     return false;
   }
   return true;
@@ -176,7 +180,8 @@ void usage(const char * name)
     "[-c <camera>]"
     "[-n <depth>]"
     "[-m <object>] "
-    "[-l <light>]",
+    "[-l <light>]"
+    "[-o <outfile>]",
   };
   static const char* options[] = {
     "<display> := xga | wxga | wqxga | <w>X<h>",

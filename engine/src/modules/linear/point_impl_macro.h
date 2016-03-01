@@ -12,17 +12,17 @@
 #define DEFINE_CROSS_PROD(T, X, Y, Z) \
   T cross(const T& p, const T& q) \
   { return T{det(p.Y, p.Z, q.Y, q.Z), \
-	     det(p.Z, p.X, q.Z, q.X), \
+             det(p.Z, p.X, q.Z, q.X), \
              det(p.X, p.Y, q.X, q.Y)}; }
 
 #define DEFINE_REFLECT_3(T, P) \
   P reflect(const P& n, const P& d) \
   { return d - T(2) * dot(n, d) * n; }
 
-typedef double pointT;
-DEFINE_TUPLE_2(point2, pointT, x, y);
-DEFINE_TUPLE_3(point3, pointT, x, y, z);
-DEFINE_TUPLE_4(point4, pointT, x, y, z, w);
+typedef double scalarT;
+DEFINE_TUPLE_2(point2, scalarT, x, y);
+DEFINE_TUPLE_3(point3, scalarT, x, y, z);
+DEFINE_TUPLE_4(point4, scalarT, x, y, z, w);
 typedef point3 vector3;
 typedef point4 vector4;
 DEFINE_TUPLE_3(simplex2, point3, a, b, c);

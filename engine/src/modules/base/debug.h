@@ -4,14 +4,10 @@
 #include <cstdio>
 
 #include "model.h"
-
-/*
-template <typename T>
-void pp(const T& p) { printf("(%f, %f, %f)", p.x, p.y, p.z); }
-*/
+#include "params.h"
 
 void pp(const point3& p);
-
 void info(const camera& cam);
+void show_config(const config& cfg);
 
 #endif  // DEBUG_H

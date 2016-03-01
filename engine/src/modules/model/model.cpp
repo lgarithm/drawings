@@ -5,11 +5,18 @@
 #include <vector>
 
 #include "arith.h"
+#include "color.h"
 #include "point.h"
 
 using std::vector;
 
-bool operator<(const intersection& i, const intersection& j) { return i.d < j.d; }
+material::material() : diffuse(white), specular(grey), roughness(200),
+                       reflection(.7) {}
+
+// intersection::intersection() {}
+
+bool operator<(const intersection& i, const intersection& j)
+{ return i.d < j.d; }
 
 bool nearest(const world& w, const ray& r, intersection& i)
 {
@@ -38,9 +45,27 @@ bool Floor::intersect(const ray& r, intersection& cut) const
     if (cut.d <= 0) return false;
     cut.n = t_vector{r + cut.d, z_axis};
     cut.i = r.v;
+    cut.m.diffuse = .4 * grey;
+    return true;
+  }
+  return false;
+}
+
+bool Chessboard::intersect(const ray& r, intersection& cut) const
+{
+  if (r.v.z != 0) {
+    cut.d = - r.o.z / r.v.z;
+    if (cut.d <= 0) return false;
+    cut.n = t_vector{r + cut.d, z_axis};
+    cut.i = r.v;
     int xx = int(floor(cut.n.o.x)) & 1;
     int yy = int(floor(cut.n.o.y)) & 1;
-    return xx == yy;
+    if (xx == yy) {
+      cut.m.diffuse = white;
+    } else {
+      cut.m.diffuse = black;
+    }
+    return true;
   }
   return false;
 }
@@ -57,14 +82,15 @@ bool sphere::intersect(const ray& r, intersection& cut) const
       cut.d = v - sqrt(disc);
       cut.i = r.v;
       auto q = r + cut.d;
-      cut.n = t_vector{q, q - pos};
+      cut.n = t_vector{q, norm(q - pos)};
       return true;
     }
   }
   return false;
 }
 
-triangle::triangle(const point3& a, const point3& b, const point3& c): a(a), b(b), c(c) {}
+triangle::triangle(const point3& a, const point3& b, const point3& c)
+  : a(a), b(b), c(c) {}
 
 bool triangle::intersect(const ray& r, intersection& o) const
 {

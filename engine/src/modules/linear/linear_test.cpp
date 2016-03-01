@@ -17,8 +17,19 @@ void test_1()
   assert(true == (global(of, p) == point3{0,0,0}));
 }
 
+void test_2()
+{
+  auto of = oframe{point3{1,1,1}, frame{x_axis, y_axis, z_axis}};
+  {
+    auto p = local(of, point3{2,2,2});
+    bool f = p == point3{1,1,1};
+    assert(f);
+  }
+}
+
 int main()
 {
   test(1);
+  test(2);
   return 0;
 }

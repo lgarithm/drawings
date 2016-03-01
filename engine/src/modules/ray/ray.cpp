@@ -1,11 +1,14 @@
 #include "ray.h"
 
-RGB from_color(const color& c)
-{
-  static const auto f = [](double s)
-    { return (unsigned char) (255 * (s > 1 ? 1 : s)); };
-  return RGB{f(c.r), f(c.g), f(c.b)};
-}
+#include <cassert>
+#include <cmath>
+
+#include <algorithm>
+
+#include "color.h"
+#include "guard.h"
+
+using std::max;
 
 static const shader default_shader(black, black);
 
@@ -19,21 +22,25 @@ shader::shader(const color& b, const color& d) : bgc(b), def(d) {}
 
 color shader::operator()(const intersection& i, const scene& s, int dep) const
 {
+  assert_unit(i.n.v);
+  assert_unit(i.i);
+  const auto r = reflect(i.n.v, i.i);
+
   auto nc = def;
   {
     for (const auto& l : s.e.lights) {
-      auto tol = l.pos - i.n.o;
-      auto ldir = norm(tol);
+      auto d = len(l.pos - i.n.o);
+      auto ldir = norm(l.pos - i.n.o);
       intersection j;
-      if (not nearest(s.w, ray{i.n.o, ldir}, j) || len(tol) < j.d) {
-        auto f = dot(ldir, i.n.v);
-        auto lc = f > 0 ? f * l.col : def;
-        auto df = white;
-        nc = nc + df * lc;
+      if (not nearest(s.w, ray{i.n.o, ldir}, j) || d < j.d) {
+        nc = nc + max(0., dot(ldir, i.n.v)) * i.m.diffuse * l.col
+          + pow(max(0., dot(ldir, r)), i.m.roughness) * i.m.specular * l.col;
       }
     }
   }
-  auto rc = dep > 0 ? trace(ray{i.n.o, reflect(i.n.v, i.i)}, s, dep - 1) : grey;
+  auto rc = dep > 0
+    ? i.m.reflection * trace(ray{i.n.o, r}, s, dep - 1)
+    : grey;
   return nc + rc;
 }
 
@@ -58,7 +65,7 @@ void engine::render(const scene& s, const camera& cam,
   for (int j=0; j < d.height; ++j) {
     for (int i=0; i < d.width; ++i) {
       auto c = rasterize(s, cam, v, d, i, j, dep);
-      auto pix = from_color(c);
+      auto pix = rgb(c);
       *p++ = pix.b;
       *p++ = pix.g;
       *p++ = pix.r;

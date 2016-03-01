@@ -6,15 +6,21 @@ point3 local(const frame& f ,const point3& p)
 point3 global(const frame& f, const point3& p)
 { return p.x * f.X + p.y * f.Y + p.z * f.Z; }
 
+point3 local(const oframe& of, const point3& p)
+{ return local(of.f, p - of.o); }
+
 point3 global(const oframe& of, const point3& p)
 { return of.o + global(of.f, p); }
 
 oframe observer(const point3& pos, const point3& focus, const vector3& up)
 {
-  auto Z = norm(up);
   auto Y = norm(focus - pos);
-  auto X = cross(Y, Z);
+  auto X = norm(cross(Y, up));
+  auto Z = cross(X, Y);
   return oframe{pos, frame{X, Y, Z}};
 }
 
-point3 operator+(const t_vector& t, pointT d) { return t.o + d * t.v; }
+oframe operator+(const oframe& of, const vector3& v)
+{ return oframe{of.o + v, of.f}; }
+
+point3 operator+(const t_vector& t, scalarT d) { return t.o + d * t.v; }
