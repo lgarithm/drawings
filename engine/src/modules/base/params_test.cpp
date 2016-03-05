@@ -13,8 +13,6 @@ void test_1()
     bool f = parse(2, argv, cfg);
     assert(not f);
     assert(cfg.d.width == 1024);
-    assert(cfg.v.xr.lo == -1);
-    assert(cfg.v.yr.hi == 1);
   }
   {
     bool f = parse(3, argv, cfg);

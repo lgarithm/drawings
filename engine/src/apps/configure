@@ -1,0 +1,43 @@
+# -*- mode: sh -*-
+
+set -e
+
+include=-I../../../output/include
+libpath=-L../../../output/lib
+opts='-std=c++0x -O3 -lrey'
+
+gen_makefile(){
+  if [ -f Makefile.am ]; then
+    cp Makefile.am Makefile
+  else
+    srcs=`ls *.cpp | tr "\n" " "`
+    echo "main:"
+    echo -e "\tg++ $opts $srcs $include $libpath"
+  fi
+}
+
+config(){
+  cd $1
+  gen_makefile $1 > Makefile
+  cd ..
+}
+
+apps='render bb8 example1'
+
+for app in $apps; do
+  include=$include" -I../$app"
+done
+
+for app in $apps; do
+  echo $app
+  config $app
+done
+
+gen_root_makefile(){
+  echo "main:"
+  for app in $apps; do
+    echo -e "\tcd $app && make"
+  done
+}
+
+gen_root_makefile > Makefile

@@ -2,5 +2,18 @@
 
 #include <cassert>
 #include <cmath>
+#include <cstdio>
 
-void assert_unit(const vector3& v) { assert(fabs(len(v) - 1) < 1e-9); }
+#include <string>
+
+using std::string;
+
+void assert_unit(const vector3& v, const string s)
+{
+  auto d = fabs(len(v) - 1);
+  bool p = d < 1e-9;
+  if (not p) {
+    fprintf(stderr, "failed to %s, diff %f, %s\n", __func__, d, s.c_str());
+    assert(false);
+  }
+}

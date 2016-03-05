@@ -1,6 +1,10 @@
 #ifndef COLOR_H
 #define COLOR_H
 
+#include "config.h"
+
+typedef COLOR_T colorT;
+
 #ifdef USE_TEMPLATE
 
 template <typename T> struct colorT { T r, g, b; };
@@ -16,15 +20,16 @@ template <typename T>
 colorT<T> operator*(const colorT<T>& p, const colorT<T>& q)
 { return colorT<T>{p.r * q.r, p.g * q.g, p.b * q.b}; }
 
-using color = colorT<double>;
+using color = colorT<colorT>;
 
 #else
 
 #include "tuple.h"
 
-DEFINE_TUPLE_3(color, double, r, g, b);
+DEFINE_TUPLE_3(color, colorT, r, g, b);
 
-color operator*(double, const color&);
+void operator+=(color&, const color&);
+color operator*(colorT, const color&);
 color operator+(const color&, const color&);
 color operator*(const color&, const color&);
 

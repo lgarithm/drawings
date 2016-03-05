@@ -15,19 +15,22 @@ struct shader
   const color bgc;
   const color def;
   shader(const color&, const color&);
-  color operator()(const intersection&, const scene&, int) const;
+  color operator()(const intersection&, const world&, const env&, int) const;
 };
 
 struct engine
 {
   const int dep;
-  engine(int dep=2);
-  void render(const scene& s, const camera&, const viewport&, const display&,
+  display d;
+
+  engine(int dep=2, const display=XGA);
+  color rasterize(const world&, const env&, const camera&, int, int) const;
+  void render(const world&, const env&, const camera&, unsigned char*) const;
+  void render(const world&, const env&, const camera&, const clip&,
               unsigned char*) const;
 };
 
-color rasterize(const scene&, const camera&,
-                const viewport&, const display&,
-                int, int, int dep);
+color rasterize(const world&, const env&, const camera&, const display&,
+                const viewport&, int, int, int dep);
 
 #endif  // RAY_H

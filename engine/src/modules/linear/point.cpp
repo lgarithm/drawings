@@ -32,6 +32,7 @@ matrix4 mat4(const vector3& o, const vector3& p, const vector3& q,
 { return matrix4{vec4(o, 1), vec4(p, 1), vec4(q, 1), vec4(r, 1)}; }
 
 DEFINE_DET_2X2(scalarT);
+point3 operator-(const point3& p) { return point3{-p.x, -p.y, -p.z}; }
 DEFINE_TUPLE3_EQUAL(point3, x, y, z);
 DEFINE_TUPLE_3_SCALE(scalarT, point3, x, y, z);
 DEFINE_TUPLE_3_PLUS(point3, x, y, z);

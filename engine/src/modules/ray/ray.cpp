@@ -9,66 +9,86 @@
 #include "guard.h"
 
 using std::max;
+using std::min;
 
 static const shader default_shader(black, black);
 
-color trace(const ray& r, const scene& s, int dep)
+color trace(const ray& r, const world& w, const env& e, int dep)
 {
   intersection i;
-  return nearest(s.w, r, i) ? default_shader(i, s, dep) : default_shader.bgc;
+  return nearest(w, r, i) ? default_shader(i, w, e, dep) : default_shader.bgc;
 }
 
 shader::shader(const color& b, const color& d) : bgc(b), def(d) {}
 
-color shader::operator()(const intersection& i, const scene& s, int dep) const
+color shader::operator()(const intersection& i, const world& w, const env& e,
+                         int dep) const
 {
-  assert_unit(i.n.v);
-  assert_unit(i.i);
+  assert_unit(i.n.v, __func__);
+  assert_unit(i.i, __func__);
   const auto r = reflect(i.n.v, i.i);
 
   auto nc = def;
   {
-    for (const auto& l : s.e.lights) {
+    for (const auto& l : e.lights) {
       auto d = len(l.pos - i.n.o);
       auto ldir = norm(l.pos - i.n.o);
       intersection j;
-      if (not nearest(s.w, ray{i.n.o, ldir}, j) || d < j.d) {
-        nc = nc + max(0., dot(ldir, i.n.v)) * i.m.diffuse * l.col
-          + pow(max(0., dot(ldir, r)), i.m.roughness) * i.m.specular * l.col;
+      if (not nearest(w, ray{i.n.o, ldir}, j) || d < j.d) {
+        nc += max(0., dot(ldir, i.n.v)) * i.m.diffuse * l.col +
+          pow(max(0., dot(ldir, r)), i.m.roughness) * i.m.specular * l.col;
       }
     }
   }
   auto rc = dep > 0
-    ? i.m.reflection * trace(ray{i.n.o, r}, s, dep - 1)
+    ? i.m.reflection * trace(ray{i.n.o, r}, w, e, dep - 1)
     : grey;
   return nc + rc;
 }
 
-color rasterize(const scene& s, const camera& cam,
-                const viewport& v, const display& d,
-                int i, int j, int dep)
+color rasterize(const world& w, const env& e, const camera& cam,
+                const display& d, const viewport& v, int i, int j, int dep)
 {
   static const auto f = [](const interval& r, int i, int n)
     { return ((n - i) * r.lo + i * r.hi) / n; };
-  auto fc = point2{f(v.xr, i, d.width - 1), f(v.yr, j, d.height - 1)};
-  auto cc = global(cam.of, point3{fc.x, cam.near, fc.y});
-  return trace(ray{cc, norm(cc - cam.of.o)}, s, dep);
+  auto fc = point3{f(v.xr, i, d.width - 1), cam.near, f(v.yr, j, d.height - 1)};
+  auto cc = global(cam.of, fc);
+  return trace(ray{cc, norm(cc - cam.of.o)}, w, e, dep);
 }
 
-engine::engine(int dep) : dep(dep) { }
-
-void engine::render(const scene& s, const camera& cam,
-                    const viewport& v, const display& d,
-                    unsigned char* buffer) const
+viewport fit(const camera& cam, const display& d)
 {
+  double W = 2 * cam.near * tan(.5 * cam.aov * M_PI / 180);
+  double H = 2 * cam.near * tan(.5 * cam.aov * M_PI / 180);
+  double k = .5 * min(W / d.width, H / d.height);
+  auto f = [](double l){ return interval{-l, l}; };
+  return viewport{f(d.width * k), f(d.height * k)};
+}
+
+engine::engine(int dep, const display d) : dep(dep), d(d) { }
+
+color engine::rasterize(const world& w, const env& e, const camera& cam,
+                        int i, int j) const
+{ return ::rasterize(w, e, cam, d, fit(cam, d), i, j, dep); }
+
+void engine::render(const world& w, const env& e, const camera& cam,
+                    const clip& c, unsigned char* buffer) const
+{
+  auto v = fit(cam, d);
   unsigned char *p = buffer;
-  for (int j=0; j < d.height; ++j) {
-    for (int i=0; i < d.width; ++i) {
-      auto c = rasterize(s, cam, v, d, i, j, dep);
-      auto pix = rgb(c);
+  for (int j=c.h.l; j < c.h.r; ++j) {
+    for (int i=c.w.l; i < c.w.r; ++i) {
+      auto pix = rgb(::rasterize(w, e, cam, d, v, i, j, dep));
       *p++ = pix.b;
       *p++ = pix.g;
       *p++ = pix.r;
     }
   }
+}
+
+void engine::render(const world& w, const env& e, const camera& cam,
+                    unsigned char* buffer) const
+{
+  auto c = clip{range{0, d.width}, range{0, d.height}};
+  return render(w, e, cam, c, buffer);
 }

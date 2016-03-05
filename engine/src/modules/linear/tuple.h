@@ -27,4 +27,8 @@
   T operator*(const T& p, const T& q) \
   { return T{p.X * q.X, p.Y * q.Y, p.Z * q.Z}; }
 
+#define DEFINE_TUPLE_3_INC(T, X, Y, Z) \
+  void operator+=(T& p, const T& q) \
+  { p.X += q.X; p.Y += q.Y; p.Z += q.Z; }
+
 #endif  // TUPLE_H

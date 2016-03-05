@@ -40,19 +40,24 @@ void bmp_head::write(FILE* fp) const
   fwrite(&info, 4, 10, fp);
 }
 
+void write_bmp_chunk(FILE* fp, const unsigned char* buffer, int w, int n)
+{
+  static const unsigned char zeros[4] = {0, 0, 0, 0};
+  int pad = _pad(w);
+  for (int i=0; i < n; ++i) {
+    fwrite(buffer, 3, w, fp);
+    fwrite(zeros, pad, 1, fp);
+    buffer += w * 3;
+  }
+}
+
 void write_bmp_file(const bmp_head& head,
                     const unsigned char* buffer,
                     const char* filename)
 {
   FILE* fp = fopen(filename, "wb");
   head.write(fp);
-  unsigned char zeros[4] = {0, 0, 0, 0};
-  int pad = _pad(head.info.width);
-  for (int i=0; i < head.info.height; ++i) {
-    fwrite(buffer, 3, head.info.width, fp);
-    fwrite(zeros, pad, 1, fp);
-    buffer += head.info.width * 3;
-  }
+  write_bmp_chunk(fp, buffer, head.info.width, head.info.height);
   size_t t = ftell(fp);
   assert(head.header.file_size == t);
   fclose(fp);

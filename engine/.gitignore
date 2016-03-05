@@ -4,3 +4,4 @@
 Makefile
 bin/*
 build/*
+output/*

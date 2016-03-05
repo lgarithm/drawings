@@ -6,14 +6,15 @@
 
 #include "arith.h"
 #include "color.h"
+#include "maybe.h"
 #include "point.h"
 
 using std::vector;
 
+camera::camera() : near(1), aov(45) {}
+
 material::material() : diffuse(white), specular(grey), roughness(200),
                        reflection(.7) {}
-
-// intersection::intersection() {}
 
 bool operator<(const intersection& i, const intersection& j)
 { return i.d < j.d; }
@@ -21,8 +22,7 @@ bool operator<(const intersection& i, const intersection& j)
 bool nearest(const world& w, const ray& r, intersection& i)
 {
   vector<intersection> cuts;
-  for (int idx=0; idx < w.objects.size(); ++idx) {
-    const auto& it = w.objects[idx];
+  for (const auto& it : w.objects) {
     intersection cut;
     if (it->intersect(r, cut)) {
       cuts.push_back(cut);
@@ -38,76 +38,16 @@ bool nearest(const world& w, const ray& r, intersection& i)
   return false;
 }
 
-bool Floor::intersect(const ray& r, intersection& cut) const
+bool simple_object::intersect(const ray& r, intersection& i) const
 {
-  if (r.v.z != 0) {
-    cut.d = - r.o.z / r.v.z;
-    if (cut.d <= 0) return false;
-    cut.n = t_vector{r + cut.d, z_axis};
-    cut.i = r.v;
-    cut.m.diffuse = .4 * grey;
+  auto mp = intersect(r);
+  if (mp.just) {
+    auto s = at(mp.it);
+    i.n = s.n;
+    i.m = s.m;
+    i.i = r.v;
+    i.d = len(r.o - mp.it);
     return true;
-  }
-  return false;
-}
-
-bool Chessboard::intersect(const ray& r, intersection& cut) const
-{
-  if (r.v.z != 0) {
-    cut.d = - r.o.z / r.v.z;
-    if (cut.d <= 0) return false;
-    cut.n = t_vector{r + cut.d, z_axis};
-    cut.i = r.v;
-    int xx = int(floor(cut.n.o.x)) & 1;
-    int yy = int(floor(cut.n.o.y)) & 1;
-    if (xx == yy) {
-      cut.m.diffuse = white;
-    } else {
-      cut.m.diffuse = black;
-    }
-    return true;
-  }
-  return false;
-}
-
-sphere::sphere(double size, const point3& pos): size(size), pos(pos) {}
-
-bool sphere::intersect(const ray& r, intersection& cut) const
-{
-  auto ro = pos - r.o;
-  auto v = dot(ro, r.v);
-  if (v >= 0) {
-    auto disc = size * size + v * v - dot(ro, ro);
-    if (disc >= 0) {
-      cut.d = v - sqrt(disc);
-      cut.i = r.v;
-      auto q = r + cut.d;
-      cut.n = t_vector{q, norm(q - pos)};
-      return true;
-    }
-  }
-  return false;
-}
-
-triangle::triangle(const point3& a, const point3& b, const point3& c)
-  : a(a), b(b), c(c) {}
-
-bool triangle::intersect(const ray& r, intersection& o) const
-{
-  auto n = norm(a,b,c);
-  auto th = -dot(r.v, n);
-  if (th > 0) {
-    auto d = dis(r.o, simplex2{a, b, c});
-    if (d > 0) {
-      auto t = d / th;
-      auto e = r + t;
-      if (in(e, simplex2{a,b,c})) {
-        o.n = t_vector{e, n};
-        o.d = t;
-        o.i = r.v;
-        return true;
-      }
-    }
   }
   return false;
 }

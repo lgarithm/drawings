@@ -1,6 +1,8 @@
 # -*- mode: sh -*-
 
-set -ex
+set -e
+
+g++ -dumpversion
 
 opts='-std=c++0x -O3'
 
@@ -11,10 +13,10 @@ move(){
 
 prepare_source(){
     for m in `ls src/modules`; do
-	move src/modules/$m
+        move src/modules/$m
     done
-    for m in `ls src/apps`; do
-        move src/apps/$m
+    for h in `find src/modules | grep .h | grep -v test`; do
+      cp $h output/include
     done
 }
 
@@ -26,9 +28,9 @@ gen_object_target(){
 
 gen_dep_objets(){
     for c in `g++ -MM $1 | tr " " "\n" | grep ".h$" | sed 's/.h$/.cpp/g'`; do
-	if [ ! -z `ls | grep $c` ]; then
-	    echo `basename $c .cpp`.o
-	fi
+        if [ -f "$c" ]; then
+            echo `basename $c .cpp`.o
+        fi
     done
 }
 
@@ -40,47 +42,70 @@ gen_out_target(){
     echo
 }
 
+gen_lib_target(){
+    objs=`find ../src/modules | grep .cpp | grep -v test | awk -F "/" '{print $5}' | sed 's/.cpp$/.o/' | tr "\n" " "`
+    echo "librey.a: $objs"
+    echo -e "\tar rcs librey.a $objs"
+    echo
+}
+
 gen_build_makefile(){
-    echo "default: setup alltests allbinaries"
+    echo "default: all_tests all_libraries all_binaries"
     echo
 
-    echo "setup:"
-    echo -e "\tmkdir -p ../bin"
-
-    echo "alltests: "`ls *_test.cpp | sed 's/.cpp$/.out/' | tr "\n" " "`
+    echo "all_tests: "`ls *_test.cpp | sed 's/.cpp$/.out/' | tr "\n" " "`
     echo
-    echo "allbinaries: "`ls *_main.cpp | sed s'/.cpp/.out/' | tr "\n" " "`
-    echo -e "\t cp *_main.out ../bin"
+    echo "all_libraries: librey.a"
+    echo
+    echo "all_binaries: "`ls *_main.cpp | sed s'/.cpp/.out/' | tr "\n" " "`
     echo
 
+    echo "# Binaries"
     for m in `ls *_main.cpp`; do
-	gen_out_target $m
+        gen_out_target $m
     done
 
+    echo "# Tests"
     for t in `ls *_test.cpp`; do
-	gen_out_target $t
+        gen_out_target $t
     done
 
+    echo "# Libs"
+    gen_lib_target
+
+    echo "# Objects"
     for c in `ls *.cpp`; do
-	gen_object_target $c
+        gen_object_target $c
     done
 }
 
 gen_makefile(){
     echo "main:"
     echo -e "\tcd build && make -j"
+    echo -e "\tcp build/*.a output/lib"
+    echo
 
     echo "check:"
     for t in `ls build/*_test.cpp`; do
-	echo -e "\t./build/`basename $t .cpp`.out"
+        echo -e "\t./build/`basename $t .cpp`.out"
     done
     for m in `ls build/*_main.cpp`; do
-	echo -e "\t./bin/`basename $m .cpp`.out -t"
+        echo -e "\t./build/`basename $m .cpp`.out -t"
     done
+    echo
+
+    echo "install: main"
+    echo -e "\tmkdir -p $prefix"
+    echo -e "\tcp -r output/bin $prefix/"
+    echo -e "\tcp -r output/lib $prefix/"
+    echo -e "\tcp -r output/include $prefix/"
 }
 
 config(){
     mkdir -p build
+    mkdir -p output/bin
+    mkdir -p output/include
+    mkdir -p output/lib
     prepare_source
     cd build
     gen_build_makefile > Makefile
@@ -88,4 +113,5 @@ config(){
     gen_makefile > Makefile
 }
 
+prefix=$HOME/local/librey
 config

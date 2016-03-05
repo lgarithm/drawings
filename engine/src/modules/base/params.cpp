@@ -9,6 +9,7 @@
 
 #include "display.h"
 #include "model.h"
+#include "primitives.h"
 #include "ray.h"
 
 using std::map;
@@ -26,18 +27,14 @@ map<string, display> _display_modes()
 
 const map<string, display> DISPLAY_MODES = _display_modes();
 
-viewport center(double width, double height)
-{
-  auto c = [](double x){ return interval{-x, x}; };
-  return viewport{c(.5 * width), c(.5 * height)};
-}
-
 config::config() : d(XGA),
-                   v(center(2, 2)),
-                   cam(camera{observer(point3{0,-20,10}, origin, z_axis), 1}),
+                   dd(division{1,1}),
                    dep(0),
                    t(false),
-                   outfile("output.bmp") {}
+                   outfile("output.bmp"),
+                   use_thread(false) {
+  cam.of = observer(point3{0,-20,10}, origin, z_axis);
+}
 
 env def_env()
 {
@@ -65,10 +62,12 @@ bool parse_display(const char * str, display& d)
   return false;
 }
 
-bool parse_viewport(const char * str, viewport& v)
+bool parse_division(const char * str, division& dd)
 {
-  return sscanf(str, "[[%lf, %lf], [%lf, %lf]]",
-                &v.xr.lo, &v.xr.hi, &v.yr.lo, &v.yr.hi) == 4;
+  if (sscanf(str, "%huX%hu", &dd.m, &dd.n) == 2) {
+    return dd.m <= 16 && dd.n <= 16;
+  }
+  return false;
 }
 
 bool parse_camera(const char * str, camera& c)
@@ -90,12 +89,18 @@ bool parse_depth(const char * str, int& n)
 
 object* parse_model(const char * str)
 {
-  double s, x, y, z;
-  if (sscanf(str, "sphere(%lf, (%lf, %lf, %lf))", &s, &x, &y, &z) == 4) {
-    if (s > 0) return new sphere{s, vec3(x, y, z)};
+  double s;
+  point3 p;
+  if (sscanf(str, "sphere(%lf, (%lf, %lf, %lf))", &s, &p.x, &p.y, &p.z) == 4) {
+    if (s > 0) return new sphere(s, p);
   }
   if (strcmp(str, "floor") == 0) {
     return new Chessboard;
+  }
+  t_vector n;
+  if (sscanf(str, "plane((%lf, %lf, %lf), (%lf, %lf, %lf))",
+             &n.o.x, &n.o.y, &n.o.z, &n.v.x, &n.v.y, &n.v.z) == 6) {
+    return new Plane(n);
   }
   return nullptr;
 }
@@ -117,18 +122,20 @@ bool parse(int argc, const char * const argv[], config& cfg)
     if (strcmp(argv[i], "-h") == 0) {
       return false;
     }
-    if (strcmp(argv[i], "-d") == 0) {
+    if (strcmp(argv[i], "-a") == 0) {
       if (++i >= argc) return false;
-      display d;
-      if (not parse_display(argv[i], d)) return false;
-      cfg.d = d;
-      continue;
+      int a;
+      if (sscanf(argv[i], "%d", &a) == 1) {
+        if (0 < a && a < 180) {
+          cfg.cam.aov = a;
+          continue;
+        }
+      }
+      return false;
     }
-    if (strcmp(argv[i], "-v") == 0) {
+    if (strcmp(argv[i], "-b") == 0) {
       if (++i >= argc) return false;
-      viewport v;
-      if (not parse_viewport(argv[i], v)) return false;
-      cfg.v = v;
+      if (not parse_division(argv[i], cfg.dd)) return false;
       continue;
     }
     if (strcmp(argv[i], "-c") == 0) {
@@ -136,11 +143,11 @@ bool parse(int argc, const char * const argv[], config& cfg)
       if (not parse_camera(argv[i], cfg.cam)) return false;
       continue;
     }
-    if (strcmp(argv[i], "-n") == 0) {
+    if (strcmp(argv[i], "-d") == 0) {
       if (++i >= argc) return false;
-      int n;
-      if (not parse_depth(argv[i], n)) return false;
-      cfg.dep = n;
+      display d;
+      if (not parse_display(argv[i], d)) return false;
+      cfg.d = d;
       continue;
     }
     if (strcmp(argv[i], "-l") == 0) {
@@ -157,13 +164,24 @@ bool parse(int argc, const char * const argv[], config& cfg)
       cfg.oo.push_back(po);
       continue;
     }
-    if (strcmp(argv[i], "-t") == 0) {
-      cfg.t = true;
+    if (strcmp(argv[i], "-n") == 0) {
+      if (++i >= argc) return false;
+      int n;
+      if (not parse_depth(argv[i], n)) return false;
+      cfg.dep = n;
       continue;
     }
     if (strcmp(argv[i], "-o") == 0) {
       if (++i >= argc) return false;
       cfg.outfile = argv[i];
+      continue;
+    }
+    if (strcmp(argv[i], "-p") == 0) {
+      cfg.use_thread = true;
+      continue;
+    }
+    if (strcmp(argv[i], "-t") == 0) {
+      cfg.t = true;
       continue;
     }
     return false;
@@ -175,23 +193,28 @@ void usage(const char * name)
 {
   static const char* usages[] = {
     "-h, help",
+    "-t, test",
+    "[-a <aov>] "
+    "[-b <division>] "
+    "[-c <camera>] "
     "[-d <display>] "
-    "[-v <viewport>] "
-    "[-c <camera>]"
-    "[-n <depth>]"
+    "[-l <light>] "
     "[-m <object>] "
-    "[-l <light>]"
-    "[-o <outfile>]",
+    "[-n <depth>] "
+    "[-o <outfile>] ",
+    "[-p]"
   };
   static const char* options[] = {
-    "<display> := xga | wxga | wqxga | <w>X<h>",
-    "<viewport> := '[[x1, x2], [y1, y2]]'",
+    "<aov> := 1 - 179",
+    "<division> := 1X1 - 16X16",
     "<camera> := '(<pos>, <look>, <up>)'",
-    "<depth> := 0,1,2,3,4,5",
-    "<object> := 'sphere(<size>, <pos>)'",
+    "<display> := xga | wxga | wqxga | <w>X<h>",
+    "<depth> := 0,1,2,3,4,5,6",
     "<light> := 'light(<pos>, <color>)'",
-    "<pos>, <look>, <up> := '(<x>, <y>, <z>)'",
+    "<object> := 'sphere(<size>, <pos>)' | 'plane(<pos>, <norm>)'",
     "<color> := '(<r>, <g>, <b>)'",
+    "<pos>, <look>, <up> := '(<x>, <y>, <z>)'",
+
   };
   printf("Usage:\n");
   for (auto it : usages) printf("\t%s %s\n", name, it);

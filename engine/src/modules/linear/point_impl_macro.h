@@ -1,6 +1,7 @@
 #ifndef POINT_IMPL_MACRO_H
 #define POINT_IMPL_MACRO_H
 
+#include "config.h"
 #include "tuple.h"
 
 #define DEFINE_DET_2X2(T) T det(T A, T B, T C, T D) { return A * D - B * C; }
@@ -19,7 +20,7 @@
   P reflect(const P& n, const P& d) \
   { return d - T(2) * dot(n, d) * n; }
 
-typedef double scalarT;
+typedef SCALAR_T scalarT;
 DEFINE_TUPLE_2(point2, scalarT, x, y);
 DEFINE_TUPLE_3(point3, scalarT, x, y, z);
 DEFINE_TUPLE_4(point4, scalarT, x, y, z, w);

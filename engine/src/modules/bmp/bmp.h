@@ -51,6 +51,8 @@ struct bmp_head
   void write(FILE*) const;
 };
 
+void write_bmp_chunk(FILE*, const unsigned char*, int, int=1);
+
 void write_bmp_file(const bmp_head&,
                     const unsigned char*,
                     const char*);

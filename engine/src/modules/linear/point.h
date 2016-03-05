@@ -9,6 +9,7 @@
 
 #include "point_impl_macro.h"
 
+point3 operator-(const point3&);
 bool operator==(const point3&, const point3&);
 point3 operator*(scalarT, const point3&);
 point3 operator+(const point3&, const point3&);
