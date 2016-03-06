@@ -8,6 +8,8 @@
 
 using std::string;
 
+#ifdef USE_GUARD
+
 void assert_unit(const vector3& v, const string s)
 {
   auto d = fabs(len(v) - 1);
@@ -17,3 +19,9 @@ void assert_unit(const vector3& v, const string s)
     assert(false);
   }
 }
+
+#else
+
+void assert_unit(const vector3& v, const string s) {}
+
+#endif  // #ifdef USE_GUARD

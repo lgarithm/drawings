@@ -1,2 +1,7 @@
+include=-I../../../output/include -I../bb8
+libpath=-L../../../output/lib -lrey
+cc=g++ -std=c++0x
+opts=-O3 -pthread
+
 main:
-	g++ -std=c++0x -O3 -lrey example_main.cpp examples.cpp ../bb8/bb8_model.cpp  -I../../../output/include -I../render -I../bb8 -I../example1 -I../exia -L../../../output/lib
+	$(cc) $(opts) example_main.cpp examples.cpp ../bb8/bb8_model.cpp $(include) $(libpath)

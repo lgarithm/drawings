@@ -3,24 +3,13 @@
 #include <map>
 #include <string>
 
-#include "app.h"
-#include "debug.h"
 #include "examples.h"
-#include "model.h"
-#include "params.h"
-#include "ray.h"
+#include "rey.h"
 
-using std::map;
 using std::string;
 using std::unique_ptr;
 
-//map<string, world*()> examples;
-
-void init()
-{
-  //examples["1"] = example_1;
-  //examples["2"] = example_2;
-}
+const auto builtin_examples = examples();
 
 int main(int argc, char* argv[])
 {
@@ -33,7 +22,11 @@ int main(int argc, char* argv[])
 
   scene s;
   s.e = cfg.lights;
-  unique_ptr<world> w(example_1());
+
+  auto name = cfg.args.empty() ? "example_1" : cfg.args[0];
+  auto fn = get<string, world_gen>(builtin_examples, name, example_1);
+  unique_ptr<world> w(fn());
+
   for (auto& it : w->objects) {
     s.w.objects.push_back(unique_ptr<object>(std::move(it)));
   }

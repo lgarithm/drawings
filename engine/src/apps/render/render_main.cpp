@@ -3,11 +3,7 @@
 #include <algorithm>
 #include <memory>
 
-#include "app.h"
-#include "debug.h"
-#include "display.h"
-#include "params.h"
-#include "ray.h"
+#include "rey.h"
 
 using std::unique_ptr;
 

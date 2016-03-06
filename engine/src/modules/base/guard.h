@@ -1,6 +1,8 @@
 #ifndef GUARD_H
 #define GUARD_H
 
+#define USE_GUARD
+
 #include <string>
 
 #include "point.h"

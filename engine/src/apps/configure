@@ -3,8 +3,9 @@
 set -e
 
 include=-I../../../output/include
-libpath=-L../../../output/lib
-opts='-std=c++0x -O3 -lrey'
+libpath='-L../../../output/lib -lrey'
+cc='g++ -std=c++0x'
+opts='-O3 -pthread'
 
 gen_makefile(){
   if [ -f Makefile.am ]; then
@@ -12,7 +13,7 @@ gen_makefile(){
   else
     srcs=`ls *.cpp | tr "\n" " "`
     echo "main:"
-    echo -e "\tg++ $opts $srcs $include $libpath"
+    echo -e "\t$cc $opts $srcs $include $libpath"
   fi
 }
 

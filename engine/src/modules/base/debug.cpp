@@ -14,15 +14,15 @@ void info(const camera& cam)
   printf("\n");
   {
     auto f = cam.of.f;
-    printf(".: ");
+    printf("\t.: ");
     pp(f.Y);
     printf("\n");
 
-    printf(">: ");
+    printf("\t>: ");
     pp(f.X);
     printf("\n");
 
-    printf("^: ");
+    printf("\t^: ");
     pp(f.Z);
     printf("\n");
   }
@@ -31,9 +31,12 @@ void info(const camera& cam)
 
 void show_config(const config& cfg)
 {
-  printf("display %d X %d\n", cfg.d.width, cfg.d.height);
+  printf("display: %d X %d\n", cfg.d.width, cfg.d.height);
   info(cfg.cam);
   printf("trace depth: %d\n", cfg.dep);
   printf("%lu objects\n", cfg.oo.size());
   printf("%lu lights\n", cfg.lights.lights.size());
+  for (auto& it : cfg.args) {
+    printf("args: %s\n", it.c_str());
+  }
 }

@@ -9,19 +9,6 @@
 
 #include "point_impl_macro.h"
 
-point3 operator-(const point3&);
-bool operator==(const point3&, const point3&);
-point3 operator*(scalarT, const point3&);
-point3 operator+(const point3&, const point3&);
-point3 operator-(const point3&, const point3&);
-point3 cross(const point3&, const point3&);
-scalarT dot(const point3&, const point3&);
-point3 reflect(const point3&, const point3&);
-scalarT det(const matrix4&);
-scalarT vol6(const point3&, const point3&, const point3&, const point3&);
-scalarT area2(const point3&, const point3&, const point3&);
-scalarT dis(const point3&, const simplex2&);
-bool in(const point3&, const simplex2& s);
 #endif  // USE_TEMPLATE
 
 vector3 vec3(scalarT, scalarT, scalarT);

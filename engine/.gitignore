@@ -1,7 +1,9 @@
 *.a
+*.bmp
 *.o
 *.out
 Makefile
 bin/*
 build/*
+doc/doc/*
 output/*

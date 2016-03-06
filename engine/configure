@@ -4,7 +4,9 @@ set -e
 
 g++ -dumpversion
 
-opts='-std=c++0x -O3'
+cc='g++ -std=c++0x'
+
+opts='-O3 -fPIC'
 
 move(){
     cp -v $1/*.h build 2> /dev/null || true
@@ -21,13 +23,13 @@ prepare_source(){
 }
 
 gen_object_target(){
-    g++ -MM $1
-    echo -e "\tg++ $opts -c $1"
+    $cc -MM $1
+    echo -e "\t$cc $opts -c $1"
     echo
 }
 
 gen_dep_objets(){
-    for c in `g++ -MM $1 | tr " " "\n" | grep ".h$" | sed 's/.h$/.cpp/g'`; do
+    for c in `$cc -MM $1 | tr " " "\n" | grep ".h$" | sed 's/.h$/.cpp/g'`; do
         if [ -f "$c" ]; then
             echo `basename $c .cpp`.o
         fi
@@ -38,7 +40,7 @@ gen_out_target(){
     base=`basename $1 .cpp`
     deps=`gen_dep_objets $1 | tr "\n" " "`
     echo $base".out: $deps"
-    echo -e "\tg++ $opts $deps $1 -o $base.out"
+    echo -e "\t$cc $opts $deps $1 -o $base.out"
     echo
 }
 
@@ -46,6 +48,9 @@ gen_lib_target(){
     objs=`find ../src/modules | grep .cpp | grep -v test | awk -F "/" '{print $5}' | sed 's/.cpp$/.o/' | tr "\n" " "`
     echo "librey.a: $objs"
     echo -e "\tar rcs librey.a $objs"
+    echo
+    echo "librey.so: $objs"
+    echo -e "\t$cc $opts -shared -o librey.so $objs"
     echo
 }
 
@@ -55,7 +60,7 @@ gen_build_makefile(){
 
     echo "all_tests: "`ls *_test.cpp | sed 's/.cpp$/.out/' | tr "\n" " "`
     echo
-    echo "all_libraries: librey.a"
+    echo "all_libraries: librey.a librey.so"
     echo
     echo "all_binaries: "`ls *_main.cpp | sed s'/.cpp/.out/' | tr "\n" " "`
     echo
@@ -83,6 +88,7 @@ gen_makefile(){
     echo "main:"
     echo -e "\tcd build && make -j"
     echo -e "\tcp build/*.a output/lib"
+    echo -e "\tcp build/*.so output/share"
     echo
 
     echo "check:"
@@ -99,6 +105,11 @@ gen_makefile(){
     echo -e "\tcp -r output/bin $prefix/"
     echo -e "\tcp -r output/lib $prefix/"
     echo -e "\tcp -r output/include $prefix/"
+    echo -e "\tcp -r output/share $prefix/"
+    echo
+
+    echo "demo:"
+    echo -e "\tcd src/apps && bash ./configure && make"
 }
 
 config(){
@@ -106,6 +117,7 @@ config(){
     mkdir -p output/bin
     mkdir -p output/include
     mkdir -p output/lib
+    mkdir -p output/share
     prepare_source
     cd build
     gen_build_makefile > Makefile

@@ -2,7 +2,6 @@
 
 #include <cmath>
 
-#include "guard.h"
 #include "maybe.h"
 #include "model.h"
 #include "point.h"
@@ -11,23 +10,14 @@ Plane::Plane(const t_vector& n) : n(n) { assert_unit(n.v, __func__); }
 
 maybe<point3> Plane::intersect(const ray& r) const
 {
-  assert_unit(r.v, __func__);
-  auto c = dot(n.v, r.v);
-  if (c < 0) {
-    auto l = dot(n.v, n.o - r.o);
-    if (l < 0) {
-      auto t = l / c;
-      return just<point3>(r + t);
-    }
+  auto t = r_dis(n, r);
+  if (t.just) {
+    return just<point3>(r + t.it);
   }
   return nothing<point3>();
 }
 
-surface Plane::at(const point3&) const
-{
-  auto s = surface{n};
-  return s;
-}
+surface Plane::at(const point3&) const { return surface{n, m}; }
 
 maybe<point3> Floor::intersect(const ray& r) const
 {

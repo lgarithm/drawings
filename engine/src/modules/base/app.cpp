@@ -62,7 +62,7 @@ struct task
 
   task(const engine& e, const world& w, const env& l,
        const camera& cam, const clip& c, unsigned char *p, result* r) :
-    id(Id++), e(e), w(w), l(l), cam(cam), c(c), p(p), r(r) {}
+    id(++Id), e(e), w(w), l(l), cam(cam), c(c), p(p), r(r) {}
 
   void operator()()
   {

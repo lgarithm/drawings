@@ -16,38 +16,15 @@ using std::map;
 using std::vector;
 using std::string;
 
-map<string, display> _display_modes()
-{
-  map<string, display> mp;
-  mp["xga"] = XGA;
-  mp["wxga"] = WXGA;
-  mp["wqxga"] = WQXGA;
-  return mp;
-}
-
-const map<string, display> DISPLAY_MODES = _display_modes();
+const map<string, display> DISPLAY_MODES = display_modes();
 
 config::config() : d(XGA),
                    dd(division{1,1}),
+                   cam(observer(point3{0,-20,10}, origin, z_axis)),
                    dep(0),
                    t(false),
                    outfile("output.bmp"),
-                   use_thread(false) {
-  cam.of = observer(point3{0,-20,10}, origin, z_axis);
-}
-
-env def_env()
-{
-  env e;
-  double h = 10;
-  double x = 20;
-  double y = 20;
-  e.lights.push_back(light{point3{-x, y, h}, red});
-  e.lights.push_back(light{point3{x, y, h}, red});
-  e.lights.push_back(light{point3{x, -y, h}, red});
-  e.lights.push_back(light{point3{-x, -y, h}, red});
-  return e;
-}
+                   use_thread(false) {}
 
 bool parse_display(const char * str, display& d)
 {
@@ -184,7 +161,7 @@ bool parse(int argc, const char * const argv[], config& cfg)
       cfg.t = true;
       continue;
     }
-    return false;
+    cfg.args.push_back(argv[i]);
   }
   return true;
 }
@@ -201,7 +178,7 @@ void usage(const char * name)
     "[-l <light>] "
     "[-m <object>] "
     "[-n <depth>] "
-    "[-o <outfile>] ",
+    "[-o <outfile>] "
     "[-p]"
   };
   static const char* options[] = {
@@ -214,7 +191,6 @@ void usage(const char * name)
     "<object> := 'sphere(<size>, <pos>)' | 'plane(<pos>, <norm>)'",
     "<color> := '(<r>, <g>, <b>)'",
     "<pos>, <look>, <up> := '(<x>, <y>, <z>)'",
-
   };
   printf("Usage:\n");
   for (auto it : usages) printf("\t%s %s\n", name, it);

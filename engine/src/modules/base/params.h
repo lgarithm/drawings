@@ -29,10 +29,9 @@ struct config
 
   bool use_thread;
 
+  std::vector<std::string> args;
   config();
 };
-
-env def_env();
 
 bool parse(int argc, const char * const argv[], config& cfg);
 void usage(const char * name);

@@ -3,11 +3,16 @@
 
 #define DEFINE_TUPLE_2(NAME, T, X, Y) struct NAME { T X,Y; }
 
+#define DEFINE_TUPLE_2_MINUS(T, X, Y) \
+  T operator-(const T& p, const T& q) \
+  { return T{p.X - q.X, p.Y - q.Y}; }
+
 #define DEFINE_TUPLE_3(NAME, T, X, Y, Z) struct NAME { T X,Y,Z; }
 
-#define DEFINE_TUPLE_4(NAME, T, X, Y, Z, W) struct NAME { T X,Y,Z,W; }
+#define DEFINE_TUPLE_3_NEGATIVE(T, X, Y, Z) \
+  T operator-(const T& p) { return T{-p.X, -p.Y, -p.Z}; }
 
-#define DEFINE_TUPLE3_EQUAL(T, X, Y, Z) \
+#define DEFINE_TUPLE_3_EQUAL(T, X, Y, Z) \
   bool operator==(const T& p, const T& q) \
   { return p.X == q.X && p.y == q.Y && p.Z == q.Z; }
 
@@ -30,5 +35,7 @@
 #define DEFINE_TUPLE_3_INC(T, X, Y, Z) \
   void operator+=(T& p, const T& q) \
   { p.X += q.X; p.Y += q.Y; p.Z += q.Z; }
+
+#define DEFINE_TUPLE_4(NAME, T, X, Y, Z, W) struct NAME { T X,Y,Z,W; }
 
 #endif  // TUPLE_H

@@ -6,12 +6,27 @@
 
 #include "arith.h"
 #include "color.h"
+#include "guard.h"
 #include "maybe.h"
 #include "point.h"
 
 using std::vector;
 
-camera::camera() : near(1), aov(45) {}
+const oframe camera::top = oframe{origin + z_axis, origin, y_axis};
+const oframe camera::front = oframe{origin - y_axis, origin, z_axis};
+
+camera::camera(const oframe of) : of(of), near(1), aov(45) {}
+
+maybe<scalarT> r_dis(const t_vector& n, const ray& r)
+{
+  assert_unit(r.v, __func__);
+  auto c = dot(n.v, r.v);
+  if (c < 0) {
+    auto l = dot(n.v, n.o - r.o);
+    if (l < 0) return just<scalarT>(l / c);
+  }
+  return nothing<scalarT>();
+}
 
 material::material() : diffuse(white), specular(grey), roughness(200),
                        reflection(.7) {}
@@ -20,23 +35,7 @@ bool operator<(const intersection& i, const intersection& j)
 { return i.d < j.d; }
 
 bool nearest(const world& w, const ray& r, intersection& i)
-{
-  vector<intersection> cuts;
-  for (const auto& it : w.objects) {
-    intersection cut;
-    if (it->intersect(r, cut)) {
-      cuts.push_back(cut);
-    }
-  }
-  if (not cuts.empty()) {
-    i = cuts[0];
-    for (int idx = 1; idx < cuts.size(); ++idx) {
-      if (cuts[idx] < i) { i = cuts[idx]; }
-    }
-    return true;
-  }
-  return false;
-}
+{ return nearest(w.objects, r, i); }
 
 bool simple_object::intersect(const ray& r, intersection& i) const
 {

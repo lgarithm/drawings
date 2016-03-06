@@ -1,10 +1,23 @@
 #include "display.h"
 
 #include <algorithm>
+#include <map>
+#include <string>
 #include <vector>
 
+using std::map;
 using std::min;
+using std::string;
 using std::vector;
+
+map<string, display> display_modes()
+{
+  map<string, display> mp;
+  mp["xga"] = XGA;
+  mp["wxga"] = WXGA;
+  mp["wqxga"] = WQXGA;
+  return mp;
+}
 
 unsigned ceil_div(unsigned n, unsigned d) { return n / d + (n % d != 0); }
 

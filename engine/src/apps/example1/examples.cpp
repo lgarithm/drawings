@@ -1,11 +1,24 @@
 #include "examples.h"
 
+#include <map>
 #include <memory>
+#include <string>
 
 #include "bb8_model.h"
-#include "primitives.h"
+#include "rey.h"
 
+using std::map;
+using std::string;
 using std::unique_ptr;
+
+map<string, world_gen> examples()
+{
+  map<string, world_gen> mp;
+  mp["example_1"] = example_1;
+  mp["example_2"] = example_2;
+  mp["test_room"] = test_room;
+  return mp;
+}
 
 world* example_1()
 {
@@ -34,5 +47,31 @@ world* example_2()
   w->objects.push_back(unique_ptr<object>(new Chessboard));
   w->objects.push_back(unique_ptr<object>(p));
   w->objects.push_back(unique_ptr<object>(q));
+  return w;
+}
+
+world* test_room()
+{
+  auto w = new world;
+  scalarT x = 100;
+  scalarT y = 100;
+  scalarT h = 30;
+  auto lw = new Plane(t_vector{origin - .5 * x * x_axis, x_axis});
+  auto rw = new Plane(t_vector{origin + .5 * x * x_axis, -x_axis});
+  auto fw = new Plane(t_vector{origin - .5 * y * y_axis, y_axis});
+  auto bw = new Plane(t_vector{origin + .5 * y * y_axis, -y_axis});
+  auto c = new Plane(t_vector{origin + h * z_axis, -z_axis});
+  for (auto it : {lw, rw, fw, bw, c}) {
+    it->m.reflection = .2;
+  }
+  lw->m.diffuse = blue;
+  rw->m.diffuse = green;
+  c->m.diffuse = color{.1, .1, .1};
+  w->objects.push_back(unique_ptr<object>(new Chessboard));
+  w->objects.push_back(unique_ptr<object>(lw));
+  w->objects.push_back(unique_ptr<object>(rw));
+  w->objects.push_back(unique_ptr<object>(fw));
+  w->objects.push_back(unique_ptr<object>(bw));
+  w->objects.push_back(unique_ptr<object>(c));
   return w;
 }

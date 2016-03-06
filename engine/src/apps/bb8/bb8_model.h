@@ -1,8 +1,12 @@
 #ifndef BB8_MODEL_H
 #define BB8_MODEL_H
 
-#include "maybe.h"
-#include "model.h"
+#include <map>
+#include <string>
+
+#include "rey.h"
+
+std::map<std::string, world_gen> bb8_examples();
 
 struct bb8_head : simple_object
 {
@@ -33,8 +37,6 @@ struct bb8 : object
   bb8_body body;
 
   bb8(double, const oframe&);
-  //maybe<point3> intersect(const ray&) const /* override */;
-  //surface at(const point3&) const /* override */;
   bool intersect(const ray&, intersection&) const /* override */;
 };
 

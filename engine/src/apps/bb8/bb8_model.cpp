@@ -4,16 +4,29 @@
 #include <memory>
 
 #include <algorithm>
+#include <map>
+#include <string>
 
-#include "color.h"
-#include "maybe.h"
-#include "model.h"
-#include "primitives.h"
+#include "rey.h"
 
 static auto const radian = 180 / M_PI;
 
+using std::map;
+using std::max;
 using std::min;
+using std::string;
 using std::unique_ptr;
+
+template<typename T> T max3(const T& a, const T& b, const T& c)
+{ return max(max(a, b), c); }
+
+map<string, world_gen> bb8_examples()
+{
+  map<string, world_gen> mp;
+  mp["example_1"] = bb8_example_1;
+  mp["example_2"] = bb8_example_2;
+  return mp;
+}
 
 bb8_head::bb8_head(double size, const oframe& of) : size(size), of(of) {}
 
@@ -35,8 +48,13 @@ surface bb8_head::at(const point3& p) const
   sphere sp(size, of.o);
   auto s = sp.at(p);
   auto q = norm(local(of, p));
-  if (asin(q.z) * radian > 15) {
-    s.m.diffuse = white;
+  auto g = asin(q.z) * radian;
+  if (g > 10) {
+    if (g > 50 && g < 60) {
+      s.m.diffuse = orange;
+    } else {
+      s.m.diffuse = white;
+    }
   } else {
     s.m.diffuse = grey;
   }
@@ -57,21 +75,22 @@ surface bb8_body::at(const point3& p) const
   sphere sp(size, of.o);
   auto s = sp.at(p);
 
-  auto q = norm(local(of, p));
-  auto f1 = [&](const vector3& x)
-    { return fabs(acos(dot(q, x)) - .5 * M_PI) * radian > 60; };
-  auto f2 = [&](const vector3& x)
-    { return fabs(acos(dot(q, x)) - .5 * M_PI) * radian > 70; };
+  const auto q = norm(local(of, p));
+  const auto r = point3{fabs(q.x), fabs(q.y), fabs(q.z)};
+  auto th = acos(max3(dot(r, x_axis), dot(r, y_axis), dot(r, z_axis))) * radian;
 
-  auto g1 = f1(x_axis) || f1(y_axis) || f1(z_axis);
-  auto g2 = f2(x_axis) || f2(y_axis) || f2(z_axis);
-  if (g1) {
-    if (g2) {
+  if (th < 30) {
+    if (th < 20) {
       s.m.diffuse = grey;
-    }
-    else {
+    } else {
       s.m.diffuse = orange;
     }
+  } else {
+    /*
+    static const auto eps = 5e-3;
+    if (fabs(q.x) <  eps|| fabs(q.y) < eps || fabs(q.z) < eps) {
+      s.m.diffuse = grey;
+    }//*/
   }
   s.m.reflection = .2;
   return s;
@@ -132,7 +151,6 @@ world* bb8_example_2()
     }
   }
 
-  // w->objects.push_back(unique_ptr<object>(new Floor));
   w->objects.push_back(unique_ptr<object>(new Chessboard(5)));
   return w;
 }
