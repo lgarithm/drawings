@@ -7,27 +7,37 @@
 
 #include "color.h"
 #include "guard.h"
+#include "profile.h"
 
 using std::max;
 using std::min;
 
 static const shader default_shader(black, black);
 
-color trace(const ray& r, const world& w, const env& e, int dep)
-{
-  intersection i;
-  return nearest(w, r, i) ? default_shader(i, w, e, dep) : default_shader.bgc;
-}
+
+#define DEFINE_TRACE_FUNC(func_name, TRACE_CODE)                        \
+  color func_name(const ray& r, const world& w, const env& e, int dep)  \
+  {                                                                     \
+    TRACE_CODE                                                          \
+    intersection i;                                                     \
+    return nearest(w, r, i)                                             \
+      ? default_shader(i, reflect(i.n.v, r.v), w, e, dep)               \
+      : default_shader.bgc;                                             \
+  }
+
+
+#define NO_TRACE
+#define LOG_TRACE log_trace(r, dep);
+
+DEFINE_TRACE_FUNC(trace, NO_TRACE)
+DEFINE_TRACE_FUNC(trace_with_log, LOG_TRACE)
 
 shader::shader(const color& b, const color& d) : bgc(b), def(d) {}
 
-color shader::operator()(const intersection& i, const world& w, const env& e,
-                         int dep) const
+color shader::operator()(const intersection& i, const vector3& r,
+                         const world& w, const env& e, int dep) const
 {
   assert_unit(i.n.v, __func__);
-  assert_unit(i.i, __func__);
-  const auto r = reflect(i.n.v, i.i);
-
   auto nc = def;
   {
     for (const auto& l : e.lights) {
@@ -72,12 +82,11 @@ color engine::rasterize(const world& w, const env& e, const camera& cam,
 { return ::rasterize(w, e, cam, d, fit(cam, d), i, j, dep); }
 
 void engine::render(const world& w, const env& e, const camera& cam,
-                    const clip& c, unsigned char* buffer) const
+                    const clip& c, unsigned char* p) const
 {
-  auto v = fit(cam, d);
-  unsigned char *p = buffer;
-  for (int j=c.h.l; j < c.h.r; ++j) {
-    for (int i=c.w.l; i < c.w.r; ++i) {
+  const auto v = fit(cam, d);
+  for (unsigned short j=c.h.l; j < c.h.r; ++j) {
+    for (unsigned short i=c.w.l; i < c.w.r; ++i) {
       auto pix = rgb(::rasterize(w, e, cam, d, v, i, j, dep));
       *p++ = pix.b;
       *p++ = pix.g;
@@ -88,7 +97,5 @@ void engine::render(const world& w, const env& e, const camera& cam,
 
 void engine::render(const world& w, const env& e, const camera& cam,
                     unsigned char* buffer) const
-{
-  auto c = clip{range{0, d.width}, range{0, d.height}};
-  return render(w, e, cam, c, buffer);
-}
+{ return render(w, e, cam, clip{range{0, d.width}, range{0, d.height}},
+                buffer); }

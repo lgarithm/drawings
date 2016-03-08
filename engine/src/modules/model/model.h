@@ -6,6 +6,7 @@
 
 #include "color.h"
 #include "guard.h"  // For transitive closure
+#include "material.h"
 #include "maybe.h"
 #include "point.h"
 #include "linear.h"
@@ -28,25 +29,11 @@ typedef t_vector ray;
 
 maybe<scalarT> r_dis(const t_vector& n, const ray& r);
 
-struct material
-{
-  color diffuse;
-  color specular;
-  unsigned char roughness;
-  colorT reflection;
-
-  material();
-
-  // TODO
-  // static const material
-};
-
 struct surface{ t_vector n; material m; };
 
 struct intersection
 {
   t_vector n;
-  vector3 i;
   material m;
   double d;
 };

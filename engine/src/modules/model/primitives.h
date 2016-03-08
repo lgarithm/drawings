@@ -31,8 +31,7 @@ struct Chessboard : Floor
   surface at(const point3&) const /* override */;
 };
 
-struct Mirror : Floor
-{ surface at(const point3&) const /* override */; };
+struct Mirror : Floor { surface at(const point3&) const /* override */; };
 
 struct sphere : simple_object
 {

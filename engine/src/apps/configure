@@ -23,7 +23,7 @@ config(){
   cd ..
 }
 
-apps='render bb8 example1'
+apps='render bb8 example1 builtin'
 
 for app in $apps; do
   include=$include" -I../$app"

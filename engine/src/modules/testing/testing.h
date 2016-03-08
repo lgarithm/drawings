@@ -10,10 +10,10 @@ template<typename T>void assert_eq(T x, T y) { assert(x == y); }
 
 void assert_eq(double x, double y);
 
-#define test(x) \
-  { \
-    slogger _("test_"#x); \
-    test_##x(); \
+#define test(x)                                 \
+  {                                             \
+    slogger _("test_"#x);                       \
+    test_##x();                                 \
   }
 
 #endif  // TESTING_H

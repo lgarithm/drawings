@@ -41,10 +41,13 @@ DEFINE_TUPLE_3_INC(point3, x, y, z);
 DEFINE_TUPLE_3_SCALE(scalarT, point3, x, y, z);
 DEFINE_TUPLE_3_PLUS(point3, x, y, z);
 DEFINE_TUPLE_3_MINUS(point3, x, y, z);
+DEFINE_TUPLE_3_DIV(point3, x, y, z);
 
-DEFINE_DOT_3(scalarT, point3, x, y, z);
+DEFINE_TUPLE_3_DOT(scalarT, point3, x, y, z);
 DEFINE_CROSS_PROD(point3, x, y, z);
-DEFINE_REFLECT_3(scalarT, point3);
+
+vector3 reflect(const vector3& n, const vector3& d)
+{ return d - 2 * dot(n, d) * n; }
 
 #endif
 

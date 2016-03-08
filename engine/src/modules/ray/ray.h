@@ -6,6 +6,7 @@
 #include "display.h"
 #include "guard.h"  // For transitive closure
 #include "model.h"
+#include "profile.h"  // For transitive closure
 
 struct interval{ double lo, hi; };
 struct viewport{ interval xr, yr; };
@@ -15,7 +16,8 @@ struct shader
   const color bgc;
   const color def;
   shader(const color&, const color&);
-  color operator()(const intersection&, const world&, const env&, int) const;
+  color operator()(const intersection&, const vector3&,
+                   const world&, const env&, int) const;
 };
 
 struct engine

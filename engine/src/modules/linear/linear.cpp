@@ -9,6 +9,9 @@ point3 global(const frame& f, const point3& p)
 point3 local(const oframe& of, const point3& p)
 { return local(of.f, p - of.o); }
 
+t_vector local(const oframe& of, const t_vector& t)
+{ return t_vector{local(of, t.o), local(of, t.v)}; }
+
 point3 global(const oframe& of, const point3& p)
 { return of.o + global(of.f, p); }
 

@@ -82,11 +82,17 @@ gen_build_makefile(){
     for c in `ls *.cpp`; do
         gen_object_target $c
     done
+
+    echo "# Clean"
+    echo "clean:"
+    echo -e "\t-rm *.a *.o *.out *.so"
 }
 
 gen_makefile(){
-    echo "main:"
-    echo -e "\tcd build && make -j"
+    echo "default: core demo"
+    echo
+    echo "core:"
+    echo -e "\tcd build && make"
     echo -e "\tcp build/*.a output/lib"
     echo -e "\tcp build/*.so output/share"
     echo
@@ -100,7 +106,7 @@ gen_makefile(){
     done
     echo
 
-    echo "install: main"
+    echo "install: core"
     echo -e "\tmkdir -p $prefix"
     echo -e "\tcp -r output/bin $prefix/"
     echo -e "\tcp -r output/lib $prefix/"
@@ -108,8 +114,12 @@ gen_makefile(){
     echo -e "\tcp -r output/share $prefix/"
     echo
 
-    echo "demo:"
+    echo "demo: core"
     echo -e "\tcd src/apps && bash ./configure && make"
+    echo
+
+    echo "clean:"
+    echo -e "\tcd build && make clean"
 }
 
 config(){

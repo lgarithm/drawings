@@ -28,9 +28,6 @@ maybe<scalarT> r_dis(const t_vector& n, const ray& r)
   return nothing<scalarT>();
 }
 
-material::material() : diffuse(white), specular(grey), roughness(200),
-                       reflection(.7) {}
-
 bool operator<(const intersection& i, const intersection& j)
 { return i.d < j.d; }
 
@@ -44,7 +41,6 @@ bool simple_object::intersect(const ray& r, intersection& i) const
     auto s = at(mp.it);
     i.n = s.n;
     i.m = s.m;
-    i.i = r.v;
     i.d = len(r.o - mp.it);
     return true;
   }

@@ -22,7 +22,6 @@ polygon unit_square(scalarT u=1)
 polyhedron unit_cube(scalarT u)
 {
   polyhedron pd;
-
   auto idx_m = cube(u, origin);
   for (auto& it : idx_m.faces) {
     auto vs = at(idx_m, it);
@@ -31,12 +30,6 @@ polyhedron unit_cube(scalarT u)
     for (auto& v : vs) p.vertices.push_back(point2{v.x, v.y});
     pd.faces.push_back(space_polygon(of, p.vertices));
   }
-  {
-    //const auto us = unit_square(u);
-    //auto of = oframe{origin, frame{x_axis, y_axis, z_axis}};
-    //pd.faces.push_back(space_polygon(of + u * z_axis, us.vertices));
-  }
-
   return pd;
 }
 
@@ -61,6 +54,32 @@ bool in(const point2& p, const polygon& g)
     s += fabs(area(p, g.vertices[i], g.vertices[(i + 1) % n]));
   }
   return zero(s - area(g));
+}
+
+maybe<scalarT> dis_r_circle(const t_vector2& r, scalarT s)
+{
+  return nothing<scalarT>();
+}
+
+maybe<point3> cylinder_inf::intersect(const ray& r) const
+{
+  return nothing<point3>();
+}
+
+surface cylinder_inf::at(const point3&) const
+{
+  return surface{};
+}
+
+bool cylinder::intersect(const ray& r, intersection& i) const
+{
+  auto t = local(of, r);
+  auto a = point2{t.o.x, t.o.y};
+  auto p = point2{t.v.x, t.v.y};
+  //auto d = a - dot(a, p) * p;
+
+  // TODO
+  return false;
 }
 
 space_polygon::space_polygon(const oframe& of, const std::vector<point2>& vs) :
