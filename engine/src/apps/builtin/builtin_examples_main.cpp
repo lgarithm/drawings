@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
   scene s;
   s.e = cfg.lights;
 
-  auto name = cfg.args.empty() ? "default_test_scene" : cfg.args[0];
+  auto name = cfg.args.empty() ? "" : cfg.args[0];
   auto fn = get<string, world_gen>(builtin_examples, name, default_test_scene);
   unique_ptr<world> w(fn());
 

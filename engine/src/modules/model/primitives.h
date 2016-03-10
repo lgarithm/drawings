@@ -9,10 +9,10 @@
 
 struct Plane : simple_object
 {
-  t_vector n;
+  t_vector3 n;
   material m;
 
-  Plane(const t_vector&);
+  Plane(const t_vector3&);
   maybe<point3> intersect(const ray&) const /* override */;
   surface at(const point3&) const /* override */;
 };

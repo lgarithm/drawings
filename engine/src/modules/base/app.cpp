@@ -30,7 +30,7 @@ namespace
   clogger lo;
   static const int buffer_size = 3 * max_width * max_height;
   unsigned char buffer[buffer_size];
-  unsigned char* buffers[64];
+  unsigned char* buffers[4096];
 }
 
 void save(const char * name, const display& d, const unsigned char * buffer)
@@ -82,8 +82,15 @@ int task::Id = 0;
 void run(const config& cfg, const scene& s)
 {
   if (cfg.t) return;
-
   engine e(cfg.dep, cfg.d);
+  if (cfg.single) {
+    auto g = e.rasterize(s.w, s.e, cfg.cam, cfg.i, cfg.j);
+    auto p = rgb(g);
+    printf("pix[%d, %d] = (%f, %f, %f) # %02x %02x %02x | %d %d %d\n",
+      cfg.j, cfg.i, g.r, g.g, g.b, p.r, p.g, p.b, p.r, p.g, p.b);
+    return ;
+  }
+
   auto sch = scheduler{cfg.d};
   auto a = sch.divide();
   if (cfg.dd.m > 1 || cfg.dd.n > 1) a = sch.divide(cfg.dd.m, cfg.dd.n);
@@ -127,8 +134,8 @@ void run(const config& cfg, const scene& s)
   if (cfg.dd.m > 1 && cfg.dd.n > 1) {
     for (auto it : rs) {
       char name[64];
-      sprintf(name, "%s.part.[%d-%d)X[%d-%d).bmp", cfg.outfile.c_str(),
-        it->c.w.l, it->c.w.r, it->c.h.l, it->c.h.r);
+      sprintf(name, "%s.%dX%d.part.[%d-%d)X[%d-%d).bmp", cfg.outfile.c_str(),
+        cfg.dd.m, cfg.dd.n, it->c.w.l, it->c.w.r, it->c.h.l, it->c.h.r);
       lo.log("saving as " + string(name));
       save(name, from_clip(it->c), it->p);
     }

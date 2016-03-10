@@ -7,6 +7,11 @@
 DEFINE_TUPLE_2_SCALE(numericT, linear_eq, A, B);
 DEFINE_TUPLE_2_PLUS(linear_eq, A, B);
 
+numericT eval(const linear_eq& e, numericT x) { return e.A * x + e.B; }
+
+numericT eval(const quad_eq& e, numericT x)
+{ return (e.A * x + e.B) * x + e.C; }
+
 quad_eq operator*(const linear_eq& l, const linear_eq& r)
 { return quad_eq{l.A * r.A, l.A * r.B + l.B * r.A, l.B * r.B}; }
 
@@ -43,3 +48,6 @@ unsigned short positive_roots(const quad_eq& e, numericT& x1, numericT& x2)
   }
   return 0;
 }
+
+bool min_positive_root(const quad_eq& e, numericT& x)
+{ numericT _; return positive_roots(e, x, _) > 0; }

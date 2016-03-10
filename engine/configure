@@ -17,7 +17,7 @@ prepare_source(){
     for m in `ls src/modules`; do
         move src/modules/$m
     done
-    for h in `find src/modules | grep .h | grep -v test`; do
+    for h in `find src/modules | grep "\.h" | grep -v test`; do
       cp $h output/include
     done
 }

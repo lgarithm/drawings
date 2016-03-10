@@ -6,7 +6,7 @@
 #include "model.h"
 #include "point.h"
 
-Plane::Plane(const t_vector& n) : n(n) { assert_unit(n.v, __func__); }
+Plane::Plane(const t_vector3& n) : n(n) { assert_unit(n.v, __func__); }
 
 maybe<point3> Plane::intersect(const ray& r) const
 {
@@ -24,6 +24,7 @@ maybe<point3> Floor::intersect(const ray& r) const
   if (r.v.z != 0) {
     auto d = - r.o.z / r.v.z;
     if (d > 0) {
+      d -= 1e-6;
       return just<point3>(r + d);
     }
   }
@@ -32,7 +33,7 @@ maybe<point3> Floor::intersect(const ray& r) const
 
 surface Floor::at(const point3& p) const
 {
-  auto s = surface{t_vector{p, z_axis}};
+  auto s = surface{t_vector3{p, z_axis}};
   s.m.diffuse = .4 * grey;
   return s;
 }
@@ -41,7 +42,7 @@ Chessboard::Chessboard(double gs) : grid_size(gs) {}
 
 surface Chessboard::at(const point3& p) const
 {
-  auto s = surface{t_vector{p, z_axis}};
+  auto s = surface{t_vector3{p, z_axis}};
   int xx = int(floor(p.x / grid_size)) & 1;
   int yy = int(floor(p.y / grid_size)) & 1;
   if (xx == yy) {
@@ -69,7 +70,7 @@ maybe<point3> sphere::intersect(const ray& r) const
 
 surface sphere::at(const point3& p) const
 {
-  auto s = surface{t_vector{p, norm(p - pos)}};
+  auto s = surface{t_vector3{p, norm(p - pos)}};
   return s;
 }
 
@@ -95,7 +96,7 @@ maybe<point3> triangle::intersect(const ray& r) const
 
 surface triangle::at(const point3& p) const
 {
-  auto s = surface{t_vector{p, norm(a,b,c)}};
+  auto s = surface{t_vector3{p, norm(a,b,c)}};
   s.m.reflection = 1;
   s.m.specular = white;
   s.m.roughness = 1;

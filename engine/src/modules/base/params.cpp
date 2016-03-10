@@ -24,7 +24,8 @@ config::config() : d(XGA),
                    dep(0),
                    t(false),
                    outfile("output.bmp"),
-                   use_thread(false) {}
+                   use_thread(false),
+                   single(false) {}
 
 bool parse_display(const char * str, display& d)
 {
@@ -74,7 +75,7 @@ object* parse_model(const char * str)
   if (strcmp(str, "floor") == 0) {
     return new Chessboard;
   }
-  t_vector n;
+  t_vector3 n;
   if (sscanf(str, "plane((%lf, %lf, %lf), (%lf, %lf, %lf))",
              &n.o.x, &n.o.y, &n.o.z, &n.v.x, &n.v.y, &n.v.z) == 6) {
     return new Plane(n);
@@ -157,6 +158,12 @@ bool parse(int argc, const char * const argv[], config& cfg)
       cfg.use_thread = true;
       continue;
     }
+    if (strcmp(argv[i], "-r") == 0) {
+      if (++i >= argc) return false;
+      if (sscanf(argv[i], "%hu,%hu", &cfg.j, &cfg.i) != 2) return false;
+      cfg.single = true;
+      continue;
+    }
     if (strcmp(argv[i], "-t") == 0) {
       cfg.t = true;
       continue;
@@ -179,7 +186,8 @@ void usage(const char * name)
     "[-m <object>] "
     "[-n <depth>] "
     "[-o <outfile>] "
-    "[-p]"
+    "[-p] "
+    "[-r <ji>]"
   };
   static const char* options[] = {
     "<aov> := 1 - 179",
@@ -191,6 +199,7 @@ void usage(const char * name)
     "<object> := 'sphere(<size>, <pos>)' | 'plane(<pos>, <norm>)'",
     "<color> := '(<r>, <g>, <b>)'",
     "<pos>, <look>, <up> := '(<x>, <y>, <z>)'",
+    "<ji> := 0-4095,0-4095"
   };
   printf("Usage:\n");
   for (auto it : usages) printf("\t%s %s\n", name, it);

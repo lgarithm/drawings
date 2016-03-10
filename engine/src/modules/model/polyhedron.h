@@ -16,7 +16,7 @@ struct cylinder_inf : simple_object
 
 struct cylinder : object
 {
-  // t_vector t;
+  // t_vector3 t;
   oframe of;
   scalarT h;
   scalarT r;

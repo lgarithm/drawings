@@ -29,6 +29,9 @@ struct config
 
   bool use_thread;
 
+  bool single;
+  unsigned short i, j;
+
   std::vector<std::string> args;
   config();
 };

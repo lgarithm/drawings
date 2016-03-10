@@ -12,12 +12,7 @@
 
 using std::vector;
 
-const oframe camera::top = oframe{origin + z_axis, origin, y_axis};
-const oframe camera::front = oframe{origin - y_axis, origin, z_axis};
-
-camera::camera(const oframe of) : of(of), near(1), aov(45) {}
-
-maybe<scalarT> r_dis(const t_vector& n, const ray& r)
+maybe<scalarT> r_dis(const t_vector3& n, const ray& r)
 {
   assert_unit(r.v, __func__);
   auto c = dot(n.v, r.v);

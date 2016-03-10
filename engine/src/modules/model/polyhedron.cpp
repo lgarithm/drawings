@@ -87,7 +87,7 @@ space_polygon::space_polygon(const oframe& of, const std::vector<point2>& vs) :
 
 maybe<point3> space_polygon::intersect(const ray& r) const
 {
-  auto t = r_dis(t_vector{of.o, of.f.Z}, r);
+  auto t = r_dis(t_vector3{of.o, of.f.Z}, r);
   if (t.just) {
     auto p = r + t.it;
     auto q = local(of, p);
@@ -100,7 +100,7 @@ maybe<point3> space_polygon::intersect(const ray& r) const
 
 surface space_polygon::at(const point3& p) const
 {
-  auto s = surface{t_vector{of.o, of.f.Z}};
+  auto s = surface{t_vector3{of.o, of.f.Z}};
   return s;
 }
 

@@ -10,30 +10,17 @@
 #include "maybe.h"
 #include "point.h"
 #include "linear.h"
+#include "view.h"
 
-struct camera
-{
-  oframe of;
-  scalarT near;
-  scalarT aov;
-  // TODO: scalarT far;
-  // TODO: scalarT aspect = 1;
+typedef t_vector3 ray;
 
-  camera(const oframe=top);
+maybe<scalarT> r_dis(const t_vector3& n, const ray& r);
 
-  static const oframe top;
-  static const oframe front;
-};
-
-typedef t_vector ray;
-
-maybe<scalarT> r_dis(const t_vector& n, const ray& r);
-
-struct surface{ t_vector n; material m; };
+struct surface{ t_vector3 n; material m; };
 
 struct intersection
 {
-  t_vector n;
+  t_vector3 n;
   material m;
   double d;
 };
