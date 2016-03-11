@@ -19,6 +19,7 @@ linear_eq operator*(numericT, const linear_eq&);
 quad_eq operator*(const linear_eq&, const linear_eq&);
 quad_eq sqr(const linear_eq&);
 quad_eq operator+(const quad_eq&, const quad_eq&);
+quad_eq operator-(const quad_eq&, const quad_eq&);
 unsigned short real_roots(const quad_eq&, numericT&, numericT&);
 unsigned short positive_roots(const quad_eq&, numericT&, numericT&);
 bool min_positive_root(const quad_eq& e, numericT& x);

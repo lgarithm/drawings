@@ -1,6 +1,7 @@
 #include "arith.h"
 
 #include <cmath>
+#include <cstdio>
 
 #include "tuple.h"
 
@@ -19,6 +20,7 @@ quad_eq sqr(const linear_eq& leq) { return leq * leq; }
 
 DEFINE_TUPLE_3_SCALE(numericT, quad_eq, A, B, C);
 DEFINE_TUPLE_3_PLUS(quad_eq, A, B, C);
+DEFINE_TUPLE_3_MINUS(quad_eq, A, B, C);
 
 unsigned short real_roots(const quad_eq& e, numericT& x1, numericT& x2)
 {
@@ -50,4 +52,14 @@ unsigned short positive_roots(const quad_eq& e, numericT& x1, numericT& x2)
 }
 
 bool min_positive_root(const quad_eq& e, numericT& x)
-{ numericT _; return positive_roots(e, x, _) > 0; }
+{
+  numericT _;
+  auto n = positive_roots(e, x, _);
+  if (n > 0) {
+    auto y = eval(e, x);
+    if (fabs(y) > 1e-3 || x < 0) {
+      fprintf(stderr, "%f X^2 + %f X + %f = 0 @ %f = %f\n", e.A, e.B, e.C, x, y);
+    }
+  }
+  return n > 0;
+}

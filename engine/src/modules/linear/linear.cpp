@@ -39,3 +39,6 @@ oframe operator+(const oframe& of, const vector3& v)
 { return oframe{of.o + v, of.f}; }
 
 point3 operator+(const t_vector3& t, scalarT d) { return t.o + d * t.v; }
+
+t_vector3 operator+(const t_vector3& t, const vector3& v)
+{ return t_vector3{t.o + v, t.v}; }

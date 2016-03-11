@@ -21,7 +21,7 @@ world* test_ellipsoid()
 {
   auto w = default_test_scene();
   auto e = new ellipsoid(3,3,2);
-  e->of.o += 15 * z_axis;
+  e->of.o += 5 * z_axis;
   w->objects.push_back(unique_ptr<object>(e));
   return w;
 }
@@ -59,6 +59,14 @@ world* test_cylinder_2()
   return w;
 }
 
+world* test_cone()
+{
+  auto w = default_test_scene();
+  auto c = new cone_surface(1. / 4);
+  w->objects.push_back(unique_ptr<object>(c));
+  return w;
+}
+
 map<string, world_gen> examples()
 {
   map<string, world_gen> mp;
@@ -66,5 +74,6 @@ map<string, world_gen> examples()
   mp["ellipsoid2"] = test_ellipsoid_2;
   mp["cylinder"] = test_cylinder;
   mp["cylinder2"] = test_cylinder_2;
+  mp["cone"] = test_cone;
   return mp;
 }

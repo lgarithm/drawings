@@ -27,7 +27,9 @@ static const shader default_shader(black, black);
 
 
 #define NO_TRACE
-#define LOG_TRACE log_trace(r, dep);
+#define LOG_TRACE                               \
+  scope_logger __(__func__);                    \
+  log_trace(r, dep);
 
 DEFINE_TRACE_FUNC(trace, NO_TRACE)
 DEFINE_TRACE_FUNC(trace_with_log, LOG_TRACE)

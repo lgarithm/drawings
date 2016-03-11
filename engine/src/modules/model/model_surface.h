@@ -34,6 +34,13 @@ struct cylinder_surface : quadratic_surface
   vector3 n_at(const point3&) const /* override */;
 };
 
-// struct cone_surface : quadratic_surface { };
+struct cone_surface : quadratic_surface
+{
+  scalarT k;
+
+  cone_surface(scalarT);
+  quad_eq equation(const ray&) const /* override */;
+  vector3 n_at(const point3&) const /* override */;
+};
 
 #endif  // MODEL_SURFACE_H

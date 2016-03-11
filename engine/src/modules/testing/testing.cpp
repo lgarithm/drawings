@@ -4,6 +4,10 @@
 
 #include "logger.h"
 
+namespace {
+  const auto eps = 1e-6;
+}
+
 void assert_eq(double x, double y)
 {
   double e = fabs(x - y);
@@ -11,5 +15,5 @@ void assert_eq(double x, double y)
   sprintf(msg, "asserting %f == %f, delta=%f", x, y, e);
   clogger lo;
   lo.log(msg);
-  assert(e < 1e-6);
+  assert(e < eps);
 }
