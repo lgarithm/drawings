@@ -1,5 +1,5 @@
-include=-I../../../output/include -I../bb8
-libpath=-L../../../output/lib -lrey
+include=-I../../../build/include -I../bb8
+libpath=-L../../../build/lib -lrey
 cc=g++ -std=c++0x
 opts=-O3 -pthread
 

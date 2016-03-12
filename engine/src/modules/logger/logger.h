@@ -3,6 +3,12 @@
 
 #include <string>
 
+struct with_c
+{
+  with_c(unsigned short, unsigned short);
+  ~with_c();
+};
+
 struct clogger
 {
   static const int RED;

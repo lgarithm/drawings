@@ -8,9 +8,11 @@
 
 Plane::Plane(const t_vector3& n) : n(n) { assert_unit(n.v, __func__); }
 
+maybe<scalarT> Plane::meet(const ray& r) const { return r_dis(n, r); }
+
 maybe<point3> Plane::intersect(const ray& r) const
 {
-  auto t = r_dis(n, r);
+  auto t = meet(r);
   if (t.just) {
     return just<point3>(r + t.it);
   }

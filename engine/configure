@@ -4,21 +4,18 @@ set -e
 
 g++ -dumpversion
 
-cc='g++ -std=c++0x'
+cc='g++ -std=c++0x -I../include'
 
 opts='-O3 -fPIC'
 
 move(){
-    cp -v $1/*.h build 2> /dev/null || true
-    cp -v $1/*.cpp build 2> /dev/null || true
+    cp -v $1/*.h build/include 2> /dev/null || true
+    cp -v $1/*.cpp build/src 2> /dev/null || true
 }
 
 prepare_source(){
     for m in `ls src/modules`; do
         move src/modules/$m
-    done
-    for h in `find src/modules | grep "\.h" | grep -v test`; do
-      cp $h output/include
     done
 }
 
@@ -29,8 +26,8 @@ gen_object_target(){
 }
 
 gen_dep_objets(){
-    for c in `$cc -MM $1 | tr " " "\n" | grep ".h$" | sed 's/.h$/.cpp/g'`; do
-        if [ -f "$c" ]; then
+    for c in `$cc -MM $1 | tr " " "\n" | grep ".h$" | sed 's/.h$/.cpp/g' | sort | uniq`; do
+        if [ -f "`basename $c`" ]; then
             echo `basename $c .cpp`.o
         fi
     done
@@ -45,7 +42,7 @@ gen_out_target(){
 }
 
 gen_lib_target(){
-    objs=`find ../src/modules | grep .cpp | grep -v test | awk -F "/" '{print $5}' | sed 's/.cpp$/.o/' | tr "\n" " "`
+    objs=`find ../../src/modules | grep .cpp | grep -v test | awk -F "/" '{print $6}' | sed 's/.cpp$/.o/' | tr "\n" " "`
     echo "librey.a: $objs"
     echo -e "\tar rcs librey.a $objs"
     echo
@@ -92,26 +89,26 @@ gen_makefile(){
     echo "default: core demo"
     echo
     echo "core:"
-    echo -e "\tcd build && make"
-    echo -e "\tcp build/*.a output/lib"
-    echo -e "\tcp build/*.so output/share"
+    echo -e "\tcd build/src && make"
+    echo -e "\tcp build/src/*.a build/lib"
+    echo -e "\tcp build/src/*.so build/share"
     echo
 
-    echo "check:"
-    for t in `ls build/*_test.cpp`; do
-        echo -e "\t./build/`basename $t .cpp`.out"
+    echo "check: core"
+    for t in `ls build/src/*_test.cpp`; do
+        echo -e "\t./build/src/`basename $t .cpp`.out"
     done
-    for m in `ls build/*_main.cpp`; do
-        echo -e "\t./build/`basename $m .cpp`.out -t"
+    for m in `ls build/src/*_main.cpp`; do
+        echo -e "\t./build/src/`basename $m .cpp`.out -t"
     done
     echo
 
     echo "install: core"
     echo -e "\tmkdir -p $prefix"
-    echo -e "\tcp -r output/bin $prefix/"
-    echo -e "\tcp -r output/lib $prefix/"
-    echo -e "\tcp -r output/include $prefix/"
-    echo -e "\tcp -r output/share $prefix/"
+    echo -e "\tcp -r build/bin $prefix/"
+    echo -e "\tcp -r build/lib $prefix/"
+    echo -e "\tcp -r build/include $prefix/"
+    echo -e "\tcp -r build/share $prefix/"
     echo
 
     echo "demo: core"
@@ -123,17 +120,18 @@ gen_makefile(){
 }
 
 config(){
-    mkdir -p build
-    mkdir -p output/bin
-    mkdir -p output/include
-    mkdir -p output/lib
-    mkdir -p output/share
+    mkdir -p build/src
+    mkdir -p build/bin
+    mkdir -p build/include
+    mkdir -p build/lib
+    mkdir -p build/share
     prepare_source
-    cd build
+    cd build/src
     gen_build_makefile > Makefile
-    cd ..
+    cd ../..
     gen_makefile > Makefile
 }
 
 prefix=$HOME/local/librey
 config
+mkdir -p output

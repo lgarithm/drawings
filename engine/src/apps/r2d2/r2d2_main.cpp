@@ -1,4 +1,4 @@
-#include "builtin_examples.h"
+#include "r2d2_model.h"
 #include "rey.h"
 
 int main(int argc, char* argv[]) { return app(argc, argv, examples()); }

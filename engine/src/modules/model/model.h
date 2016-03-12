@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <utility>
 
 #include "color.h"
 #include "guard.h"  // For transitive closure
@@ -18,6 +19,7 @@ maybe<scalarT> r_dis(const t_vector3& n, const ray& r);
 
 struct surface{ t_vector3 n; material m; };
 
+// TODO : depre
 struct intersection
 {
   t_vector3 n;
@@ -28,7 +30,12 @@ struct intersection
 bool operator<(const intersection&, const intersection&);
 
 struct object
-{ virtual bool intersect(const ray&, intersection&) const = 0; };
+{
+  virtual bool intersect(const ray&, intersection&) const = 0;  // TODO : depre
+
+  virtual maybe<scalarT> meet(const ray&) const { return nothing<scalarT>(); }
+  // virtual std::pair<t_vector3, material> at(const point3&) const;  // = 0;
+};
 
 struct simple_object : object
 {
@@ -39,7 +46,9 @@ struct simple_object : object
 
 struct world{ std::vector<std::unique_ptr<object>> objects; };
 
+void operator+=(world&, object*);
 typedef world*(*world_gen)();
+void info(const world& w);
 
 template<typename T>
 bool nearest(const std::vector<T>& oo, const ray& r, intersection& i)
@@ -61,7 +70,5 @@ bool nearest(const world&, const ray&, intersection&);
 
 struct light{ point3 pos; color col; };
 struct env{ std::vector<light> lights; };
-
-struct scene{ world w; env e; };
 
 #endif  // MODEL_H

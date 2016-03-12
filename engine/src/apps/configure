@@ -2,8 +2,8 @@
 
 set -e
 
-include=-I../../../output/include
-libpath='-L../../../output/lib -lrey'
+include=-I../../../build/include
+libpath='-L../../../build/lib -lrey'
 cc='g++ -std=c++0x'
 opts='-O3 -pthread'
 
@@ -23,7 +23,7 @@ config(){
   cd ..
 }
 
-apps='render bb8 example1 builtin'
+apps='render bb8 example1 builtin r2d2'
 
 for app in $apps; do
   include=$include" -I../$app"

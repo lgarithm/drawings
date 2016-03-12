@@ -6,6 +6,11 @@
 
 using std::string;
 
+with_c::with_c(unsigned short b, unsigned short f)
+{ printf("\e[%hu;%hum", b, f); }
+
+with_c::~with_c() { printf("\e[m"); }
+
 clogger::clogger() : bg(0), color(GREEN) {}
 
 void clogger::log(const string msg, int c, int b)

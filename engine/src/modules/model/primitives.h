@@ -13,6 +13,8 @@ struct Plane : simple_object
   material m;
 
   Plane(const t_vector3&);
+
+  maybe<scalarT> meet(const ray&) const /* override */;
   maybe<point3> intersect(const ray&) const /* override */;
   surface at(const point3&) const /* override */;
 };

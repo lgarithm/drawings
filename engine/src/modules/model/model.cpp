@@ -1,7 +1,9 @@
 #include "model.h"
 
 #include <cmath>
+#include <cstdio>
 
+#include <memory>
 #include <vector>
 
 #include "arith.h"
@@ -11,6 +13,7 @@
 #include "point.h"
 
 using std::vector;
+using std::unique_ptr;
 
 maybe<scalarT> r_dis(const t_vector3& n, const ray& r)
 {
@@ -40,4 +43,22 @@ bool simple_object::intersect(const ray& r, intersection& i) const
     return true;
   }
   return false;
+}
+
+void operator+=(world& w, object* po)
+{ w.objects.push_back(unique_ptr<object>(po)); }
+
+size_t save(const object* o, unsigned char *p)
+{
+  size_t s = sizeof(*o);
+  return s;
+}
+
+void info(const world& w)
+{
+  unsigned char buffer[1024];
+  for (auto& it : w.objects) {
+    auto s = save(it.get(), buffer);
+    printf("object{size : %lu}\n", s);
+  }
 }

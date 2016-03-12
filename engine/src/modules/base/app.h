@@ -1,11 +1,12 @@
 #ifndef APP_H
 #define APP_H
 
-#include "logger.h"
-#include "model.h"
-#include "params.h"
+#include <map>
+#include <string>
 
-int app(int argc, char* argv[]);
-void run(const config&, const scene&);
+#include "model.h"
+
+int app(int, char* argv[]);
+int app(int, char* argv[], std::map<std::string, world_gen>, world_gen=nullptr);
 
 #endif  // APP_H

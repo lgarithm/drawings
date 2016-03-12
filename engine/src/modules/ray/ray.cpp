@@ -70,8 +70,9 @@ color rasterize(const world& w, const env& e, const camera& cam,
 
 viewport fit(const camera& cam, const display& d)
 {
-  double W = 2 * cam.near * tan(.5 * cam.aov * M_PI / 180);
-  double H = 2 * cam.near * tan(.5 * cam.aov * M_PI / 180);
+  auto g = [&](scalarT a){ return 2 * cam.near * tan(.5 * a * M_PI / 180); };
+  double W = g(cam.aov);
+  double H = g(cam.aov);
   double k = .5 * min(W / d.width, H / d.height);
   auto f = [](double l){ return interval{-l, l}; };
   return viewport{f(d.width * k), f(d.height * k)};

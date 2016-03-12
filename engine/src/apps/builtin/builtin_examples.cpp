@@ -1,19 +1,57 @@
 #include "builtin_examples.h"
 
 #include <map>
-#include <memory>
 #include <string>
 
 #include "rey.h"
 
 using std::map;
 using std::string;
-using std::unique_ptr;
+
+world* empty_scene() { return new world; }
 
 world* default_test_scene()
 {
   auto w = new world;
-  w->objects.push_back(unique_ptr<object>(new Chessboard(3)));
+  *w += new Chessboard(3);
+  return w;
+}
+
+world* test_plane_1()
+{
+  auto w = new world;
+  *w += new Plane(t_vector3{origin, z_axis});
+  return w;
+}
+
+world* test_plane_2()
+{
+  auto w = new world;
+  auto r1 = 2 * (x_axis + 2 * z_axis);
+  auto r2 = 2 * (-x_axis + 2 * z_axis);
+  *w += new Plane(t_vector3{origin - r1, norm(r1)});
+  *w += new Plane(t_vector3{origin - r2, norm(r2)});
+  return w;
+}
+
+world* single_ellipsoid()
+{
+  auto w = new world;
+  *w += new ellipsoid(3,3,2);
+  return w;
+}
+
+world* single_cylinder_surface()
+{
+  auto w = new world;
+  *w += new cylinder_surface(2);
+  return w;
+}
+
+world* single_cone_surface()
+{
+  auto w = new world;
+  *w += new cone_surface(1 / 4.);
   return w;
 }
 
@@ -22,7 +60,7 @@ world* test_ellipsoid()
   auto w = default_test_scene();
   auto e = new ellipsoid(3,3,2);
   e->of.o += 5 * z_axis;
-  w->objects.push_back(unique_ptr<object>(e));
+  *w += e;
   return w;
 }
 
@@ -34,8 +72,8 @@ world* test_ellipsoid_2()
   f->m.reflection = .2;
   f->m.diffuse = yellow;
 
-  w->objects.push_back(unique_ptr<object>(e));
-  w->objects.push_back(unique_ptr<object>(f));
+  *w += e;
+  *w += f;
   return w;
 }
 
@@ -46,8 +84,8 @@ world* test_cylinder()
   auto c2 = new cylinder_surface(3);
   c1->of.o += -5 * x_axis;
   c2->of.o += 5 * x_axis;
-  w->objects.push_back(unique_ptr<object>(c1));
-  w->objects.push_back(unique_ptr<object>(c2));
+  *w += c1;
+  *w += c2;
   return w;
 }
 
@@ -55,7 +93,7 @@ world* test_cylinder_2()
 {
   auto w = default_test_scene();
   auto c = new cylinder_surface(3);
-  w->objects.push_back(unique_ptr<object>(c));
+  *w += c;
   return w;
 }
 
@@ -63,13 +101,19 @@ world* test_cone()
 {
   auto w = default_test_scene();
   auto c = new cone_surface(1. / 4);
-  w->objects.push_back(unique_ptr<object>(c));
+  *w += c;
   return w;
 }
 
 map<string, world_gen> examples()
 {
   map<string, world_gen> mp;
+  mp["empty"] = empty_scene;
+  mp["single_ellipsoid"] = single_ellipsoid;
+  mp["single_cylinder_surface"] = single_cylinder_surface;
+  mp["single_cone_surface"] = single_cone_surface;
+  mp["test_plane_1"] = test_plane_1;
+  mp["test_plane_2"] = test_plane_2;
   mp["ellipsoid"] = test_ellipsoid;
   mp["ellipsoid2"] = test_ellipsoid_2;
   mp["cylinder"] = test_cylinder;

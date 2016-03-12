@@ -1,7 +1,6 @@
 #include "bb8_model.h"
 
 #include <cmath>
-#include <memory>
 
 #include <algorithm>
 #include <map>
@@ -15,7 +14,6 @@ using std::map;
 using std::max;
 using std::min;
 using std::string;
-using std::unique_ptr;
 
 template<typename T> T max3(const T& a, const T& b, const T& c)
 { return max(max(a, b), c); }
@@ -125,11 +123,10 @@ world* bb8_example_1()
   auto gg = [&](vector3 p)
     {
       auto of = oframe{p + size * z_axis, f};
-      w->objects.push_back(unique_ptr<object>(new bb8(size, of)));
+      *w += new bb8(size, of);
     };
   gg(origin);
-
-  w->objects.push_back(unique_ptr<object>(new Floor));
+  *w += new Floor;
   return w;
 }
 
@@ -141,7 +138,7 @@ world* bb8_example_2()
   auto gg = [&](vector3 p)
     {
       auto of = oframe{p + size * z_axis, f};
-      w->objects.push_back(unique_ptr<object>(new bb8(size, of)));
+      *w += new bb8(size, of);
     };
 
   double d = 15;
@@ -150,7 +147,6 @@ world* bb8_example_2()
       gg(point3{d * x, d * y, 0});
     }
   }
-
-  w->objects.push_back(unique_ptr<object>(new Chessboard(5)));
+  *w += new Chessboard(5);
   return w;
 }

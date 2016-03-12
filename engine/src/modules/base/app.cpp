@@ -1,29 +1,29 @@
 #include "app.h"
 
+#include <cassert>
 #include <cstdio>
 
 #include <algorithm>
+#include <map>
 #include <memory>
+#include <string>
 #include <vector>
-
-#if HAS_STD_THREAD
-  #include <thread>
-#endif
 
 #include "bmp.h"
 #include "debug.h"
 #include "display.h"
 #include "logger.h"
 #include "model.h"
+#include "parallel.h"
 #include "params.h"
 #include "ray.h"
+#include "utils.h"
 
+using std::map;
+using std::move;
 using std::vector;
 using std::string;
-
-#if HAS_STD_THREAD
-  using std::thread;
-#endif
+using std::unique_ptr;
 
 namespace
 {
@@ -31,7 +31,10 @@ namespace
   static const int buffer_size = 3 * max_width * max_height;
   unsigned char buffer[buffer_size];
   unsigned char* buffers[4096];
-}
+
+  struct scene{ world w; env e; };
+}  // namespace
+
 
 void save(const char * name, const display& d, const unsigned char * buffer)
 {
@@ -39,45 +42,6 @@ void save(const char * name, const display& d, const unsigned char * buffer)
   head.init(d.width, d.height);
   write_bmp_file(head, buffer, name);
 }
-
-struct result
-{
-  clip c;
-  unsigned char *p;
-};
-
-struct task
-{
-  static int Id;
-
-  const int id;
-  const engine e;
-  const world& w;
-  const env l;
-  const camera cam;
-  const clip c;
-  unsigned char *p;
-
-  result* r;
-
-  task(const engine& e, const world& w, const env& l,
-       const camera& cam, const clip& c, unsigned char *p, result* r) :
-    id(++Id), e(e), w(w), l(l), cam(cam), c(c), p(p), r(r) {}
-
-  void operator()()
-  {
-    char msg[64];
-    sprintf(msg, "begin rendering task #%d", id);
-    lo.log(msg);
-    e.render(w, l, cam, c, p);
-    r->c = c;
-    r->p = p;
-    sprintf(msg, "finished rendering task #%d", id);
-    lo.log(msg);
-  }
-};
-
-int task::Id = 0;
 
 void run(const config& cfg, const scene& s)
 {
@@ -87,7 +51,7 @@ void run(const config& cfg, const scene& s)
     auto g = e.rasterize(s.w, s.e, cfg.cam, cfg.i, cfg.j);
     auto p = rgb(g);
     printf("pix[%d, %d] = (%f, %f, %f) # %02x %02x %02x | %d %d %d\n",
-      cfg.j, cfg.i, g.r, g.g, g.b, p.r, p.g, p.b, p.r, p.g, p.b);
+           cfg.j, cfg.i, expand_c(g), expand_c(p), expand_c(p));
     return ;
   }
 
@@ -98,9 +62,7 @@ void run(const config& cfg, const scene& s)
 
   lo.log("begin rendering ...");
 
-  #if HAS_STD_THREAD
-    vector<thread*> ts;
-  #endif
+  vector<task*> tasks;
   vector<result*> rs;
   unsigned char * p = buffer;
   for (int i=0; i < n; ++i) {
@@ -116,20 +78,10 @@ void run(const config& cfg, const scene& s)
     auto r = new result;
     auto tsk = new task(e, s.w, s.e, cfg.cam, c, buffers[i], r);
     rs.push_back(r);
-    if (cfg.use_thread) {
-      #if HAS_STD_THREAD
-        auto th = new thread(*tsk);
-        ts.push_back(th);
-      #else
-        (*tsk)();
-      #endif
-    } else {
-      (*tsk)();
-    }
+    tasks.push_back(tsk);
   }
-  #if HAS_STD_THREAD
-    for (auto& it : ts) { it->join(); }
-  #endif
+
+  run_tasks(tasks, cfg.use_thread);
 
   if (cfg.dd.m > 1 && cfg.dd.n > 1) {
     for (auto it : rs) {
@@ -145,3 +97,37 @@ void run(const config& cfg, const scene& s)
   }
   lo.log("done");
 }
+
+int app(int argc, char* argv[], map<string, world_gen> worlds, world_gen def)
+{
+  config cfg;
+  if (not parse(argc, argv, cfg)) {
+    usage(argv[0]);
+    return 0;
+  }
+  show_config(cfg);
+
+  scene s;
+  s.e = cfg.lights;
+
+  auto name = cfg.args.empty() ? "" : cfg.args[0];
+  auto fn = get<string, world_gen>(worlds, name, def);
+  if (fn != nullptr) {
+    unique_ptr<world> w(fn());
+    for (auto& it : w->objects) {
+      lo.log("add 1 object from scene", clogger::RED);
+      s.w += it.get();
+      it.release();
+    }
+  }
+  for (auto it : cfg.oo) {
+    lo.log("add object from cfg", clogger::RED);
+    s.w += it;
+  }
+  info(s.w);
+  run(cfg, s);
+  return 0;
+}
+
+int app(int argc, char* argv[])
+{ return app(argc, argv, map<string, world_gen>()); }
