@@ -125,6 +125,8 @@ int app(int argc, char* argv[], const atlas& worlds, world_gen def)
       usage(argv[0], worlds);
       return 1;
     }
+  } else {
+    lo.log("no builtin scene for given!");
   }
   for (auto it : cfg.oo) {
     lo.log("add object from cfg", clogger::RED);

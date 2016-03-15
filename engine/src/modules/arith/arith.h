@@ -24,4 +24,6 @@ unsigned short real_roots(const quad_eq&, numericT&, numericT&);
 unsigned short positive_roots(const quad_eq&, numericT&, numericT&);
 bool min_positive_root(const quad_eq& e, numericT& x);
 
+static auto const radian = 180 / M_PI;
+
 #endif  // ARITH_H

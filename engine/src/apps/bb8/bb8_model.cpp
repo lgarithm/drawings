@@ -7,8 +7,6 @@
 
 #include "rey.h"
 
-static auto const radian = 180 / M_PI;
-
 using std::max;
 using std::min;
 

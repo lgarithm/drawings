@@ -14,4 +14,6 @@ template<typename T> bool operator<(const maybe<T>& x, const maybe<T>& y)
   return x.it < y.it;
 }
 
+#define inject(m, f) (m.just ? f(m.it) : m)
+
 #endif  // MAYBE_H

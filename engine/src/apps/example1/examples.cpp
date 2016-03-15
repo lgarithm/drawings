@@ -1,13 +1,16 @@
 #include "examples.h"
 
-#include <map>
-#include <string>
-
 #include "bb8_model.h"
 #include "rey.h"
 
-using std::map;
-using std::string;
+namespace {
+
+world* default_test_scene()
+{
+  auto w = new world;
+  *w += new Floor;
+  return w;
+}
 
 world* example_1()
 {
@@ -65,11 +68,35 @@ world* test_room()
   return w;
 }
 
-map<string, world_gen> examples()
+world* r2d2_bb8()
 {
-  map<string, world_gen> mp;
+  auto w = default_test_scene();
+  {
+    auto h = 7;
+    auto r = 3;
+    auto p = point3{-5,0,0};
+    auto of = oframe(origin + p, frame(-x_axis, -y_axis, z_axis));
+    of = of + .5 * h * of.f.Z;
+    *w += new r2d2(r, h, of);
+  }
+  {
+    double size = 3.5;
+    auto p = point3{5,0,0};
+    auto f = frame{norm(x_axis + y_axis), norm(y_axis - x_axis), z_axis};
+    auto of = oframe(p + size * z_axis, f);
+    *w += new bb8(size, of);
+  }
+  return w;
+}
+
+}  // namespace
+
+atlas examples()
+{
+  atlas mp;
   mp["example_1"] = example_1;
   mp["example_2"] = example_2;
   mp["test_room"] = test_room;
+  mp["r2d2_bb8"] = r2d2_bb8;
   return mp;
 }
