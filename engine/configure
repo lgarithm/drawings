@@ -22,6 +22,9 @@ prepare_source(){
     for m in `ls src/modules`; do
         move src/modules/$m
     done
+
+    sed -f override.sed -ir build/include/*.h
+    rm build/include/*.hr
 }
 
 gen_object_target(){
