@@ -58,7 +58,8 @@ bool min_positive_root(const quad_eq& e, numericT& x)
   if (n > 0) {
     auto y = eval(e, x);
     if (fabs(y) > 1e-3 || x < 0) {
-      fprintf(stderr, "%f X^2 + %f X + %f = 0 @ %f = %f\n", e.A, e.B, e.C, x, y);
+      fprintf(stderr, "%f X^2 + %f X + %f = 0 @ %f = %f\n",
+              e.A, e.B, e.C, x, y);
     }
   }
   return n > 0;

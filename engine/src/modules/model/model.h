@@ -15,33 +15,20 @@
 
 typedef t_vector3 ray;
 
-maybe<scalarT> r_dis(const t_vector3& n, const ray& r);
-
 struct surface{ t_vector3 n; material m; };
 
-// TODO : depre
-struct intersection
-{
-  t_vector3 n;
-  material m;
-  double d;
-};
+struct intersection { surface s; scalarT d; };
 
 bool operator<(const intersection&, const intersection&);
 
 struct object
-{
-  virtual bool intersect(const ray&, intersection&) const = 0;  // TODO : depre
-
-  virtual maybe<scalarT> meet(const ray&) const { return nothing<scalarT>(); }
-  // virtual std::pair<t_vector3, material> at(const point3&) const;  // = 0;
-};
+{ virtual maybe<intersection> intersect(const ray&) const = 0; };
 
 struct simple_object : object
 {
-  virtual maybe<point3> intersect(const ray&) const = 0;
+  maybe<intersection> intersect(const ray&) const override;
+  virtual maybe<scalarT> meet(const ray&) const = 0;
   virtual surface at(const point3&) const = 0;
-  bool intersect(const ray&, intersection&) const /* override */;
 };
 
 struct world{ std::vector<std::unique_ptr<object>> objects; };
@@ -51,22 +38,23 @@ typedef world*(*world_gen)();
 void info(const world& w);
 
 template<typename T>
-bool nearest(const std::vector<T>& oo, const ray& r, intersection& i)
-{
+maybe<intersection> nearest(const std::vector<T>& oo, const ray& r)
+{ // TODO : reduce
   bool f = false;
-  intersection cut;
+  intersection i;
   for (const auto& it : oo) {
-    if (it->intersect(r, cut)) {
-      if (not f or cut < i) {
+    auto j = it->intersect(r);
+    if (j.just) {
+      if (not f or j.it.d < i.d) {
         f = true;
-        i = cut;
+        i = j.it;
       }
     }
   }
-  return f;
+  return f ? just(i) : nothing<intersection>();
 }
 
-bool nearest(const world&, const ray&, intersection&);
+maybe<intersection> nearest(const world&, const ray&);
 
 struct light{ point3 pos; color col; };
 struct env{ std::vector<light> lights; };

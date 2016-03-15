@@ -1,5 +1,7 @@
 #include "linear.h"
 
+t_vector3::t_vector3(const point3& o, const vector3& v) : o(o), v(v) { }
+
 frame::frame() : X(x_axis), Y(y_axis), Z(z_axis) { }
 
 frame::frame(const vector3& x, const vector3& y, const vector3& z)

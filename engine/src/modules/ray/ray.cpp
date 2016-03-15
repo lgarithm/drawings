@@ -7,6 +7,7 @@
 
 #include "color.h"
 #include "guard.h"
+#include "model.h"
 #include "profile.h"
 
 using std::max;
@@ -18,10 +19,10 @@ static const shader default_shader(black, black);
 #define DEFINE_TRACE_FUNC(func_name, TRACE_CODE)                        \
   color func_name(const ray& r, const world& w, const env& e, int dep)  \
   {                                                                     \
-    TRACE_CODE                                                          \
-    intersection i;                                                     \
-    return nearest(w, r, i)                                             \
-      ? default_shader(i, reflect(i.n.v, r.v), w, e, dep)               \
+    TRACE_CODE;                                                         \
+    auto i = nearest(w, r);                                             \
+    return (i.just)                                                     \
+      ? default_shader(i.it.s, reflect(i.it.s.n.v, r.v), w, e, dep)     \
       : default_shader.bgc;                                             \
   }
 
@@ -36,24 +37,24 @@ DEFINE_TRACE_FUNC(trace_with_log, LOG_TRACE)
 
 shader::shader(const color& b, const color& d) : bgc(b), def(d) {}
 
-color shader::operator()(const intersection& i, const vector3& r,
+color shader::operator()(const surface& s, const vector3& r,
                          const world& w, const env& e, int dep) const
 {
-  assert_unit(i.n.v, __func__);
+  assert_unit(s.n.v, __FILE__, __func__);
   auto nc = def;
   {
     for (const auto& l : e.lights) {
-      auto d = len(l.pos - i.n.o);
-      auto ldir = norm(l.pos - i.n.o);
-      intersection j;
-      if (not nearest(w, ray{i.n.o, ldir}, j) || d < j.d) {
-        nc += max(0., dot(ldir, i.n.v)) * i.m.diffuse * l.col +
-          pow(max(0., dot(ldir, r)), i.m.roughness) * i.m.specular * l.col;
+      auto d = len(l.pos - s.n.o);
+      auto ldir = norm(l.pos - s.n.o);
+      auto j = nearest(w, ray{s.n.o, ldir});
+      if (not j.just || d < j.it.d) {
+        nc += max(0., dot(ldir, s.n.v)) * s.m.diffuse * l.col +
+          pow(max(0., dot(ldir, r)), s.m.roughness) * s.m.specular * l.col;
       }
     }
   }
   auto rc = dep > 0
-    ? i.m.reflection * trace(ray{i.n.o, r}, w, e, dep - 1)
+    ? s.m.reflection * trace(ray{s.n.o, r}, w, e, dep - 1)
     : grey;
   return nc + rc;
 }

@@ -1,12 +1,17 @@
 #include "polyhedron.h"
 
+#include <cassert>
 #include <cmath>
 
+#include <algorithm>
 #include <vector>
+#include <utility>
 
 #include "arith.h"
+#include "primitives.h"
 #include "solids.h"
 
+using std::max;
 using std::vector;
 
 polygon unit_square(scalarT u=1)
@@ -56,46 +61,46 @@ bool in(const point2& p, const polygon& g)
   return zero(s - area(g));
 }
 
-maybe<scalarT> dis_r_circle(const t_vector2& r, scalarT s)
-{
-  return nothing<scalarT>();
-}
+cylinder::cylinder(scalarT r, scalarT h, const oframe of)
+  : b(r, h, of)
+  , u(r, t_vector3(of.o + .5 * h * of.f.Z, of.f.Z))
+  , d(r, t_vector3(of.o - .5 * h * of.f.Z, -of.f.Z))
+  , subs{&b, &u, &d}
+  { }
 
-maybe<point3> cylinder_inf::intersect(const ray& r) const
+maybe<intersection> cylinder::intersect(const ray& r) const
 {
-  return nothing<point3>();
-}
-
-surface cylinder_inf::at(const point3&) const
-{
-  return surface{};
-}
-
-bool cylinder::intersect(const ray& r, intersection& i) const
-{
-  auto t = local(of, r);
-  auto a = point2{t.o.x, t.o.y};
-  auto p = point2{t.v.x, t.v.y};
-  //auto d = a - dot(a, p) * p;
-
-  // TODO
-  return false;
+  const int n = 3;
+  maybe<scalarT> ts[n];
+  for (int i=0; i < n; ++i) ts[i] = subs[i]->meet(r);
+  auto idx = 0;
+  for (int i=1; i < n; ++i) {
+    if (ts[i].just) {
+      if (!ts[idx].just || ts[idx].it < ts[i].it) idx = i;
+    }
+  }
+  if (ts[idx].just) {
+    auto s = subs[idx]->at(r + ts[idx].it);
+    s.n = s.n + 1e-6 * s.n.v;
+    return just(intersection{s, ts[idx].it});
+  }
+  return nothing<intersection>();
 }
 
 space_polygon::space_polygon(const oframe& of, const std::vector<point2>& vs) :
     of(of) { vertices = vs; }
 
-maybe<point3> space_polygon::intersect(const ray& r) const
+maybe<scalarT> space_polygon::meet(const ray& r) const
 {
   auto t = r_dis(t_vector3{of.o, of.f.Z}, r);
   if (t.just) {
     auto p = r + t.it;
     auto q = local(of, p);
     if (in(point2{q.x, q.y}, *this)) {
-      return just<point3>(p);
+      return just<scalarT>(t.it);
     }
   }
-  return nothing<point3>();
+  return nothing<scalarT>();
 }
 
 surface space_polygon::at(const point3& p) const
@@ -104,11 +109,11 @@ surface space_polygon::at(const point3& p) const
   return s;
 }
 
-bool polyhedron::intersect(const ray& r, intersection& i) const
+maybe<intersection> polyhedron::intersect(const ray& r) const
 {
   vector<const object*> oo(faces.size());
   for (int i=0; i < faces.size(); ++i) {
     oo[i] = &faces[i];
   }
-  return nearest(oo, r, i);
+  return nearest(oo, r);
 }

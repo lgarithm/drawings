@@ -1,5 +1,6 @@
 #include "bb8_model.h"
 
+#include <cassert>
 #include <cmath>
 
 #include <algorithm>
@@ -28,17 +29,15 @@ map<string, world_gen> bb8_examples()
 
 bb8_head::bb8_head(double size, const oframe& of) : size(size), of(of) {}
 
-maybe<point3> bb8_head::intersect(const ray& r) const
+maybe<scalarT> bb8_head::meet(const ray& r) const
 {
   sphere s(size, of.o);
-  auto mp = s.intersect(r);
-  if (mp.just) {
-    auto p = norm(local(of, mp.it));
-    if (p.z >= 0) {
-      return mp;
-    }
+  auto t = s.meet(r);
+  if (t.just) {
+    auto p = local(of, r + t.it);
+    if (p.z > 0) return t;
   }
-  return nothing<point3>();
+  return nothing<scalarT>();
 }
 
 surface bb8_head::at(const point3& p) const
@@ -61,11 +60,10 @@ surface bb8_head::at(const point3& p) const
 
 bb8_body::bb8_body(double size, const oframe& of) : size(size), of(of) {}
 
-maybe<point3> bb8_body::intersect(const ray& r) const
+maybe<scalarT> bb8_body::meet(const ray& r) const
 {
   sphere s(size, of.o);
-  auto mp = s.intersect(r);
-  return mp;
+  return s.meet(r);
 }
 
 surface bb8_body::at(const point3& p) const
@@ -97,22 +95,11 @@ surface bb8_body::at(const point3& p) const
 bb8::bb8(double size, const oframe& of) : head(.5 * size, of + size * z_axis),
                                           body(size, of) {}
 
-bool bb8::intersect(const ray& r, intersection& i) const
+maybe<intersection> bb8::intersect(const ray& r) const
 {
-  intersection j1, j2;
-  bool f1 = body.simple_object::intersect(r, j1);
-  bool f2 = head.simple_object::intersect(r, j2);
-  if (not f1 and not f2) return false;
-  if (not f1) {
-    i = j2;
-    return true;
-  }
-  if (not f2) {
-    i = j1;
-    return true;
-  }
-  i = min(j1, j2);
-  return true;
+  auto i1 = body.intersect(r);
+  auto i2 = head.intersect(r);
+  return min(i1, i2);
 }
 
 world* bb8_example_1()

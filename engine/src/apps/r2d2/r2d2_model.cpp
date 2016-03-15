@@ -8,12 +8,11 @@
 
 using std::map;
 using std::string;
-using std::unique_ptr;
 
 world* default_test_scene()
 {
   auto w = new world;
-  w->objects.push_back(unique_ptr<object>(new Chessboard(3)));
+  *w += new Chessboard(3);
   return w;
 }
 

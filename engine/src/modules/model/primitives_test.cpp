@@ -6,25 +6,41 @@
 #include "model.h"
 #include "testing.h"
 
+void test_0()
+{
+  {
+    auto d = r_dis(t_vector3(origin, z_axis), ray{origin + z_axis, -z_axis});
+    assert(d.just);
+    assert(d.it == 1);
+  }
+  {
+    auto d = r_dis(t_vector3(origin, z_axis), ray{origin + z_axis, z_axis});
+    assert(not d.just);
+  }
+  {
+    auto d = r_dis(t_vector3(origin, -z_axis), ray{origin + z_axis, -z_axis});
+    assert(not d.just);
+  }
+}
+
 void test_1()
 {
-  intersection i;
   auto s = sphere(1, point3{0, 0, 0});
   {
     auto r = ray{point3{0, 0, 2}, norm(vec3(0, 0, -1))};
-    bool f = s.simple_object::intersect(r, i);
-    assert(f);
-    assert(i.d == 1);
+    auto i = s.simple_object::intersect(r);
+    assert(i.just);
+    assert(i.it.d == 1);
   }
   {
     auto r = ray{point3{0, 0, sqrt(2.0)}, norm(vec3(1 - 1e-9, 0, -1))};
-    bool f = s.simple_object::intersect(r, i);
-    assert(f);
+    auto i = s.simple_object::intersect(r);
+    assert(i.just);
   }
   {
     auto r = ray{point3{0, 0, sqrt(2.1)}, norm(vec3(1, 0, -1))};
-    bool f = s.simple_object::intersect(r, i);
-    assert(not f);
+    auto i = s.simple_object::intersect(r);
+    assert(not i.just);
   }
 }
 
@@ -37,13 +53,14 @@ void test_2()
   auto t = triangle(a,b,c);
   {
     auto r = ray{point3{1,1,1}, norm(vec3(-1,-1,-1))};
-    bool f = t.simple_object::intersect(r, i);
-    assert(f);
+    auto i = t.simple_object::intersect(r);
+    assert(i.just);
   }
 }
 
 int main()
 {
+  test(0);
   test(1);
   test(2);
   return 0;

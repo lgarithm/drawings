@@ -17,6 +17,13 @@ world* default_test_scene()
   return w;
 }
 
+world* test_board_1()
+{
+  auto w = new world;
+  *w += new Chessboard;
+  return w;
+}
+
 world* test_plane_1()
 {
   auto w = new world;
@@ -77,7 +84,7 @@ world* test_ellipsoid_2()
   return w;
 }
 
-world* test_cylinder()
+world* test_cylinder_surface()
 {
   auto w = default_test_scene();
   auto c1 = new cylinder_surface(3);
@@ -89,7 +96,7 @@ world* test_cylinder()
   return w;
 }
 
-world* test_cylinder_2()
+world* test_cylinder_surface_2()
 {
   auto w = default_test_scene();
   auto c = new cylinder_surface(3);
@@ -105,10 +112,34 @@ world* test_cone()
   return w;
 }
 
+world* test_cylinder()
+{
+  auto w = new world;
+  *w += new cylinder(3, 3);
+  return w;
+}
+
+world* test_cylinder_2()
+{
+  auto w = new world;
+  auto of = oframe();
+  *w += new cylinder(2, 4, of + 5 * z_axis);
+  *w += new Floor;
+  return w;
+}
+
+world* test_cylinder_3()
+{
+  auto w = new world;
+  *w += new cylinder(12, 4, oframe());
+  return w;
+}
+
 map<string, world_gen> examples()
 {
   map<string, world_gen> mp;
   mp["empty"] = empty_scene;
+  mp["test_board_1"] = test_board_1;
   mp["single_ellipsoid"] = single_ellipsoid;
   mp["single_cylinder_surface"] = single_cylinder_surface;
   mp["single_cone_surface"] = single_cone_surface;
@@ -116,8 +147,11 @@ map<string, world_gen> examples()
   mp["test_plane_2"] = test_plane_2;
   mp["ellipsoid"] = test_ellipsoid;
   mp["ellipsoid2"] = test_ellipsoid_2;
+  mp["cylinder_surface"] = test_cylinder_surface;
+  mp["cylinder_surface2"] = test_cylinder_surface_2;
+  mp["cone"] = test_cone;
   mp["cylinder"] = test_cylinder;
   mp["cylinder2"] = test_cylinder_2;
-  mp["cone"] = test_cone;
+  mp["cylinder3"] = test_cylinder_3;
   return mp;
 }

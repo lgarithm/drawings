@@ -3,31 +3,27 @@
 
 #include <vector>
 
+#include "maybe.h"
 #include "model.h"
-
-struct cylinder_inf : simple_object
-{
-  oframe of;
-  scalarT r;
-
-  maybe<point3> intersect(const ray&) const;
-  surface at(const point3&) const;
-};
-
-struct cylinder : object
-{
-  // t_vector3 t;
-  oframe of;
-  scalarT h;
-  scalarT r;
-
-  bool intersect(const ray&, intersection&) const /* override */;
-};
+#include "model_surface.h"
+#include "primitives.h"
 
 struct polygon { std::vector<point2> vertices; };
 
 scalarT area(const polygon&, const point2 = point2{0,0});
 bool in(const point2&, const polygon&);
+
+struct cylinder : object
+{
+  bound_cylinder_surface b;
+  disc u, d;
+
+  simple_object* subs[3];
+
+  cylinder(scalarT, scalarT, const oframe=oframe());
+
+  maybe<intersection> intersect(const ray&) const override;
+};
 
 struct space_polygon : simple_object, polygon
 {
@@ -35,15 +31,15 @@ struct space_polygon : simple_object, polygon
 
   space_polygon(const oframe&, const std::vector<point2>&);
 
-  maybe<point3> intersect(const ray&) const;
-  surface at(const point3&) const;
+  maybe<scalarT> meet(const ray&) const override;
+  surface at(const point3&) const override;
 };
 
 struct polyhedron : object
 {
   std::vector<space_polygon> faces;
 
-  bool intersect(const ray&, intersection&) const /* override */;
+  maybe<intersection> intersect(const ray&) const override;
 
   //polyhedron();
 };

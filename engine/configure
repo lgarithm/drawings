@@ -9,11 +9,16 @@ cc='g++ -std=c++0x -I../include'
 opts='-O3 -fPIC'
 
 move(){
-    cp -v $1/*.h build/include 2> /dev/null || true
-    cp -v $1/*.cpp build/src 2> /dev/null || true
+    for h in `find $1 | grep "\.h"`; do
+        cp -v $h build/include | tee -a cp.log
+    done
+    for c in `find $1 | grep "\.cpp"`; do
+        cp -v $c build/src | tee -a cp.log
+    done
 }
 
 prepare_source(){
+    echo -n "" > cp.log
     for m in `ls src/modules`; do
         move src/modules/$m
     done
@@ -36,7 +41,7 @@ gen_dep_objets(){
 gen_out_target(){
     base=`basename $1 .cpp`
     deps=`gen_dep_objets $1 | tr "\n" " "`
-    echo $base".out: $deps"
+    echo $base".out: $deps $1"
     echo -e "\t$cc $opts $deps $1 -o $base.out"
     echo
 }
@@ -119,19 +124,32 @@ gen_makefile(){
     echo -e "\tcd build && make clean"
 }
 
+prepare_dir(){
+    mkdir -pv build/src
+    mkdir -pv build/bin
+    mkdir -pv build/include
+    mkdir -pv build/lib
+    mkdir -pv build/share
+    mkdir -pv output
+}
+
 config(){
-    mkdir -p build/src
-    mkdir -p build/bin
-    mkdir -p build/include
-    mkdir -p build/lib
-    mkdir -p build/share
+    echo -e "\x1b[1;32mCreating Dir\x1b[m"
+    prepare_dir
+    echo -e "\x1b[1;32mCopying Source\x1b[m"
     prepare_source
+    echo -e "\x1b[1;32mGenerating Build Makefile\x1b[m"
     cd build/src
     gen_build_makefile > Makefile
     cd ../..
+    echo -e "\x1b[1;32mGenerating Makefile\x1b[m"
     gen_makefile > Makefile
+    echo -e "\x1b[1;32mDone\x1b[m"
 }
 
-prefix=$HOME/local/librey
-config
-mkdir -p output
+main(){
+    prefix=$HOME/local/librey
+    config
+}
+
+main

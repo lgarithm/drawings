@@ -36,6 +36,9 @@ struct counter
 counter _worest;
 }  // namespace
 
+void assert_unit(const vector3& v, const string s, const string t)
+{ assert_unit(v, s + ":" + t); }
+
 void assert_unit(const vector3& v, const string s)
 {
   auto d = fabs(len(v) - 1);

@@ -14,8 +14,9 @@ struct bb8_head : simple_object
   oframe of;
 
   bb8_head(double, const oframe&);
-  maybe<point3> intersect(const ray&) const /* override */;
-  surface at(const point3&) const /* override */;
+
+  maybe<scalarT> meet(const ray&) const override;
+  surface at(const point3&) const override;
 };
 
 struct bb8_body : simple_object
@@ -24,8 +25,9 @@ struct bb8_body : simple_object
   oframe of;
 
   bb8_body(double, const oframe&);
-  maybe<point3> intersect(const ray&) const /* override */;
-  surface at(const point3&) const /* override */;
+
+  maybe<scalarT> meet(const ray&) const override;
+  surface at(const point3&) const override;
 };
 
 struct bb8 : object
@@ -37,7 +39,8 @@ struct bb8 : object
   bb8_body body;
 
   bb8(double, const oframe&);
-  bool intersect(const ray&, intersection&) const /* override */;
+
+  maybe<intersection> intersect(const ray&) const override;
 };
 
 world* bb8_example_1();

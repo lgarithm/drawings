@@ -1,5 +1,6 @@
 *.a
 *.bmp
+*.log
 *.o
 *.out
 Makefile

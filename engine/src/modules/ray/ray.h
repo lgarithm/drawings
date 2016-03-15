@@ -16,7 +16,7 @@ struct shader
   const color bgc;
   const color def;
   shader(const color&, const color&);
-  color operator()(const intersection&, const vector3&,
+  color operator()(const surface&, const vector3&,
                    const world&, const env&, int) const;
 };
 

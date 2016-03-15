@@ -4,7 +4,15 @@
 #include "point.h"
 
 struct t_vector2{ point2 o; vector2 v; };
-struct t_vector3{ point3 o; vector3 v; };
+
+struct t_vector3
+{
+  point3 o;
+  vector3 v;
+
+  t_vector3() {}  // TODO : depre
+  t_vector3(const point3&, const vector3&);
+};
 
 struct frame
 {

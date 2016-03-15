@@ -68,7 +68,7 @@ void run(const config& cfg, const scene& s)
   for (int i=0; i < n; ++i) {
     const auto c = a[i];
     char msg[64];
-    sprintf(msg, "rendering part %d/%zu : [%u, %u) X [%u, %u)", i + 1, n,
+    sprintf(msg, "part %d/%zu : [%u, %u) X [%u, %u)", i + 1, n,
             c.w.l, c.w.r, c.h.l, c.h.r);
     lo.log(msg);
     {
