@@ -1,1 +1,1 @@
-s/ override;/ \/* override *\/;/g
+s/ override/ \/* override *\//g

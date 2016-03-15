@@ -20,7 +20,7 @@ move(){
 override_override(){
     sed -f override.sed -ir build/include/*.h
     rm build/include/*.hr
-    for h in `find build/demo/**/*.h`; do
+    for h in `find build/demo/**/*`; do
         echo $h
         sed -f override.sed -ir $h
         rm ${h}r
