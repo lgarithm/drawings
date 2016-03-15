@@ -82,7 +82,8 @@ vector3 cone_surface::n_at(const point3& p) const
 }
 
 
-bound_cylinder_surface::bound_cylinder_surface(scalarT r, scalarT h, const oframe& of)
+bound_cylinder_surface::bound_cylinder_surface(scalarT r, scalarT h,
+                                               const oframe& of)
   : cylinder_surface(r, of), h(h) { }
 
 maybe<scalarT> bound_cylinder_surface::meet(const ray& r) const

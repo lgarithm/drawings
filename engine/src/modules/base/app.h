@@ -7,6 +7,6 @@
 #include "model.h"
 
 int app(int, char* argv[]);
-int app(int, char* argv[], std::map<std::string, world_gen>, world_gen=nullptr);
+int app(int, char* argv[], const atlas&, world_gen=nullptr);
 
 #endif  // APP_H

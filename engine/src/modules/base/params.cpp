@@ -173,7 +173,7 @@ bool parse(int argc, const char * const argv[], config& cfg)
   return true;
 }
 
-void usage(const char * name)
+void usage(const char * name, const atlas& a)
 {
   static const char* usages[] = {
     "-h, help",
@@ -187,7 +187,8 @@ void usage(const char * name)
     "[-n <depth>] "
     "[-o <outfile>] "
     "[-p] "
-    "[-r <ji>]"
+    "[-r <ji>] "
+    "[world]"
   };
   static const char* options[] = {
     "<aov> := 1 - 179",
@@ -204,5 +205,7 @@ void usage(const char * name)
   printf("Usage:\n");
   for (auto it : usages) printf("\t%s %s\n", name, it);
   for (auto it : options) printf("\t%s\n", it);
+  printf("\t[world]:\n");
+  for (auto it : a) printf("\t\t%s\n", it.first.c_str());
   printf("\n");
 }

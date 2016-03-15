@@ -7,6 +7,7 @@
 #include "debug.h"
 #include "display.h"
 #include "model.h"
+#include "view.h"
 #include "ray.h"
 
 struct result { clip c; unsigned char *p; };

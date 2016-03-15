@@ -1,6 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <map>
 #include <memory>
 #include <vector>
 #include <utility>
@@ -11,7 +12,6 @@
 #include "maybe.h"
 #include "point.h"
 #include "linear.h"
-#include "view.h"
 
 typedef t_vector3 ray;
 
@@ -35,28 +35,23 @@ struct world{ std::vector<std::unique_ptr<object>> objects; };
 
 void operator+=(world&, object*);
 typedef world*(*world_gen)();
-void info(const world& w);
+typedef std::map<std::string, world_gen> atlas;
 
 template<typename T>
 maybe<intersection> nearest(const std::vector<T>& oo, const ray& r)
-{ // TODO : reduce
-  bool f = false;
-  intersection i;
+{
+  auto i = nothing<intersection>();
   for (const auto& it : oo) {
     auto j = it->intersect(r);
-    if (j.just) {
-      if (not f or j.it.d < i.d) {
-        f = true;
-        i = j.it;
-      }
-    }
+    if (j < i) i = j;
   }
-  return f ? just(i) : nothing<intersection>();
+  return i;
 }
 
 maybe<intersection> nearest(const world&, const ray&);
 
 struct light{ point3 pos; color col; };
 struct env{ std::vector<light> lights; };
+typedef env*(*env_gen)();
 
 #endif  // MODEL_H

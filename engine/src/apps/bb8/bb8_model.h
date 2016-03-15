@@ -1,12 +1,9 @@
 #ifndef BB8_MODEL_H
 #define BB8_MODEL_H
 
-#include <map>
-#include <string>
-
 #include "rey.h"
 
-std::map<std::string, world_gen> bb8_examples();
+atlas bb8_examples();
 
 struct bb8_head : simple_object
 {

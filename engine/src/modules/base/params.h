@@ -8,6 +8,7 @@
 #include "model.h"
 #include "primitives.h"  // For traisitive closure
 #include "ray.h"
+#include "view.h"
 
 static const int max_width = 4096;
 static const int max_height = 4096;
@@ -37,6 +38,6 @@ struct config
 };
 
 bool parse(int argc, const char * const argv[], config& cfg);
-void usage(const char * name);
+void usage(const char * name, const atlas&);
 
 #endif  // PARAMS_H

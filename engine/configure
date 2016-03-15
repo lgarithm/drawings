@@ -17,14 +17,37 @@ move(){
     done
 }
 
+override_override(){
+    sed -f override.sed -ir build/include/*.h
+    rm build/include/*.hr
+    for h in `find build/demo/**/*.h`; do
+        echo $h
+        sed -f override.sed -ir $h
+        rm ${h}r
+    done
+}
+
 prepare_source(){
     echo -n "" > cp.log
     for m in `ls src/modules`; do
         move src/modules/$m
     done
-
-    sed -f override.sed -ir build/include/*.h
-    rm build/include/*.hr
+    for a in `ls src/apps`; do
+        if [ -d src/apps/$a ]; then
+            mkdir -p build/demo/$a
+            for b in `ls src/apps/$a`; do
+                cp -v src/apps/$a/$b build/demo/$a | tee -a cp.log
+            done
+        else
+            cp -v src/apps/$a build/demo | tee -a cp.log
+        fi
+    done
+    if [[ ! $(uname -a | grep Darwin) ]]; then
+        echo -e "\x1b[1;32mOverriding overide\x1b[m"
+        override_override
+    else
+        echo -e "\x1b[1;32mNOT overriding overide\x1b[m"
+    fi
 }
 
 gen_object_target(){
@@ -120,7 +143,7 @@ gen_makefile(){
     echo
 
     echo "demo: core"
-    echo -e "\tcd src/apps && bash ./configure && make"
+    echo -e "\tcd build/demo && bash ./configure && make"
     echo
 
     echo "clean:"
@@ -128,11 +151,12 @@ gen_makefile(){
 }
 
 prepare_dir(){
-    mkdir -pv build/src
     mkdir -pv build/bin
+    mkdir -pv build/demo
     mkdir -pv build/include
     mkdir -pv build/lib
     mkdir -pv build/share
+    mkdir -pv build/src
     mkdir -pv output
 }
 

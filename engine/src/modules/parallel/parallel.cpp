@@ -2,6 +2,7 @@
 
 #include <vector>
 #if HAS_STD_THREAD
+#include <mutex>
 #include <thread>
 #endif
 
@@ -10,6 +11,9 @@
 using std::vector;
 #if HAS_STD_THREAD
 using std::thread;
+using std::mutex;
+using std::lock_guard;
+mutex wrt;
 #endif
 
 namespace
@@ -23,14 +27,17 @@ task::task(const engine& e, const world& w, const env& l,
 
 void task::operator()()
 {
-  char msg[64];
-  sprintf(msg, "begin rendering task #%d", id);
-  lo.log(msg);
   e.render(w, l, cam, c, p);
   r->c = c;
   r->p = p;
-  sprintf(msg, "finished rendering task #%d", id);
-  lo.log(msg);
+  {
+#if HAS_STD_THREAD
+    lock_guard<mutex> lck(wrt);
+#endif
+    with_c _(1, 43);
+    printf("\rfinished rendering task #[%d]", id);
+    fflush(stdout);
+  }
 }
 
 int task::Id = 0;
@@ -38,7 +45,10 @@ int task::Id = 0;
 void run_tasks(vector<task*>& tasks, bool use_thread)
 {
   auto m = thread::hardware_concurrency();
-  printf("hardware_concurrency: %u\n", m);
+  {
+    with_c _(1, 44);
+    printf("hardware_concurrency: %u\n", m);
+  }
 #if HAS_STD_THREAD
   vector<thread*> ts;
 #endif
@@ -57,4 +67,5 @@ void run_tasks(vector<task*>& tasks, bool use_thread)
 #if HAS_STD_THREAD
   for (auto& it : ts) { it->join(); }
 #endif
+  printf("\n");
 }

@@ -6,6 +6,7 @@
 #include "display.h"
 #include "guard.h"  // For transitive closure
 #include "model.h"
+#include "view.h"
 #include "profile.h"  // For transitive closure
 
 struct interval{ double lo, hi; };

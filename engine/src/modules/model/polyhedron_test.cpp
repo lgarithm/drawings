@@ -1,7 +1,11 @@
 #include "polyhedron.h"
 
+#include <algorithm>
+
 #include "solids.h"
 #include "testing.h"
+
+using std::max_element;
 
 void test_1()
 {
@@ -21,6 +25,10 @@ void test_1()
   assert(!t1.just);
   assert(t2.just);
   assert(!t3.just);
+
+  //maybe<scalarT> ts[] = {t1, t2, t3};
+  //auto idx = max_element(ts, ts + 3) - ts;
+  //assert(idx == 1);
 }
 
 void test_2()

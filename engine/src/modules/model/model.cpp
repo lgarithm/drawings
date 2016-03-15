@@ -36,18 +36,3 @@ maybe<intersection> simple_object::intersect(const ray& r) const
 
 void operator+=(world& w, object* po)
 { w.objects.push_back(unique_ptr<object>(po)); }
-
-size_t save(const object* o, unsigned char *p)
-{
-  size_t s = sizeof(*o);
-  return s;
-}
-
-void info(const world& w)
-{
-  unsigned char buffer[1024];
-  for (auto& it : w.objects) {
-    auto s = save(it.get(), buffer);
-    printf("object{size : %lu}\n", s);
-  }
-}

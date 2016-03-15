@@ -4,24 +4,20 @@
 #include <cmath>
 
 #include <algorithm>
-#include <map>
-#include <string>
 
 #include "rey.h"
 
 static auto const radian = 180 / M_PI;
 
-using std::map;
 using std::max;
 using std::min;
-using std::string;
 
 template<typename T> T max3(const T& a, const T& b, const T& c)
 { return max(max(a, b), c); }
 
-map<string, world_gen> bb8_examples()
+atlas bb8_examples()
 {
-  map<string, world_gen> mp;
+  atlas mp;
   mp["example_1"] = bb8_example_1;
   mp["example_2"] = bb8_example_2;
   return mp;

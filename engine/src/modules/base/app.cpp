@@ -60,17 +60,16 @@ void run(const config& cfg, const scene& s)
   if (cfg.dd.m > 1 || cfg.dd.n > 1) a = sch.divide(cfg.dd.m, cfg.dd.n);
   size_t n = a.size();
 
-  lo.log("begin rendering ...");
-
   vector<task*> tasks;
   vector<result*> rs;
   unsigned char * p = buffer;
   for (int i=0; i < n; ++i) {
     const auto c = a[i];
-    char msg[64];
-    sprintf(msg, "part %d/%zu : [%u, %u) X [%u, %u)", i + 1, n,
-            c.w.l, c.w.r, c.h.l, c.h.r);
-    lo.log(msg);
+    {
+      with_c _(1, 43);
+      printf("\rpreparing part %d/%zu : [%u, %u) X [%u, %u)", i + 1, n,
+             c.w.l, c.w.r, c.h.l, c.h.r);
+    }
     {
       buffers[i] = p;
       p += 3 * size(c);
@@ -80,7 +79,9 @@ void run(const config& cfg, const scene& s)
     rs.push_back(r);
     tasks.push_back(tsk);
   }
+  printf("\n");
 
+  lo.log("begin rendering ...");
   run_tasks(tasks, cfg.use_thread);
 
   if (cfg.dd.m > 1 && cfg.dd.n > 1) {
@@ -98,11 +99,11 @@ void run(const config& cfg, const scene& s)
   lo.log("done");
 }
 
-int app(int argc, char* argv[], map<string, world_gen> worlds, world_gen def)
+int app(int argc, char* argv[], const atlas& worlds, world_gen def)
 {
   config cfg;
   if (not parse(argc, argv, cfg)) {
-    usage(argv[0]);
+    usage(argv[0], worlds);
     return 0;
   }
   show_config(cfg);
@@ -110,14 +111,19 @@ int app(int argc, char* argv[], map<string, world_gen> worlds, world_gen def)
   scene s;
   s.e = cfg.lights;
 
-  auto name = cfg.args.empty() ? "" : cfg.args[0];
-  auto fn = get<string, world_gen>(worlds, name, def);
-  if (fn != nullptr) {
-    unique_ptr<world> w(fn());
-    for (auto& it : w->objects) {
-      lo.log("add 1 object from scene", clogger::RED);
-      s.w += it.get();
-      it.release();
+  if (not cfg.args.empty()) {
+    auto fn = get<string, world_gen>(worlds, cfg.args[0], def);
+    if (fn != nullptr) {
+      unique_ptr<world> w(fn());
+      for (auto& it : w->objects) {
+        lo.log("add 1 object from scene", clogger::RED);
+        s.w += it.get();
+        it.release();
+      }
+    } else {
+      lo.log("no default scene for " + cfg.args[0]);
+      usage(argv[0], worlds);
+      return 1;
     }
   }
   for (auto it : cfg.oo) {
@@ -129,5 +135,4 @@ int app(int argc, char* argv[], map<string, world_gen> worlds, world_gen def)
   return 0;
 }
 
-int app(int argc, char* argv[])
-{ return app(argc, argv, map<string, world_gen>()); }
+int app(int argc, char* argv[]) { return app(argc, argv, atlas()); }
