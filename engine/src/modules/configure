@@ -1,0 +1,61 @@
+# -*- mode: sh -*-
+
+set -e
+
+source ../../configtool
+
+cc='g++ -std=c++0x -I.'
+
+modules(){
+    for m in `ls -d */`; do
+        echo $m
+    done
+}
+
+for m in `modules`; do
+    echo "adding $m to include dir"
+    cc=$cc" -I../$m"
+done
+
+echo "Using cc $cc"
+# opts='-O3 -fPIC'
+
+opts=
+
+gen_makefile(){
+    echo "all_objs: "`ls *.cpp | sed 's/.cpp/.o/g' | tr "\n" " "`
+    [ -f Makefile.am ] && echo -e "\tmake -f Makefile.am"
+    echo
+
+    for src in `find . | grep .cpp`; do
+        echo "# Objects"
+        gen_object_target $src
+    done
+}
+
+config(){
+    echo "config for $1" 1>&2
+    cd $1
+    pwd
+    gen_makefile > Makefile
+    cd ..
+    pwd
+}
+
+gen_main_makefile(){
+    echo "all:"
+    for m in `modules`; do
+        echo -e "\tcd $m && make"
+    done
+}
+
+main(){
+    for m in `modules`; do
+        config $m
+    done
+    gen_main_makefile > Makefile
+}
+
+main
+
+echo -e "\x1b[1;42mDONE\x1b[m"

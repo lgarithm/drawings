@@ -1,6 +1,13 @@
 #include "bmp.h"
 
 #include <cassert>
+#include <cstdio>
+
+#include <unistd.h>
+
+namespace {
+  static const unsigned char zeros[4] = {0, 0, 0, 0};
+}  // namespace
 
 int _pad(int w)
 {
@@ -42,8 +49,7 @@ void bmp_head::write(FILE* fp) const
 
 void write_bmp_chunk(FILE* fp, const unsigned char* buffer, int w, int n)
 {
-  static const unsigned char zeros[4] = {0, 0, 0, 0};
-  int pad = _pad(w);
+  const int pad = _pad(w);
   for (int i=0; i < n; ++i) {
     fwrite(buffer, 3, w, fp);
     fwrite(zeros, pad, 1, fp);
@@ -61,4 +67,19 @@ void write_bmp_file(const bmp_head& head,
   size_t t = ftell(fp);
   assert(head.header.file_size == t);
   fclose(fp);
+}
+
+void stream_bmp(const bmp_head& head, const unsigned char* buffer, int fd)
+{
+  write(fd, &head.magic, 2);
+  write(fd, &head.header, 12);
+  write(fd, &head.info, 40);
+
+  const int dl = 3 * head.info.width;
+  const int pad = _pad(head.info.width);
+  for (int i=0; i < head.info.height; ++i) {
+    write(fd, buffer, dl);
+    write(fd, zeros, pad);
+    buffer += dl;
+  }
 }

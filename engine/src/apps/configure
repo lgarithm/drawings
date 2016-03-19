@@ -2,9 +2,18 @@
 
 set -e
 
+source ../../configtool
+
 include=-I../../../build/include
 libpath='-L../../../build/lib -lrey'
+
 cc='g++ -std=c++0x'
+
+for m in `ls -d */`; do
+  echo "adding $m to include dir"
+  cc=$cc" -I../$m"
+done
+
 opts='-O3 -pthread'
 
 gen_makefile(){
@@ -23,7 +32,7 @@ config(){
   cd ..
 }
 
-apps='render bb8 example1 builtin r2d2'
+apps='render bb8 example1 builtin r2d2 server'
 
 for app in $apps; do
   include=$include" -I../$app"

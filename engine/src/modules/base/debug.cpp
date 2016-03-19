@@ -45,7 +45,7 @@ void show_config(const config& cfg)
   printf("display: %d X %d\n", cfg.d.width, cfg.d.height);
   info(cfg.cam);
   printf("trace depth: %d\n", cfg.dep);
-  printf("%lu objects\n", cfg.oo.size());
+  printf("%lu objects\n", cfg.w.objects.size());
   printf("%lu lights\n", cfg.lights.lights.size());
   for (auto& it : cfg.args) {
     printf("args: %s\n", it.c_str());

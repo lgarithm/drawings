@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 
+#include <unistd.h>
+
 #include "bmp.h"
 #include "debug.h"
 #include "display.h"
@@ -29,10 +31,8 @@ namespace
 {
   clogger lo;
   static const int buffer_size = 3 * max_width * max_height;
-  unsigned char buffer[buffer_size];
-  unsigned char* buffers[4096];
-
-  struct scene{ world w; env e; };
+  // TODO : !!!!! separate per thread !!!!
+  unsigned char g_buffer[buffer_size];
 }  // namespace
 
 
@@ -43,12 +43,19 @@ void save(const char * name, const display& d, const unsigned char * buffer)
   write_bmp_file(head, buffer, name);
 }
 
-void run(const config& cfg, const scene& s)
+void stream(int fd, const display& d, const unsigned char * buffer)
+{
+  bmp_head head;
+  head.init(d.width, d.height);
+  stream_bmp(head, buffer, fd);
+}
+
+void run(const config& cfg)
 {
   if (cfg.t) return;
   engine e(cfg.dep, cfg.d);
   if (cfg.single) {
-    auto g = e.rasterize(s.w, s.e, cfg.cam, cfg.i, cfg.j);
+    auto g = e.rasterize(cfg.w, cfg.lights, cfg.cam, cfg.i, cfg.j);
     auto p = rgb(g);
     printf("pix[%d, %d] = (%f, %f, %f) # %02x %02x %02x | %d %d %d\n",
            cfg.j, cfg.i, expand_c(g), expand_c(p), expand_c(p));
@@ -60,9 +67,13 @@ void run(const config& cfg, const scene& s)
   if (cfg.dd.m > 1 || cfg.dd.n > 1) a = sch.divide(cfg.dd.m, cfg.dd.n);
   size_t n = a.size();
 
-  vector<task*> tasks;
   vector<result*> rs;
-  unsigned char * p = buffer;
+  vector<task*> tasks;
+  unsigned char * p = g_buffer;
+  if (cfg.buffer != nullptr) {
+    p = cfg.buffer;
+  }
+  const unsigned char * buffer = p;
   for (int i=0; i < n; ++i) {
     const auto c = a[i];
     {
@@ -70,21 +81,29 @@ void run(const config& cfg, const scene& s)
       printf("\rpreparing part %d/%zu : [%u, %u) X [%u, %u)", i + 1, n,
              c.w.l, c.w.r, c.h.l, c.h.r);
     }
+    auto r = new result;
+    rs.push_back(r);
     {
-      buffers[i] = p;
+      r->p = p;
       p += 3 * size(c);
     }
-    auto r = new result;
-    auto tsk = new task(e, s.w, s.e, cfg.cam, c, buffers[i], r);
-    rs.push_back(r);
+    auto tsk = new task(e, cfg.w, cfg.lights, cfg.cam, c, r);
     tasks.push_back(tsk);
   }
   printf("\n");
 
   lo.log("begin rendering ...");
   run_tasks(tasks, cfg.use_thread);
+  lo.log("end rendering ...");
 
-  if (cfg.dd.m > 1 && cfg.dd.n > 1) {
+  if (cfg.outfd > 0) {
+    lo.log("streamming");
+    if (!cfg.bmp_padding) {
+      write(cfg.outfd, buffer, (unsigned) size(cfg.d) * 3);
+    } else {
+      stream(cfg.outfd, cfg.d, buffer);
+    }
+  } else if (cfg.dd.m > 1 && cfg.dd.n > 1) {
     for (auto it : rs) {
       char name[64];
       sprintf(name, "%s.%dX%d.part.[%d-%d)X[%d-%d).bmp", cfg.outfile.c_str(),
@@ -102,38 +121,12 @@ void run(const config& cfg, const scene& s)
 int app(int argc, char* argv[], const atlas& worlds, world_gen def)
 {
   config cfg;
-  if (not parse(argc, argv, cfg)) {
+  if (not parse(argc, argv, cfg, worlds, def)) {
     usage(argv[0], worlds);
     return 0;
   }
   show_config(cfg);
-
-  scene s;
-  s.e = cfg.lights;
-
-  if (not cfg.args.empty()) {
-    auto fn = get<string, world_gen>(worlds, cfg.args[0], def);
-    if (fn != nullptr) {
-      unique_ptr<world> w(fn());
-      for (auto& it : w->objects) {
-        lo.log("add 1 object from scene", clogger::RED);
-        s.w += it.get();
-        it.release();
-      }
-    } else {
-      lo.log("no default scene for " + cfg.args[0]);
-      usage(argv[0], worlds);
-      return 1;
-    }
-  } else {
-    lo.log("no builtin scene for given!");
-  }
-  for (auto it : cfg.oo) {
-    lo.log("add object from cfg", clogger::RED);
-    s.w += it;
-  }
-  info(s.w);
-  run(cfg, s);
+  run(cfg);
   return 0;
 }
 

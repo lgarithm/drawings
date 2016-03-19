@@ -4,6 +4,7 @@
 #include <cstring>
 
 #include <map>
+#include <memory>
 #include <vector>
 #include <string>
 
@@ -11,21 +12,14 @@
 #include "model.h"
 #include "primitives.h"
 #include "ray.h"
+#include "utils.h"
 
 using std::map;
 using std::vector;
 using std::string;
+using std::unique_ptr;
 
 const map<string, display> DISPLAY_MODES = display_modes();
-
-config::config() : d(XGA),
-                   dd(division{1,1}),
-                   cam(observer(point3{0,-20,10}, origin, z_axis)),
-                   dep(0),
-                   t(false),
-                   outfile("output.bmp"),
-                   use_thread(false),
-                   single(false) {}
 
 bool parse_display(const char * str, display& d)
 {
@@ -139,7 +133,7 @@ bool parse(int argc, const char * const argv[], config& cfg)
       if (++i >= argc) return false;
       auto po = parse_model(argv[i]);
       if (po == nullptr) return false;
-      cfg.oo.push_back(po);
+      cfg.w += po;
       continue;
     }
     if (strcmp(argv[i], "-n") == 0) {
@@ -169,6 +163,26 @@ bool parse(int argc, const char * const argv[], config& cfg)
       continue;
     }
     cfg.args.push_back(argv[i]);
+  }
+  return true;
+}
+
+bool parse(int argc, const char * const argv[], config& cfg,
+           const atlas& worlds, world_gen def)
+{
+  if (not parse(argc, argv, cfg)) {
+    return false;
+  }
+  if (not cfg.args.empty()) {
+    auto fn = get<string, world_gen>(worlds, cfg.args[0], def);
+    if (fn != nullptr) {
+      unique_ptr<world> w(fn());
+      for (auto& it : w->objects) {
+        cfg.w += it.release();
+      }
+    } else {
+      return false;
+    }
   }
   return true;
 }

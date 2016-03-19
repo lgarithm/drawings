@@ -1,0 +1,25 @@
+# -*- mode: sh -*-
+
+g++ -dumpversion
+
+gen_object_target(){
+    $cc -MM $1
+    echo -e "\t$cc $opts -c $1"
+    echo
+}
+
+gen_dep_objets(){
+    for c in `$cc -MM $1 | tr " " "\n" | grep ".h$" | sed 's/.h$/.cpp/g' | sort | uniq`; do
+        if [ -f "`basename $c`" ]; then
+            echo `basename $c .cpp`.o
+        fi
+    done
+}
+
+gen_out_target(){
+    main=`basename $1 .cpp`
+    deps=`gen_dep_objets $1 | tr "\n" " "`
+    echo $main".out: $deps $1"
+    echo -e "\t$cc $opts $deps $1 -o $main.out"
+    echo
+}

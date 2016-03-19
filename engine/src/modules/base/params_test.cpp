@@ -60,7 +60,7 @@ void test_4()
     config cfg;
     bool f = parse(3, argv, cfg);
     assert(f);
-    assert(cfg.oo.size() == 1);
+    assert(cfg.w.objects.size() == 1);
   }
   {
     config cfg;
@@ -71,7 +71,7 @@ void test_4()
     config cfg;
     bool f = parse(5, argv, cfg);
     assert(f);
-    assert(cfg.oo.size() == 2);
+    assert(cfg.w.objects.size() == 2);
   }
 }
 

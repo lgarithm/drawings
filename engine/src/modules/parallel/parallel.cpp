@@ -22,14 +22,13 @@ namespace
 }  // namespace
 
 task::task(const engine& e, const world& w, const env& l,
-           const camera& cam, const clip& c, unsigned char *p, result* r) :
-  id(++Id), e(e), w(w), l(l), cam(cam), c(c), p(p), r(r) {}
+           const camera& cam, const clip& c, result* r) :
+  id(++Id), e(e), w(w), l(l), cam(cam), c(c), r(r) {}
 
 void task::operator()()
 {
-  e.render(w, l, cam, c, p);
+  e.render(w, l, cam, c, r->p);
   r->c = c;
-  r->p = p;
   {
 #if HAS_STD_THREAD
     lock_guard<mutex> lck(wrt);

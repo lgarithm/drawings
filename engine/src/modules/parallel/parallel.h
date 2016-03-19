@@ -22,15 +22,13 @@ struct task
   const env l;
   const camera cam;
   const clip c;
-  unsigned char *p;
-
   result* r;
 
-  task(const engine& e, const world& w, const env& l,
-       const camera& cam, const clip& c, unsigned char *p, result* r);
+  task(const engine&, const world&, const env&,
+       const camera&, const clip&, result*);
   void operator()();
 };
 
-void run_tasks(std::vector<task*>& tasks, bool use_thread=false);
+void run_tasks(std::vector<task*>&, bool=false);
 
 #endif  // PARALLEL_H

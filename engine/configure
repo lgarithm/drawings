@@ -2,7 +2,7 @@
 
 set -e
 
-g++ -dumpversion
+source ./configtool
 
 cc='g++ -std=c++0x -I../include'
 
@@ -50,28 +50,6 @@ prepare_source(){
     fi
 }
 
-gen_object_target(){
-    $cc -MM $1
-    echo -e "\t$cc $opts -c $1"
-    echo
-}
-
-gen_dep_objets(){
-    for c in `$cc -MM $1 | tr " " "\n" | grep ".h$" | sed 's/.h$/.cpp/g' | sort | uniq`; do
-        if [ -f "`basename $c`" ]; then
-            echo `basename $c .cpp`.o
-        fi
-    done
-}
-
-gen_out_target(){
-    base=`basename $1 .cpp`
-    deps=`gen_dep_objets $1 | tr "\n" " "`
-    echo $base".out: $deps $1"
-    echo -e "\t$cc $opts $deps $1 -o $base.out"
-    echo
-}
-
 gen_lib_target(){
     objs=`find ../../src/modules | grep .cpp | grep -v test | awk -F "/" '{print $6}' | sed 's/.cpp$/.o/' | tr "\n" " "`
     echo "librey.a: $objs"
@@ -116,7 +94,7 @@ gen_build_makefile(){
     echo -e "\t-rm *.a *.o *.out *.so"
 }
 
-gen_makefile(){
+gen_main_makefile(){
     echo "default: core demo"
     echo
     echo "core:"
@@ -144,6 +122,11 @@ gen_makefile(){
 
     echo "demo: core"
     echo -e "\tcd build/demo && bash ./configure && make"
+    echo -e "\tcp build/demo/server/a.out build/bin/render-server"
+    echo
+
+    echo "server:"
+    echo -e "\tcd src/modules/parallel && make -f Makefile.am"
     echo
 
     echo "clean:"
@@ -169,8 +152,8 @@ config(){
     cd build/src
     gen_build_makefile > Makefile
     cd ../..
-    echo -e "\x1b[1;32mGenerating Makefile\x1b[m"
-    gen_makefile > Makefile
+    echo -e "\x1b[1;32mGenerating Main Makefile\x1b[m"
+    gen_main_makefile > Makefile
     echo -e "\x1b[1;32mDone\x1b[m"
 }
 

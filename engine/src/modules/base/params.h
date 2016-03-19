@@ -8,36 +8,16 @@
 #include "model.h"
 #include "primitives.h"  // For traisitive closure
 #include "ray.h"
+#include "task.h"
 #include "view.h"
 
 static const int max_width = 4096;
 static const int max_height = 4096;
 static const int max_dep = 6;
 
-struct config
-{
-  display d;
-  division dd;
-
-  camera cam;
-  env lights;
-  std::vector<object*> oo;
-
-  int dep;
-
-  bool t;
-  std::string outfile;
-
-  bool use_thread;
-
-  bool single;
-  unsigned short i, j;
-
-  std::vector<std::string> args;
-  config();
-};
-
-bool parse(int argc, const char * const argv[], config& cfg);
+bool parse(int argc, const char * const argv[], config&);
+bool parse(int argc, const char * const argv[], config&,
+           const atlas&, world_gen);
 void usage(const char * name, const atlas&);
 
 #endif  // PARAMS_H
