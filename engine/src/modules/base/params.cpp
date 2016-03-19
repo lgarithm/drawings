@@ -88,7 +88,7 @@ bool parse_light(const char * str, light& l)
   return false;
 }
 
-bool parse(int argc, const char * const argv[], config& cfg)
+bool parse(int argc, const char * const argv[], image_task& cfg)
 {
   for (int i=1; i < argc; ++i) {
     if (strcmp(argv[i], "-h") == 0) {
@@ -167,7 +167,7 @@ bool parse(int argc, const char * const argv[], config& cfg)
   return true;
 }
 
-bool parse(int argc, const char * const argv[], config& cfg,
+bool parse(int argc, const char * const argv[], image_task& cfg,
            const atlas& worlds, world_gen def)
 {
   if (not parse(argc, argv, cfg)) {

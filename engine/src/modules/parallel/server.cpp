@@ -34,10 +34,11 @@ namespace {
   atomic<int> living_tasks(0);
   atomic<int> request_id(0);
 
-  static const int buffer_size = 3 * max_width * max_height;
-  unsigned char s_buffers[max_conn][buffer_size];
   static char server_usage[1024];
   static char server_usage_html[1024];
+
+  static const int buffer_size = 3 * max_width * max_height;
+  unsigned char s_buffers[max_conn][buffer_size];
 }  // namespace
 
 struct render_handler
@@ -48,7 +49,7 @@ struct render_handler
 
   void operator()()
   {
-    config cfg;
+    image_task cfg;
     int argc = rr.args.size();
     const char * argv[argc];
     for (int i=0; i < argc; ++i) argv[i] = rr.args[i].c_str();
@@ -68,9 +69,7 @@ struct render_handler
     cfg.buffer = s_buffers[idx];
     cfg.outfd = fd;
     cfg.bmp_padding = rr.bmp_padding;
-    usleep(50 * 1000);
     run(cfg);
-    usleep(50 * 1000);
   }
 };
 
@@ -84,19 +83,16 @@ struct connection
   ~connection()
   {
     if (-1 == shutdown(fd, SHUT_RDWR)) {
-      perror("shutdown failed");
+      perror("shutdown connection failed");
     }
     close(fd);
     living_tasks--;
-    printf("fd %d done, living_tasks: %d\n", fd, living_tasks.load());
+    printf("%d-th done fd %d, living_tasks: %d\n",
+           idx, fd, living_tasks.load());
   }
 
   void operator()()
   {
-    if (living_tasks >= max_conn) {
-      write(fd, status_204, sizeof(status_204));
-      return ;
-    }
     const auto buffer_size = (1 << 10) - 1;
     char input[buffer_size + 1];
     auto n = read(fd, input, buffer_size);
@@ -170,18 +166,19 @@ void server::operator()()
   for (int idx=1; ;) {
     if (living_tasks < max_conn) {
       int conn = accept(fd, nullptr, nullptr);
-      printf("%d-th connection accepted\n", idx);
+      printf("%d-th connection accepted, fd: %d\n", idx, conn);
       if (conn < 0) {
-        perror("accept failed");
         if (fast_fail) {
+          perror("accept failed, exiting");
           close(fd);
           exit(EXIT_FAILURE);
         } else {
-          printf("continue\n");
+          perror("accept failed, continue");
           continue;
         }
+      } else {
+        auto th = new thread(wrap(new connection(idx++, conn)));
       }
-      auto th = new thread(wrap(new connection(idx++, conn)));
     } else {
       printf("thread full\n");
       usleep(100 * 1000);

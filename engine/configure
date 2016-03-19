@@ -64,15 +64,15 @@ gen_build_makefile(){
     echo "default: all_tests all_libraries all_binaries"
     echo
 
-    echo "all_tests: "`ls *_test.cpp | sed 's/.cpp$/.out/' | tr "\n" " "`
+    echo "all_tests: "`ls | grep _test.cpp | sed 's/.cpp$/.out/' | tr "\n" " "`
     echo
     echo "all_libraries: librey.a librey.so"
     echo
-    echo "all_binaries: "`ls *_main.cpp | sed s'/.cpp/.out/' | tr "\n" " "`
+    echo "all_binaries: "`ls | grep _main.cpp | sed s'/.cpp/.out/' | tr "\n" " "`
     echo
 
     echo "# Binaries"
-    for m in `ls *_main.cpp`; do
+    for m in `ls | grep _main.cpp`; do
         gen_out_target $m
     done
 
@@ -97,6 +97,8 @@ gen_build_makefile(){
 gen_main_makefile(){
     echo "default: core demo"
     echo
+    echo "all: core demo proxy"
+    echo
     echo "core:"
     echo -e "\tcd build/src && make"
     echo -e "\tcp build/src/*.a build/lib"
@@ -104,10 +106,11 @@ gen_main_makefile(){
     echo
 
     echo "check: core"
-    for t in `ls build/src/*_test.cpp`; do
+
+    for t in `ls build/src/ | grep _test.cpp`; do
         echo -e "\t./build/src/`basename $t .cpp`.out"
     done
-    for m in `ls build/src/*_main.cpp`; do
+    for m in `ls build/src/ | grep _main.cpp`; do
         echo -e "\t./build/src/`basename $m .cpp`.out -t"
     done
     echo
@@ -125,7 +128,7 @@ gen_main_makefile(){
     echo -e "\tcp build/demo/server/a.out build/bin/render-server"
     echo
 
-    echo "server:"
+    echo "proxy:"
     echo -e "\tcd src/modules/parallel && make -f Makefile.am"
     echo
 

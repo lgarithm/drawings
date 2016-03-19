@@ -22,6 +22,7 @@ struct scheduler
   std::vector<clip> divide();
   std::vector<clip> divide(unsigned short);
   std::vector<clip> divide(unsigned short, unsigned short);
+  std::vector<clip> divide(const division&);
 };
 
 unsigned ceil_div(unsigned, unsigned);

@@ -15,8 +15,8 @@ static const int max_width = 4096;
 static const int max_height = 4096;
 static const int max_dep = 6;
 
-bool parse(int argc, const char * const argv[], config&);
-bool parse(int argc, const char * const argv[], config&,
+bool parse(int argc, const char * const argv[], image_task&);
+bool parse(int argc, const char * const argv[], image_task&,
            const atlas&, world_gen);
 void usage(const char * name, const atlas&);
 

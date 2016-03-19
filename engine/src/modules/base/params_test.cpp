@@ -7,7 +7,7 @@
 
 void test_1()
 {
-  config cfg;
+  image_task cfg;
   static const char * argv[] = {"name", "-d", "wqxga"};
   {
     bool f = parse(2, argv, cfg);
@@ -57,18 +57,18 @@ void test_4()
     "-m", "sphere(1,(1,1,1))",
   };
   {
-    config cfg;
+    image_task cfg;
     bool f = parse(3, argv, cfg);
     assert(f);
     assert(cfg.w.objects.size() == 1);
   }
   {
-    config cfg;
+    image_task cfg;
     bool f = parse(4, argv, cfg);
     assert(not f);
   }
   {
-    config cfg;
+    image_task cfg;
     bool f = parse(5, argv, cfg);
     assert(f);
     assert(cfg.w.objects.size() == 2);
@@ -82,12 +82,12 @@ void test_5()
     "-l", "light((0,0,0), (.5, .5, .5))",
   };
   {
-    config cfg;
+    image_task cfg;
     bool f = parse(2, argv, cfg);
     assert(not f);
   }
   {
-    config cfg;
+    image_task cfg;
     bool f = parse(3, argv, cfg);
     assert(f);
   }

@@ -7,11 +7,9 @@ import (
 	"net"
 )
 
-type Client struct {
-	Addr string
-}
+type Client struct{ Addr string }
 
-func (c *Client) Get(args []string) []byte {
+func (c *Client) Render(args []string) []byte {
 	log.Printf("Connecting to %s", c.Addr)
 	conn, err := net.Dial("tcp", c.Addr)
 	if err != nil {

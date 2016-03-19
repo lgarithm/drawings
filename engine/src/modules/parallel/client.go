@@ -1,11 +1,16 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
 
 	"render"
+)
+
+var (
+	addr = flag.String("addr", "localhost:7778", "address of render server")
 )
 
 func main() {
@@ -25,7 +30,7 @@ func main() {
 }
 
 func task(name string) {
-	c := &render.Client{"localhost:7778"}
+	c := &render.Client{*addr}
 	w, h := 4096, 4096
 	var args = []string{
 		"-l", "light((0,0,50), (.5, .5, .5))",
@@ -34,6 +39,10 @@ func task(name string) {
 		"-n", "3",
 		"-d", fmt.Sprintf("%dX%d", w, h),
 	}
-	bs := c.Get(args)
+	bs := c.Render(args)
+	if len(bs) != w*h*3+54 {
+		fmt.Printf("invalied length\n")
+		return
+	}
 	ioutil.WriteFile(name, bs, os.ModePerm)
 }

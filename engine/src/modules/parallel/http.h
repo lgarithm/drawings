@@ -31,7 +31,8 @@ static const char html_header_format[] = (STATUS_200
 
 static const char byte_header_format[] = (STATUS_200
                                           "Content-Length: %d\r\n"
-                                          "Content-Type: application/octet-stream\r\n"
+                                          "Content-Type:"
+                                          " application/octet-stream\r\n"
                                           "Content-Transfer-Encoding: 8BIT\r\n"
                                           "Content-Disposition: attachment;"
                                           " filename=\"output.bmp\"\r\n"

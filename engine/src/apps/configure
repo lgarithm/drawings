@@ -39,7 +39,6 @@ for app in $apps; do
 done
 
 for app in $apps; do
-  echo $app
   config $app
 done
 

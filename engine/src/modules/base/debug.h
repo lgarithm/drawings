@@ -12,6 +12,6 @@
 void pp(const point3& p);
 void info(const camera& cam);
 void info(const world& w);
-void show_config(const config& cfg);
+void show_image_task(const image_task& cfg);
 
 #endif  // DEBUG_H

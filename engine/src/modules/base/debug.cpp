@@ -40,7 +40,7 @@ void info(const camera& cam)
   printf("near %lf\n", cam.near);
 }
 
-void show_config(const config& cfg)
+void show_image_task(const image_task& cfg)
 {
   printf("display: %d X %d\n", cfg.d.width, cfg.d.height);
   info(cfg.cam);

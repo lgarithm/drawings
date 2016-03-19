@@ -6,37 +6,32 @@
 
 #include "display.h"
 #include "model.h"
-#include "primitives.h"  // For traisitive closure
 #include "ray.h"
 #include "view.h"
 
-struct config
+struct image_task
 {
-  display d;
-  division dd;
+  std::vector<std::string> args;
 
   camera cam;
+  display d;
   env lights;
   world w;
-
   int dep;
-
-  bool t;
-
-  std::string outfile;
-
-  int outfd;
-  unsigned char * buffer;
-  bool bmp_padding;
-
-  bool use_thread;
 
   bool single;
   unsigned short i, j;
+  division dd;
 
-  std::vector<std::string> args;
+  unsigned char * buffer;
+  std::string outfile;
+  int outfd;
+  bool bmp_padding;
 
-  config();
+  bool t;
+  bool use_thread;
+
+  image_task();
 };
 
 #endif  // TASK_H

@@ -41,6 +41,9 @@ vector<clip> scheduler::divide(unsigned short m, unsigned short n)
   return a;
 }
 
+vector<clip> scheduler::divide(const division& dd)
+{ return divide(dd.m, dd.n); }
+
 unsigned size(const display& d) { return (unsigned) d.height * d.width; }
 unsigned short len(const range& r) { return r.r - r.l; }
 unsigned size(const clip& c) { return size(from_clip(c)); }
