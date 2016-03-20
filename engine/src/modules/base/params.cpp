@@ -10,7 +10,7 @@
 
 #include "display.h"
 #include "model.h"
-#include "primitives.h"
+#include "model-builtin.h"
 #include "ray.h"
 #include "utils.h"
 
@@ -61,18 +61,24 @@ bool parse_depth(const char * str, int& n)
 
 object* parse_model(const char * str)
 {
-  double s;
-  point3 p;
-  if (sscanf(str, "sphere(%lf, (%lf, %lf, %lf))", &s, &p.x, &p.y, &p.z) == 4) {
-    if (s > 0) return new sphere(s, p);
+  {
+    double s;
+    point3 p;
+    if (sscanf(str, "sphere(%lf, (%lf, %lf, %lf))", &s, &p.x, &p.y, &p.z) == 4) {
+      if (s > 0) return new sphere(s, p);
+    }
   }
-  if (strcmp(str, "floor") == 0) {
-    return new Chessboard;
+  {
+    if (strcmp(str, "floor") == 0) {
+      return new Chessboard;
+    }
   }
-  t_vector3 n;
-  if (sscanf(str, "plane((%lf, %lf, %lf), (%lf, %lf, %lf))",
-             &n.o.x, &n.o.y, &n.o.z, &n.v.x, &n.v.y, &n.v.z) == 6) {
-    return new Plane(n);
+  {
+    t_vector3 n;
+    if (sscanf(str, "plane((%lf, %lf, %lf), (%lf, %lf, %lf))",
+               &n.o.x, &n.o.y, &n.o.z, &n.v.x, &n.v.y, &n.v.z) == 6) {
+      return new Plane(n);
+    }
   }
   return nullptr;
 }

@@ -28,8 +28,8 @@ func (c *Client) Render(args []string) []byte {
 	}
 
 	var tot int
-	all := make([]byte, 1<<24)
-	b := make([]byte, 1<<24)
+	all := make([]byte, 1<<26)
+	b := make([]byte, 1<<16)
 	for {
 		n, err := conn.Read(b)
 		if err == io.EOF {
@@ -45,6 +45,14 @@ func (c *Client) Render(args []string) []byte {
 	}
 	log.Printf("got %d\n", tot)
 	return all[:tot]
+}
+
+func (c *Client) Explain(args []string) string {
+	cmd := fmt.Sprintf("curl -sOJ %s/render \\\n", c.Addr)
+	for _, a := range args {
+		cmd += fmt.Sprintf("\t-H \"X-Rey: %s\" \\\n", a)
+	}
+	return cmd
 }
 
 func makeReq(args []string) string {

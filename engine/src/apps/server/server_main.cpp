@@ -28,6 +28,7 @@ int main(int argc, char* argv[])
     action.sa_handler = term;
     sigaction(SIGINT, &action, NULL);
   }
+  signal (SIGPIPE, SIG_IGN);
   printf("running at %s:%d\n", "localhost", port);
   serve();
   return 0;

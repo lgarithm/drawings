@@ -1,8 +1,11 @@
 *.a
 *.bmp
+*.dot
+*.html
 *.log
 *.o
 *.out
+*.svg
 Makefile
 bin/*
 build/*

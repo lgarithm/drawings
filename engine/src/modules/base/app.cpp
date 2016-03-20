@@ -78,12 +78,14 @@ void save_results(const image_task& img_tsk, const unsigned char * buffer,
                   const vector<result*>& rs)
 {
   if (img_tsk.outfd > 0) {
-    lo.log("streamming");
     if (!img_tsk.bmp_padding) {
+      lo.log("streamming raw pixel");
       write(img_tsk.outfd, buffer, size(img_tsk.d) * 3);
     } else {
+      lo.log("streamming bmp file");
       stream(img_tsk.outfd, img_tsk.d, buffer);
     }
+    lo.log("end streamming");
   } else if (img_tsk.dd.m > 1 && img_tsk.dd.n > 1) {
     for (auto it : rs) {
       char name[64];

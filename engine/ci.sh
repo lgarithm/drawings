@@ -16,6 +16,7 @@ main(){
     ./tests/all-tests.sh
 }
 
+rm -fr build
 begin=`now`
 date > ci-begin.log
 main

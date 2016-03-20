@@ -6,9 +6,11 @@ import (
 	"image"
 	"image/color"
 	"image/png"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 
 	"render"
@@ -51,9 +53,14 @@ func (s *server) handleIndex(w http.ResponseWriter, r *http.Request) {
 </body></html>`)
 }
 
-func (s *server) proxyImage(w http.ResponseWriter, r *http.Request) {
+func (s *server) examples(w http.ResponseWriter, r *http.Request) {
+	if f, err := os.Open("examples.html"); err == nil {
+		io.Copy(w, f)
+	}
+}
+
+func (s *server) parse(r *http.Request) ([]string, *img) {
 	vals, _ := url.ParseQuery(r.URL.RawQuery)
-	w.Header().Set("Content-Type", "image/png")
 	var wi, hi uint16 = 1024 / 2, 768 / 2
 	i := &img{wi, hi, nil}
 	var args []string
@@ -87,10 +94,25 @@ func (s *server) proxyImage(w http.ResponseWriter, r *http.Request) {
 			args = append(args, strconv.Itoa(n))
 		}
 	}
-	args = append(args, "no-bmp-header")
-	args = append(args, "no-bmp-padding")
-	if bs := s.Render(args); len(bs) == int(i.Width)*int(i.Height)*3 {
+	return args, i
+}
+
+func (s *server) help(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain")
+	a, _ := s.parse(r)
+	usage := s.Explain(a)
+	fmt.Fprintf(w, "%s\n", usage)
+}
+
+func (s *server) proxyImage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "image/png")
+	a, i := s.parse(r)
+	a = append(a, "no-bmp-header")
+	a = append(a, "no-bmp-padding")
+	if bs := s.Render(a); len(bs) == int(i.Width)*int(i.Height)*3 {
 		i.bs = bs
+	} else {
+		log.Printf("invalided length")
 	}
 	png.Encode(w, i)
 }
@@ -100,6 +122,8 @@ func init() { flag.Parse() }
 func main() {
 	s := server{render.Client{*addr}}
 	http.HandleFunc("/", s.handleIndex)
+	http.HandleFunc("/examples", s.examples)
+	http.HandleFunc("/help", s.help)
 	http.HandleFunc("/proxy", s.proxyImage)
 	log.Printf("png proxy running at http://%s:%d/", "localhost", *port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *port), nil))
