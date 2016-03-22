@@ -51,9 +51,14 @@ void stream(int fd, const display& d, const unsigned char * buffer)
 }
 
 void create_render_tasks(const image_task& img_tsk, const engine& e,
-                         const vector<clip>& a, unsigned char * buffer,
+                         unsigned char * buffer,
                          vector<task*>& ts, vector<result*>& rs)
 {
+  auto sch = scheduler{img_tsk.d};
+  auto a = (img_tsk.dd.m > 1 || img_tsk.dd.n > 1) ?
+    sch.divide(img_tsk.dd) : sch.divide();
+  if (img_tsk.part) a = {img_tsk.c};
+
   unsigned char * p = buffer;
   auto idx = 0;
   for (auto c : a) {
@@ -74,16 +79,27 @@ void create_render_tasks(const image_task& img_tsk, const engine& e,
   printf("\n");
 }
 
+int ret_size(const image_task& img_tsk)
+{
+  auto d = img_tsk.part ? from_clip(img_tsk.c) : img_tsk.d;
+  int s = size(d) * 3;
+  return img_tsk.bmp_padding ? s + 54 : s;
+}
+
 void save_results(const image_task& img_tsk, const unsigned char * buffer,
                   const vector<result*>& rs)
 {
+  auto d = img_tsk.part ? from_clip(img_tsk.c) : img_tsk.d;
+
   if (img_tsk.outfd > 0) {
     if (!img_tsk.bmp_padding) {
       lo.log("streamming raw pixel");
-      write(img_tsk.outfd, buffer, size(img_tsk.d) * 3);
+      printf("will send %d bytes\n", size(d) * 3);
+      write(img_tsk.outfd, buffer, size(d) * 3);
     } else {
       lo.log("streamming bmp file");
-      stream(img_tsk.outfd, img_tsk.d, buffer);
+      printf("will send %d bytes\n", size(d) * 3 + 54);
+      stream(img_tsk.outfd, d, buffer);
     }
     lo.log("end streamming");
   } else if (img_tsk.dd.m > 1 && img_tsk.dd.n > 1) {
@@ -98,7 +114,7 @@ void save_results(const image_task& img_tsk, const unsigned char * buffer,
     }
   } else {
     lo.log("saving as " + img_tsk.outfile);
-    save(img_tsk.outfile.c_str(), img_tsk.d, buffer);
+    save(img_tsk.outfile.c_str(), d, buffer);
   }
 }
 
@@ -115,20 +131,16 @@ void run(const image_task& img_tsk)
     return ;
   }
 
-  auto sch = scheduler{img_tsk.d};
-  auto a = (img_tsk.dd.m > 1 || img_tsk.dd.n > 1) ?
-    sch.divide(img_tsk.dd) : sch.divide();
-
   vector<result*> rs;
   vector<task*> ts;
   unsigned char * buffer = img_tsk.buffer ? img_tsk.buffer : g_buffer;
-  create_render_tasks(img_tsk, e, a, buffer, ts, rs);
+  create_render_tasks(img_tsk, e, buffer, ts, rs);
 
   lo.log("begin rendering ...");
   run_tasks(ts, img_tsk.use_thread);
   lo.log("end rendering ...");
   save_results(img_tsk, buffer, rs);
-  lo.log("done");
+  lo.log("image task done");
 }
 
 int app(int argc, char* argv[], const atlas& worlds, world_gen def)

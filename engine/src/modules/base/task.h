@@ -21,6 +21,8 @@ struct image_task
 
   bool single;
   unsigned short i, j;
+  bool part;
+  clip c;
   division dd;
 
   unsigned char * buffer;

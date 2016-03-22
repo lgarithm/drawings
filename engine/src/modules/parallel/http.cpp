@@ -99,3 +99,6 @@ void send_text_body(int fd, const char * body)
 
 void send_html_body(int fd, const char * body)
 { send_static_body(fd, html_header_format, body); }
+
+void send_raw_body(int fd, const char * body)
+{ write(fd, body, strlen(body)); }

@@ -2,6 +2,7 @@
 
 #include <cassert>
 
+#include "display.h"
 #include "model.h"
 #include "testing.h"
 
@@ -93,6 +94,25 @@ void test_5()
   }
 }
 
+void test_6()
+{
+  static const char * argv[] = {
+    "", "-e", "0-100, 100-200",
+  };
+  {
+    image_task cfg;
+    bool f = parse(2, argv, cfg);
+    assert(not f);
+  }
+  {
+    image_task cfg;
+    bool f = parse(3, argv, cfg);
+    assert(f);
+    assert(cfg.part);
+    assert(size(cfg.c) == 10000);
+  }
+}
+
 int main()
 {
   test(1);
@@ -100,5 +120,6 @@ int main()
   test(3);
   test(4);
   test(5);
+  test(6);
   return 0;
 }

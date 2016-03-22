@@ -11,3 +11,4 @@ bin/*
 build/*
 doc/doc/*
 output/*
+install-engine.sh

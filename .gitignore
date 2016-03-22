@@ -136,3 +136,5 @@ mpxerr.tex
 *.ppm
 *.gif
 *.bmp
+*.tar
+*.bz2

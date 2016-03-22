@@ -128,6 +128,15 @@ bool parse(int argc, const char * const argv[], image_task& cfg)
       cfg.d = d;
       continue;
     }
+    if (strcmp(argv[i], "-e") == 0) {
+      if (++i >= argc) return false;
+      clip& c = cfg.c;
+      if (sscanf(argv[i], "%hu-%hu,%hu-%hu", &c.w.l, &c.w.r, &c.h.l, &c.h.r) != 4) {
+        return false;
+      }
+      cfg.part = true;
+      continue;
+    }
     if (strcmp(argv[i], "-l") == 0) {
       if (++i >= argc) return false;
       light l;
@@ -202,6 +211,7 @@ void usage(const char * name, const atlas& a)
     "[-b <division>] "
     "[-c <camera>] "
     "[-d <display>] "
+    "[-e <clip>]"
     "[-l <light>] "
     "[-m <object>] "
     "[-n <depth>] "
@@ -215,6 +225,7 @@ void usage(const char * name, const atlas& a)
     "<division> := 1X1 - 16X16",
     "<camera> := '(<pos>, <look>, <up>)'",
     "<display> := xga | wxga | wqxga | <w>X<h>",
+    "<clip> := w1-w2,h1-h2, e.g. 0-16, 16-32",
     "<depth> := 0,1,2,3,4,5,6",
     "<light> := 'light(<pos>, <color>)'",
     "<object> := 'sphere(<size>, <pos>)' | 'plane(<pos>, <norm>)'",

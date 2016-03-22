@@ -29,5 +29,6 @@ unsigned ceil_div(unsigned, unsigned);
 unsigned size(const display&);
 unsigned size(const clip&);
 display from_clip(const clip&);
+clip full(const display&);
 
 #endif  // DISPLAY_H

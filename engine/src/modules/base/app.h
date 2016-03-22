@@ -7,5 +7,6 @@
 int app(int, char* argv[]);
 int app(int, char* argv[], const atlas&, world_gen=nullptr);
 void run(const image_task&);
+int ret_size(const image_task&);
 
 #endif  // APP_H

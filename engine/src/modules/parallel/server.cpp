@@ -34,6 +34,7 @@ namespace {
   atomic<int> living_tasks(0);
   atomic<int> request_id(0);
 
+  static char ping_response[1024];
   static char server_usage[1024];
   static char server_usage_html[1024];
 
@@ -49,27 +50,35 @@ struct render_handler
 
   void operator()()
   {
-    image_task cfg;
+    image_task img_tsk;
     int argc = rr.args.size();
     const char * argv[argc];
     for (int i=0; i < argc; ++i) argv[i] = rr.args[i].c_str();
-    if (not parse(argc, argv, cfg)) {
+    printf("parsing render params\n");
+    if (not parse(argc, argv, img_tsk)) {
+      for (int i=0; i < argc; ++i) {
+        printf("%s\n", argv[i]);
+      }
       write(fd, status_400, sizeof(status_400));
       return ;
     }
-    if (rr.http_header) {
-      char head[1024];
-      bmp_head bh;
-      bh.init(cfg.d.width, cfg.d.height);
-      sprintf(head, byte_header_format, bh.header.file_size);
-      write(fd, head, strlen(head));
+    for (int i=0; i < argc; ++i) {
+      printf("arg from header: %s\n", argv[i]);
     }
+
     int idx = (request_id++) % max_conn;
     printf("using buffer %d\n", idx);
-    cfg.buffer = s_buffers[idx];
-    cfg.outfd = fd;
-    cfg.bmp_padding = rr.bmp_padding;
-    run(cfg);
+    img_tsk.buffer = s_buffers[idx];
+    img_tsk.outfd = fd;
+    img_tsk.bmp_padding = rr.bmp_padding;
+
+    printf("rendering\n");
+    if (rr.http_header) {
+      char head[1024];
+      sprintf(head, byte_header_format, ret_size(img_tsk));
+      write(fd, head, strlen(head));
+    }
+    run(img_tsk);
   }
 };
 
@@ -85,7 +94,9 @@ struct connection
     if (-1 == shutdown(fd, SHUT_RDWR)) {
       perror("shutdown connection failed");
     }
-    close(fd);
+    if (-1 == close(fd)) {
+      perror("close connection failed");
+    }
     living_tasks--;
     printf("%d-th done fd %d, living_tasks: %d\n",
            idx, fd, living_tasks.load());
@@ -93,12 +104,17 @@ struct connection
 
   void operator()()
   {
-    const auto buffer_size = (1 << 10) - 1;
+    const auto buffer_size = (1 << 12) - 1;
     char input[buffer_size + 1];
     auto n = read(fd, input, buffer_size);
+    {
+      input[n] = '\0';
+      printf("got %ld bytes request:\n%s\n", n, input);
+    }
+    // TODO : integrity.
     unique_ptr<http_request> req(parse_http_request(input, n));
     auto path = string(req->path, req->path_len);
-
+    printf("access %s\n", path.c_str());
     if (path == "/render") {
       auto rr = parse_http_headers(req->headers, req->headers_len);
       if (rr.test) {
@@ -114,6 +130,9 @@ struct connection
       } else {
         render_handler(fd, rr)();
       }
+    } else if (path == "/ping") {
+      send_text_body(fd, ping_response);
+      printf("ping OK\n");
     } else if (path == "/") {
       send_text_body(fd, server_usage);
     } else if (path == "/index") {
@@ -128,6 +147,7 @@ server::server(int port, const string& hostname)
   : port(port), hostname(hostname), fd(-1), fast_fail(true)
 {
   _server_usage(hostname.c_str(), port, server_usage, server_usage_html);
+  sprintf(ping_response, "OK\r\n");
 
   fd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
   if (-1 == fd) {

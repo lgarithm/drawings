@@ -17,6 +17,8 @@ image_task::image_task():
   dep(0),
   single(false),
   i(0), j(0),
+  part(false),
+  c(full(d)),
   dd(division{1, 1}),
   buffer(nullptr),
   outfile("output.bmp"),

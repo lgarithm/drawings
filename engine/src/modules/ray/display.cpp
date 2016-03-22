@@ -48,3 +48,4 @@ unsigned size(const display& d) { return (unsigned) d.height * d.width; }
 unsigned short len(const range& r) { return r.r - r.l; }
 unsigned size(const clip& c) { return size(from_clip(c)); }
 display from_clip(const clip& c) { return display{len(c.w), len(c.h)}; }
+clip full(const display& d) { return clip{range{0, d.width}, range{0, d.height}}; }

@@ -64,7 +64,9 @@ struct render_request
 
 render_request parse_http_headers(char *, int);
 
+
 void send_text_body(int, const char *);
 void send_html_body(int, const char *);
+void send_raw_body(int, const char *);
 
 #endif
