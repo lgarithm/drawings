@@ -1,6 +1,9 @@
 #ifndef COLOR_H
 #define COLOR_H
 
+#include <map>
+#include <string>
+
 #include "config.h"
 
 typedef COLOR_T colorT;
@@ -28,10 +31,11 @@ using color = colorT<colorT>;
 
 DEFINE_TUPLE_3(color, colorT, r, g, b);
 
-void operator+=(color&, const color&);
-color operator*(colorT, const color&);
-color operator+(const color&, const color&);
-color operator*(const color&, const color&);
+DECLARE_TUPLE_3_SCALE(colorT, color, r, g, b);
+DECLARE_TUPLE_3_ADD(color, r, g, b);
+DECLARE_TUPLE_3_MUL(color, r, g, b);
+DECLARE_TUPLE_3_INC(color, r, g, b);
+DECLARE_TUPLE_3_EQU(color, r, g, b);
 
 #endif  // USE_TEMPLATE
 
@@ -46,5 +50,16 @@ static const auto yellow = red + green;
 static const auto orange = red + .5 * green;
 static const auto white = red + green + blue;
 static const auto grey = .5 * (black + white);
+
+static const auto colors = std::map<std::string, color>({
+    {"black", black},
+    {"red", red},
+    {"green", green},
+    {"blue", blue},
+    {"yellow", yellow},
+    {"orange", orange},
+    {"white", white},
+    {"grey", grey},
+  });
 
 #endif  // COLOR_H

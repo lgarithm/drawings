@@ -33,8 +33,11 @@ void task::operator()()
 #if HAS_STD_THREAD
     lock_guard<mutex> lck(wrt);
 #endif
-    with_c _(1, 43);
-    printf("\rfinished rendering task #[%d]", id);
+    printf("\r%s\r", "                                       ");
+    {
+      with_c _(1, 42);
+      printf("finished rendering task #[%d]", id);
+    }
     fflush(stdout);
   }
 }
@@ -43,12 +46,13 @@ int task::Id = 0;
 
 void run_tasks(vector<task*>& tasks, bool use_thread)
 {
+#if HAS_STD_THREAD
   auto m = thread::hardware_concurrency();
   {
     with_c _(1, 44);
-    printf("hardware_concurrency: %u\n", m);
+    printf("hardware_concurrency: %u", m);
   }
-#if HAS_STD_THREAD
+  printf("\n");
   vector<thread*> ts;
 #endif
   for (auto tsk : tasks) {

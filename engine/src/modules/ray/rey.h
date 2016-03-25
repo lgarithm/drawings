@@ -8,6 +8,5 @@
 #include "model-builtin.h"
 #include "params.h"
 #include "ray.h"
-#include "utils.h"
 
 #endif  // REY_H

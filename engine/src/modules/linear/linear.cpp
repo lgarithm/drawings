@@ -15,19 +15,19 @@ point3 local(const frame& f ,const point3& p)
 { return point3{dot(p, f.X), dot(p, f.Y), dot(p, f.Z)}; }
 
 point3 global(const frame& f, const point3& p)
-{ return p.x * f.X + p.y * f.Y + p.z * f.Z; }
+{ return origin + p.x * f.X + p.y * f.Y + p.z * f.Z; }
 
 point3 local(const oframe& of, const point3& p)
-{ return local(of.f, p - of.o); }
+{ return local(of.f, origin + (p - of.o)); }
 
 point3 global(const oframe& of, const point3& p)
-{ return of.o + global(of.f, p); }
+{ return of.o + (global(of.f, p) - origin); }
 
 t_vector3 local(const oframe& of, const t_vector3& t)
-{ return t_vector3{local(of, t.o), local(of.f, t.v)}; }
+{ return t_vector3{local(of, t.o), local(of.f, origin + t.v) - origin}; }
 
 t_vector3 global(const oframe& of, const t_vector3& t)
-{ return t_vector3{global(of, t.o), global(of.f, t.v)}; }
+{ return t_vector3{global(of, t.o), global(of.f, origin + t.v) - origin}; }
 
 oframe observer(const point3& pos, const point3& focus, const vector3& up)
 {

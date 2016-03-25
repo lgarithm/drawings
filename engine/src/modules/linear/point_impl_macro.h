@@ -13,27 +13,42 @@
         det(p.X, p.Y, q.X, q.Y)}; }
 
 typedef SCALAR_T scalarT;
+
+DEFINE_TUPLE_2(vector2, scalarT, x, y);
+DEFINE_TUPLE_3(vector3, scalarT, x, y, z);
+DEFINE_TUPLE_4(vector4, scalarT, x, y, z, w);
+
+DECLARE_TUPLE_2_SUB(vector2, x, y);
+DECLARE_TUPLE_2_DET(scalarT, vector2, x, y);
+
+DECLARE_TUPLE_3_NEG(vector3, x, y, z);
+DECLARE_TUPLE_3_EQU(vector3, x, y, z);
+DECLARE_TUPLE_3_INC(vector3, x, y, z);
+DECLARE_TUPLE_3_ADD(vector3, x, y, z);
+DECLARE_TUPLE_3_SUB(vector3, x, y, z);
+DECLARE_TUPLE_3_DIV(vector3, x, y, z);
+DECLARE_TUPLE_3_DOT(scalarT, vector3, x, y, z);
+DECLARE_TUPLE_3_SCALE(scalarT, vector3, x, y, z);
+
 DEFINE_TUPLE_2(point2, scalarT, x, y);
 DEFINE_TUPLE_3(point3, scalarT, x, y, z);
 DEFINE_TUPLE_4(point4, scalarT, x, y, z, w);
-typedef point2 vector2;
-typedef point3 vector3;
-typedef point4 vector4;
+
+DECLARE_TUPLE_2_DIS(point2, vector2, x, y);
+
+DECLARE_TUPLE_3_EQU(point3, x, y, z);
+DECLARE_TUPLE_3_DIV(point3, x, y, z);
+DECLARE_TUPLE_3_DIS(point3, vector3, x, y, z);
+
+DECLARE_TUPLE_3_SCALE(scalarT, point3, x, y, z);
+
+DECLARE_TUPLE_3_MOV(point3, vector3, x, y, z);
+DECLARE_TUPLE_3_L_1_1(scalarT, point3, vector3, x, y, z);
+
 DEFINE_TUPLE_3(simplex2, point3, a, b, c);
 DEFINE_TUPLE_4(matrix4, vector4, o, p, q, r);
 
-scalarT det(const point2&, const point2&);
-point2 operator-(const point2&, const point2&);
-
-point3 operator-(const point3&);
-bool operator==(const point3&, const point3&);
-point3 operator*(scalarT, const point3&);
-void operator+=(point3&, const point3&);
-point3 operator+(const point3&, const point3&);
-point3 operator-(const point3&, const point3&);
-point3 operator/(const point3&, const point3&);
-point3 cross(const point3&, const point3&);
-scalarT dot(const point3&, const point3&);
+vector3 cross(const vector3&, const vector3&);
 vector3 reflect(const vector3&, const vector3&);
 
 scalarT det(const matrix4&);

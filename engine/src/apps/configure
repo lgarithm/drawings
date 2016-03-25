@@ -32,7 +32,7 @@ config(){
   cd ..
 }
 
-apps='render bb8 example1 builtin r2d2 server'
+apps='render bb8 billiard example1 builtin r2d2 server'
 
 for app in $apps; do
   include=$include" -I../$app"

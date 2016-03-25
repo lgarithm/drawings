@@ -16,7 +16,6 @@ using std::map;
 using std::string;
 using std::type_index;
 
-void pp(const point3& p) { printf("(%f, %f, %f)", p.x, p.y, p.z); }
 
 void info(const camera& cam)
 {
@@ -57,7 +56,7 @@ typedef map<type_index, string> dnames;
 dnames _names()
 {
   dnames mp;
-  mp[typeid(Plane*)] = "Plane";
+  mp[typeid(plane*)] = "plane";
   mp[typeid(sphere*)] = "sphere";
   mp[typeid(Floor*)] = "Floor";
   mp[typeid(ellipsoid*)] = "ellipsoid";

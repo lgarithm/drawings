@@ -13,7 +13,7 @@ struct algebraic_surface : simple_object
   algebraic_surface();
   algebraic_surface(const oframe&);
 
-  surface at(const point3&) const override;
+  t_vector3 at(const point3&) const override;
   virtual vector3 n_at(const point3&) const = 0;
 };
 

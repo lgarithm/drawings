@@ -17,12 +17,14 @@ point3 vec3(scalarT x, scalarT y, scalarT z)
 
 #else
 
-vector3 vec3(scalarT x, scalarT y, scalarT z) { return point3{x, y, z}; }
+vector3 vec3(scalarT x, scalarT y, scalarT z) { return vector3{x, y, z}; }
 
 vector4 vec4(scalarT x, scalarT y, scalarT z, scalarT w)
-{ return point4{x, y, z, w}; }
+{ return vector4{x, y, z, w}; }
 
 vector4 vec4(const vector3& v, scalarT w) { return vec4(v.x, v.y, v.z, w); }
+
+point3 pos3(scalarT x, scalarT y, scalarT z) { return point3{x, y, z}; }
 
 matrix4 mat4(const vector4& o, const vector4& p, const vector4& q,
              const vector4& r) { return matrix4{o, p, q, r}; }
@@ -32,19 +34,27 @@ matrix4 mat4(const vector3& o, const vector3& p, const vector3& q,
 { return matrix4{vec4(o, 1), vec4(p, 1), vec4(q, 1), vec4(r, 1)}; }
 
 DEFINE_DET_2X2(scalarT);
+DEFINE_TUPLE_2_DET(scalarT, vector2, x, y);
 DEFINE_TUPLE_2_DET(scalarT, point2, x, y);
-DEFINE_TUPLE_2_MINUS(point2, x, y);
+DEFINE_TUPLE_2_DIS(point2, vector2, x, y);
 
-DEFINE_TUPLE_3_NEGATIVE(point3, x, y, z);
-DEFINE_TUPLE_3_EQUAL(point3, x, y, z);
-DEFINE_TUPLE_3_INC(point3, x, y, z);
-DEFINE_TUPLE_3_SCALE(scalarT, point3, x, y, z);
-DEFINE_TUPLE_3_PLUS(point3, x, y, z);
-DEFINE_TUPLE_3_MINUS(point3, x, y, z);
+DEFINE_TUPLE_3_NEG(vector3, x, y, z);
+DEFINE_TUPLE_3_EQU(vector3, x, y, z);
+DEFINE_TUPLE_3_INC(vector3, x, y, z);
+
+DEFINE_TUPLE_3_ADD(vector3, x, y, z);
+DEFINE_TUPLE_3_SUB(vector3, x, y, z);
+DEFINE_TUPLE_3_DIV(vector3, x, y, z);
+DEFINE_TUPLE_3_DOT(scalarT, vector3, x, y, z);
+DEFINE_TUPLE_3_SCALE(scalarT, vector3, x, y, z);
+
+DEFINE_CROSS_PROD(vector3, x, y, z);
+
+DEFINE_TUPLE_3_EQU(point3, x, y, z);
 DEFINE_TUPLE_3_DIV(point3, x, y, z);
-
-DEFINE_TUPLE_3_DOT(scalarT, point3, x, y, z);
-DEFINE_CROSS_PROD(point3, x, y, z);
+DEFINE_TUPLE_3_MOV(point3, vector3, x, y, z);
+DEFINE_TUPLE_3_DIS(point3, vector3, x, y, z);
+DEFINE_TUPLE_3_L_1_1(scalarT, point3, vector3, x, y, z);
 
 vector3 reflect(const vector3& n, const vector3& d)
 { return d - 2 * dot(n, d) * n; }
@@ -84,7 +94,7 @@ scalarT det(const matrix4& m)
 }
 
 scalarT vol6(const point3& a, const point3& b, const point3& c, const point3& d)
-{ return -det(mat4(a,b,c,d)); }
+{ return -det(mat4(a - origin, b - origin, c - origin, d - origin)); }
 
 scalarT area2(const point3& a, const point3& b, const point3& c)
 { return len(cross(b - a, b - c)); }

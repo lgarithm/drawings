@@ -24,7 +24,7 @@ maybe<scalarT> plane_alg_impl::meet(const ray& r) const
 {
   auto u = dot(n, r.v);
   if (u != 0) {
-    auto t = (dot(n, r.o) + d) / u;
+    auto t = (dot(r.o, n) + d) / u;
     if (t > 0) {
       return just(t);
     }
@@ -32,23 +32,21 @@ maybe<scalarT> plane_alg_impl::meet(const ray& r) const
   return nothing<scalarT>();
 }
 
-surface plane_alg_impl::at(const point3& p) const
-{ return surface{t_vector3{p, n}}; }
+t_vector3 plane_alg_impl::at(const point3& p) const { return t_vector3{p, n}; }
 
 
-Plane::Plane(const t_vector3& n) : n(n) { assert_unit(n.v, __func__); }
+plane::plane(const t_vector3& n) : n(n) { assert_unit(n.v, __func__); }
 
-maybe<scalarT> Plane::meet(const ray& r) const { return r_dis(n, r); }
+maybe<scalarT> plane::meet(const ray& r) const { return r_dis(n, r); }
 
-surface Plane::at(const point3& p) const
-{ return surface{t_vector3{p, n.v}, m}; }
+t_vector3 plane::at(const point3& p) const { return t_vector3{p, n.v}; }
 
 
-disc::disc(scalarT r, const t_vector3& n) : Plane(n), R(r) { }
+disc::disc(scalarT r, const t_vector3& n) : plane(n), R(r) { }
 
 maybe<scalarT> disc::meet(const ray& r) const
 {
-  auto t = Plane::meet(r);
+  auto t = plane::meet(r);
   if (t.just) {
     auto d = len(r + t.it - n.o);
     if (d < R) return t;
@@ -57,7 +55,7 @@ maybe<scalarT> disc::meet(const ray& r) const
 }
 
 
-maybe<scalarT> Floor::meet(const ray& r) const
+maybe<scalarT> f_dis(const ray& r)
 {
   if (r.v.z != 0) {
     auto d = - r.o.z / r.v.z;
@@ -66,29 +64,32 @@ maybe<scalarT> Floor::meet(const ray& r) const
   return nothing<scalarT>();
 }
 
-surface Floor::at(const point3& p) const
-{
-  auto s = surface{t_vector3{p, z_axis}};
-  s.m.diffuse = .4 * grey;
-  return s;
-}
+Floor::Floor() { m.diffuse = .4 * grey; }
+
+maybe<scalarT> Floor::meet(const ray& r) const { return f_dis(r); }
+
+t_vector3 Floor::at(const point3& p) const { return t_vector3{p, z_axis}; }
 
 Chessboard::Chessboard(double gs) : grid_size(gs) {}
 
-surface Chessboard::at(const point3& p) const
+maybe<scalarT> Chessboard::meet(const ray& r) const { return f_dis(r); }
+
+t_vector3 Chessboard::at(const point3& p) const { return t_vector3{p, z_axis}; }
+
+material Chessboard::mt(const point3& p) const
 {
-  auto s = surface{t_vector3{p, z_axis}};
+  material m;
   int xx = int(floor(p.x / grid_size)) & 1;
   int yy = int(floor(p.y / grid_size)) & 1;
   if (xx == yy) {
-    s.m.diffuse = white;
+    m.diffuse = white;
   } else {
-    s.m.diffuse = black;
+    m.diffuse = black;
   }
-  return s;
+  return m;
 }
 
-sphere::sphere(double size, const point3& pos): size(size), pos(pos) {}
+sphere::sphere(double size, const point3& pos): size(size), pos(pos) { }
 
 maybe<scalarT> sphere::meet(const ray& r) const
 {
@@ -103,18 +104,20 @@ maybe<scalarT> sphere::meet(const ray& r) const
   return nothing<scalarT>();
 }
 
-surface sphere::at(const point3& p) const
-{
-  auto s = surface{t_vector3{p, norm(p - pos)}};
-  return s;
-}
+t_vector3 sphere::at(const point3& p) const
+{ return t_vector3{p, norm(p - pos)}; }
 
 triangle::triangle(const point3& a, const point3& b, const point3& c)
-  : a(a), b(b), c(c) {}
+  : a(a), b(b), c(c)
+{
+  m.reflection = 1;
+  m.specular = white;
+  m.roughness = 1;
+}
 
 maybe<scalarT> triangle::meet(const ray& r) const
 {
-  auto n = norm(a, b, c);
+  auto n = norm(a - origin, b - origin, c - origin);
   auto th = -dot(r.v, n);
   if (th > 0) {
     auto d = dis(r.o, simplex2{a, b, c});
@@ -129,11 +132,5 @@ maybe<scalarT> triangle::meet(const ray& r) const
   return nothing<scalarT>();
 }
 
-surface triangle::at(const point3& p) const
-{
-  auto s = surface{t_vector3{p, norm(a,b,c)}};
-  s.m.reflection = 1;
-  s.m.specular = white;
-  s.m.roughness = 1;
-  return s;
-}
+t_vector3 triangle::at(const point3& p) const
+{ return t_vector3{p, norm(a - origin, b - origin, c - origin)}; }

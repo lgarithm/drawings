@@ -3,35 +3,27 @@
 
 #include "rey.h"
 
-atlas bb8_examples();
-
-struct bb8_head : simple_object
+struct bb8_head : sphere
 {
-  double size;
   oframe of;
 
   bb8_head(double, const oframe&);
 
   maybe<scalarT> meet(const ray&) const override;
-  surface at(const point3&) const override;
+  material mt(const point3&) const override;
 };
 
-struct bb8_body : simple_object
+struct bb8_body : sphere
 {
-  double size;
   oframe of;
 
   bb8_body(double, const oframe&);
 
-  maybe<scalarT> meet(const ray&) const override;
-  surface at(const point3&) const override;
+  material mt(const point3&) const override;
 };
 
 struct bb8 : object
 {
-//  double size;
-//  oframe of;
-
   bb8_head head;
   bb8_body body;
 
@@ -39,8 +31,5 @@ struct bb8 : object
 
   maybe<intersection> intersect(const ray&) const override;
 };
-
-world* bb8_example_1();
-world* bb8_example_2();
 
 #endif  // BB8_MODEL_H

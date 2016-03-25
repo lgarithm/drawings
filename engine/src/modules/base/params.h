@@ -7,6 +7,7 @@
 #include "display.h"
 #include "model.h"
 #include "primitives.h"  // For traisitive closure
+#include "prog.h"  // For traisitive closure
 #include "ray.h"
 #include "task.h"
 #include "view.h"

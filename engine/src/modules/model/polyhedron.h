@@ -7,6 +7,8 @@
 #include "model.h"
 #include "model_surface.h"
 #include "primitives.h"
+#include "solids.h"  // For transitive closure
+
 
 struct polygon { std::vector<point2> vertices; };
 
@@ -32,7 +34,7 @@ struct space_polygon : simple_object, polygon
   space_polygon(const oframe&, const std::vector<point2>&);
 
   maybe<scalarT> meet(const ray&) const override;
-  surface at(const point3&) const override;
+  t_vector3 at(const point3&) const override;
 };
 
 struct polyhedron : object

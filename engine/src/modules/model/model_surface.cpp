@@ -14,11 +14,11 @@ algebraic_surface::algebraic_surface() { }
 
 algebraic_surface::algebraic_surface(const oframe& of) : of(of) { }
 
-surface algebraic_surface::at(const point3& p) const
+t_vector3 algebraic_surface::at(const point3& p) const
 {
-  auto s = surface{t_vector3{p, n_at(local(of, p))}};
-  assert_unit(s.n.v, __FILE__, __func__);
-  return s;
+  auto n = t_vector3{p, n_at(local(of, p))};
+  assert_unit(n.v, __FILE__, __func__);
+  return n;
 }
 
 
@@ -49,7 +49,7 @@ quad_eq ellipsoid::equation(const ray& r) const
 }
 
 vector3 ellipsoid::n_at(const point3& p) const
-{ return norm(p / vec3(a * a, b * b, c * c)); }
+{ return norm(p / pos3(a * a, b * b, c * c) - origin); }
 
 
 cylinder_surface::cylinder_surface(scalarT R, const oframe& of)

@@ -7,7 +7,6 @@
 #include <utility>
 
 #include "color.h"
-#include "guard.h"  // For transitive closure
 #include "material.h"
 #include "maybe.h"
 #include "point.h"
@@ -21,14 +20,20 @@ struct intersection { surface s; scalarT d; };
 
 bool operator<(const intersection&, const intersection&);
 
-struct object
-{ virtual maybe<intersection> intersect(const ray&) const = 0; };
+struct object { virtual maybe<intersection> intersect(const ray&) const = 0; };
 
-struct simple_object : object
+struct complex_object : object
 {
   maybe<intersection> intersect(const ray&) const override;
   virtual maybe<scalarT> meet(const ray&) const = 0;
-  virtual surface at(const point3&) const = 0;
+  virtual t_vector3 at(const point3&) const = 0;
+  virtual material mt(const point3&) const = 0;
+};
+
+struct simple_object : complex_object
+{
+  material m;
+  material mt(const point3&) const override;
 };
 
 struct world{ std::vector<std::unique_ptr<object>> objects; };

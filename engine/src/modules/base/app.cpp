@@ -19,7 +19,6 @@
 #include "parallel.h"
 #include "params.h"
 #include "ray.h"
-#include "utils.h"
 
 using std::map;
 using std::move;
@@ -138,12 +137,12 @@ void run(const image_task& img_tsk)
 
   lo.log("begin rendering ...");
   run_tasks(ts, img_tsk.use_thread);
-  lo.log("end rendering ...");
+  lo.log("end rendering.");
   save_results(img_tsk, buffer, rs);
   lo.log("image task done");
 }
 
-int app(int argc, char* argv[], const atlas& worlds, world_gen def)
+int app(int argc, const char * const argv[], const atlas& worlds, world_gen def)
 {
   image_task img_tsk;
   if (not parse(argc, argv, img_tsk, worlds, def)) {
@@ -154,5 +153,3 @@ int app(int argc, char* argv[], const atlas& worlds, world_gen def)
   run(img_tsk);
   return 0;
 }
-
-int app(int argc, char* argv[]) { return app(argc, argv, atlas()); }

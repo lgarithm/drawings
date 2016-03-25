@@ -9,7 +9,9 @@
 #define expand_c(c) c.r, c.g, c.b
 #define expand_v(v) v.x, v.y, v.z
 
-void pp(const point3& p);
+template<typename T>
+void pp(const T& p) { printf("(%f, %f, %f)", expand_v(p)); }
+
 void info(const camera& cam);
 void info(const world& w);
 void show_image_task(const image_task& cfg);

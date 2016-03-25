@@ -1,6 +1,7 @@
 package main
 
 import (
+	"compress/gzip"
 	"encoding/base64"
 	"flag"
 	"fmt"
@@ -59,6 +60,10 @@ func (i *img) ColorModel() color.Model { return color.RGBAModel }
 type server struct {
 	*render.Client
 	ss []*render.Client
+}
+
+func (s *server) addWorker(c *render.Client) {
+	s.ss = append(s.ss, c)
 }
 
 func (s *server) handleIndex(w http.ResponseWriter, r *http.Request) {
@@ -179,10 +184,20 @@ func (s *server) pass(w http.ResponseWriter, r *http.Request) {
 	bs, _ := base64.StdEncoding.DecodeString(str)
 	args := strings.Split(string(bs), "\r\n")
 	pix := s.Client.Render(args)
-	w.Header().Set("Content-Length", strconv.Itoa(len(pix)))
+	sendBytes(w, pix, r.Header.Get("X-rey-Pass-Compress") == "true")
+}
+
+func sendBytes(w http.ResponseWriter, bs []byte, compress bool) {
 	w.Header().Set("Content-Type", "application/octet-stream")
 	w.Header().Set("Content-Transfer-Encoding", "8BIT")
-	w.Write(pix)
+	if compress {
+		gw := gzip.NewWriter(w)
+		gw.Write(bs)
+		gw.Close()
+	} else {
+		w.Header().Set("Content-Length", strconv.Itoa(len(bs)))
+		w.Write(bs)
+	}
 }
 
 func (s *server) ping(w http.ResponseWriter, r *http.Request) {
@@ -199,10 +214,24 @@ func (s *server) ping(w http.ResponseWriter, r *http.Request) {
 
 func (s *server) register(w http.ResponseWriter, r *http.Request) {
 	vals, _ := url.ParseQuery(r.URL.RawQuery)
-	for a := range vals["a"] {
-		log.Printf("register %q", a)
+	if ls, ok := vals["a"]; ok {
+		for _, a := range ls {
+			log.Printf("registering %q", a)
+			c := render.New(a)
+			c.BinMode = false
+			c.PassMode = true
+			if err := c.Ping(); err == nil {
+				s.addWorker(c)
+			}
+		}
+		http.Redirect(w, r, "/register", http.StatusFound)
 	}
-	fmt.Fprintf(w, "TODO\r\n")
+	fmt.Fprintf(w, `<!doctype html><html><head></head><body>
+<form><input name="a" placeholder="addr"/></form>`)
+	for _, c := range s.ss {
+		fmt.Fprintf(w, `<a href="%s">%s</a><br>`, c.Addr, c.Addr)
+	}
+	fmt.Fprintf(w, `</body></html>`)
 }
 
 func init() { flag.Parse() }

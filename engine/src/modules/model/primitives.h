@@ -17,21 +17,20 @@ struct plane_alg_impl : simple_object
   plane_alg_impl(const vector3&, scalarT d);
 
   maybe<scalarT> meet(const ray&) const override;
-  surface at(const point3&) const override;
+  t_vector3 at(const point3&) const override;
 };
 
-struct Plane : simple_object
+struct plane : simple_object
 {
   t_vector3 n;
-  material m;
 
-  Plane(const t_vector3&);
+  plane(const t_vector3&);
 
   maybe<scalarT> meet(const ray&) const override;
-  surface at(const point3&) const override;
+  t_vector3 at(const point3&) const override;
 };
 
-struct disc : Plane
+struct disc : plane
 {
   scalarT R;
   disc(scalarT, const t_vector3&);
@@ -41,18 +40,22 @@ struct disc : Plane
 struct Floor : simple_object
 {
   maybe<scalarT> meet(const ray&) const override;
-  surface at(const point3&) const override;
+  t_vector3 at(const point3&) const override;
+
+  Floor();
 };
 
-struct Chessboard : Floor
+struct Chessboard : complex_object
 {
   double grid_size;
 
   Chessboard(double=1);
-  surface at(const point3&) const override;
+  maybe<scalarT> meet(const ray&) const override;
+  t_vector3 at(const point3&) const override;
+  material mt(const point3&) const override;
 };
 
-struct Mirror : Floor { surface at(const point3&) const override; };
+struct Mirror : Floor { t_vector3 at(const point3&) const override; };
 
 struct sphere : simple_object
 {
@@ -62,17 +65,17 @@ struct sphere : simple_object
   sphere(double, const point3&);
 
   maybe<scalarT> meet(const ray&) const override;
-  surface at(const point3&) const override;
+  t_vector3 at(const point3&) const override;
 };
 
 struct triangle : simple_object
 {
-  point3 a,b,c;
+  point3 a, b, c;
 
   triangle(const point3&, const point3&, const point3&);
 
   maybe<scalarT> meet(const ray&) const override;
-  surface at(const point3&) const override;
+  t_vector3 at(const point3&) const override;
 };
 
 #endif  // PRIMITIVE_H

@@ -16,8 +16,8 @@ run(){
 
 run
 
-echo "render server: " $pid1
-echo "proxy server: " $pid2
+echo "render server pid=$pid1"
+echo "proxy server pid=$pid2"
 
 q(){
     echo quit

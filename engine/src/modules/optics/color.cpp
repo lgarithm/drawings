@@ -5,9 +5,10 @@
 #else
 
 DEFINE_TUPLE_3_SCALE(colorT, color, r, g, b);
-DEFINE_TUPLE_3_PLUS(color, r, g, b);
-DEFINE_TUPLE_3_TIMES(color, r, g, b);
+DEFINE_TUPLE_3_ADD(color, r, g, b);
+DEFINE_TUPLE_3_MUL(color, r, g, b);
 DEFINE_TUPLE_3_INC(color, r, g, b);
+DEFINE_TUPLE_3_EQU(color, r, g, b);
 
 #endif  // USE_TEMPLATE
 

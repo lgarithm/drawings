@@ -46,9 +46,9 @@ index_model cuboid(const point3& p, const point3& q)
 index_model cube(scalarT r, const point3& o)
 {
   auto a = r / 2;
-  auto p = point3{a,a,a};
-  index_model idx_m = cuboid(-p, p);
-  for (auto& v : idx_m.vertices) { v += o; }
+  auto p = vec3(a, a, a);
+  index_model idx_m = cuboid(origin + -p, origin + p);
+  for (auto& v : idx_m.vertices) { v = v + (o - origin); }
   return idx_m;
 }
 

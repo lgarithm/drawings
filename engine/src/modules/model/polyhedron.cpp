@@ -64,7 +64,7 @@ bool in(const point2& p, const polygon& g)
 cylinder::cylinder(scalarT r, scalarT h, const oframe of)
   : b(r, h, of)
   , u(r, t_vector3(of.o + .5 * h * of.f.Z, of.f.Z))
-  , d(r, t_vector3(of.o - .5 * h * of.f.Z, -of.f.Z))
+  , d(r, t_vector3(of.o + - .5 * h * of.f.Z, -of.f.Z))
   , subs{&b, &u, &d}
   { }
 
@@ -80,9 +80,9 @@ maybe<intersection> cylinder::intersect(const ray& r) const
     }
   }
   if (ts[idx].just) {
-    auto s = subs[idx]->at(r + ts[idx].it);
-    s.n = s.n + 1e-6 * s.n.v;
-    return just(intersection{s, ts[idx].it});
+    auto n = subs[idx]->at(r + ts[idx].it);
+    n = n + 1e-6 * n.v;
+    return just(intersection{surface{n}, ts[idx].it});
   }
   return nothing<intersection>();
 }
@@ -103,11 +103,8 @@ maybe<scalarT> space_polygon::meet(const ray& r) const
   return nothing<scalarT>();
 }
 
-surface space_polygon::at(const point3& p) const
-{
-  auto s = surface{t_vector3{of.o, of.f.Z}};
-  return s;
-}
+t_vector3 space_polygon::at(const point3& p) const
+{ return t_vector3{of.o, of.f.Z}; }
 
 maybe<intersection> polyhedron::intersect(const ray& r) const
 {

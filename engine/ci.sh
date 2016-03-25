@@ -16,13 +16,17 @@ main(){
     ./tests/all-tests.sh
 }
 
-rm -fr build
-begin=`now`
-date > ci-begin.log
-main
-date > ci-end.log
-end=`now`
-duration=`expr $end - $begin`
+ci(){
+    rm -fr build
+    begin=`now`
+    date > ci-begin.log
+    main
+    date > ci-end.log
+    end=`now`
+    duration=`expr $end - $begin`
 
-echo -e "\x1b[1;42mTook ${duration}s\x1b[m"
-echo -e "\x1b[1;32mSUCCESS\x1b[m"
+    echo -e "\x1b[1;42mTook ${duration}s\x1b[m"
+    echo -e "\x1b[1;32mSUCCESS\x1b[m"
+}
+
+ci | tee ci.log

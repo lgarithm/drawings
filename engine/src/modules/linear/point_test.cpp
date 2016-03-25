@@ -65,10 +65,10 @@ void test_4()
 
 void test_5()
 {
-  auto a = vec3(1,0,0);
-  auto b = vec3(0,1,0);
-  auto c = vec3(0,0,1);
-  auto o = vec3(0,0,0);
+  auto a = pos3(1,0,0);
+  auto b = pos3(0,1,0);
+  auto c = pos3(0,0,1);
+  auto o = pos3(0,0,0);
   {
     auto v = vol6(a,b,c,o);
     assert_eq(v, -1);
@@ -81,8 +81,8 @@ void test_5()
     auto v = area2(o,a,b);
     assert_eq(v, 1);
   }
-  auto d = vec3(1,1,1);
   {
+    auto d = pos3(1,1,1);
     auto v = vol6(a,b,c,d);
     assert_eq(v, 2);
   }
@@ -90,9 +90,9 @@ void test_5()
 
 void test_6()
 {
-  auto a = point3{1,0,0};
-  auto b = point3{0,1,0};
-  auto c = point3{0,0,1};
+  auto a = pos3(1,0,0);
+  auto b = pos3(0,1,0);
+  auto c = pos3(0,0,1);
   assert_eq(dis(origin, simplex2{a,b,c}), -sqrt(1.0 / 3));
   assert_eq(dis(point3{1,1,1}, simplex2{a,b,c}), 2 * sqrt(1.0 / 3));
 }

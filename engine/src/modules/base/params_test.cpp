@@ -29,28 +29,7 @@ void test_1()
   }
 }
 
-object* parse_model(const char * str);
-
 void test_2()
-{
-  static const char * succ[] = {
-    "sphere(1,(1,1,1))",
-    "sphere(1, (1, 1, 1))",
-    //"sphere (1, (1, 1, 1))",
-  };
-  for (auto it : succ) { assert(parse_model(it)); }
-}
-
-void test_3()
-{
-  static const char * fail[] = {
-    "sphere(1)",
-    "sphere (1, (1, 1, 1))",
-  };
-  for (auto it : fail) { assert(parse_model(it) == nullptr); }
-}
-
-void test_4()
 {
   static const char * argv[] = {
     "name",
@@ -76,7 +55,7 @@ void test_4()
   }
 }
 
-void test_5()
+void test_3()
 {
   static const char * argv[] = {
     "name",
@@ -94,7 +73,7 @@ void test_5()
   }
 }
 
-void test_6()
+void test_4()
 {
   static const char * argv[] = {
     "", "-e", "0-100, 100-200",
@@ -119,7 +98,5 @@ int main()
   test(2);
   test(3);
   test(4);
-  test(5);
-  test(6);
   return 0;
 }

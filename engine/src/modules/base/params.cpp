@@ -7,24 +7,26 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <sstream>
 
 #include "display.h"
 #include "model.h"
 #include "model-builtin.h"
-#include "ray.h"
-#include "utils.h"
+#include "prog.h"
 
+using std::endl;
 using std::map;
-using std::vector;
+using std::ostringstream;
 using std::string;
 using std::unique_ptr;
+using std::vector;
 
-const map<string, display> DISPLAY_MODES = display_modes();
+// TODO : move to lang/prog
 
 bool parse_display(const char * str, display& d)
 {
-  auto pos = DISPLAY_MODES.find(str);
-  if (pos != DISPLAY_MODES.end()) {
+  auto pos = display_modes.find(str);
+  if (pos != display_modes.end()) {
     d = pos->second;
     return true;
   }
@@ -44,7 +46,8 @@ bool parse_division(const char * str, division& dd)
 
 bool parse_camera(const char * str, camera& c)
 {
-  point3 p, l, u;
+  point3 p, l;
+  vector3 u;
   if (sscanf(str, "((%lf, %lf, %lf), (%lf, %lf, %lf), (%lf, %lf, %lf))",
              &p.x, &p.y, &p.z, &l.x, &l.y, &l.z, &u.x, &u.y, &u.z) == 9) {
     c.of = observer(p, l, u);
@@ -57,30 +60,6 @@ bool parse_depth(const char * str, int& n)
 {
   if (sscanf(str, "%d", &n) == 1) return 0 <= n && n <= max_dep;
   return false;
-}
-
-object* parse_model(const char * str)
-{
-  {
-    double s;
-    point3 p;
-    if (sscanf(str, "sphere(%lf, (%lf, %lf, %lf))", &s, &p.x, &p.y, &p.z) == 4) {
-      if (s > 0) return new sphere(s, p);
-    }
-  }
-  {
-    if (strcmp(str, "floor") == 0) {
-      return new Chessboard;
-    }
-  }
-  {
-    t_vector3 n;
-    if (sscanf(str, "plane((%lf, %lf, %lf), (%lf, %lf, %lf))",
-               &n.o.x, &n.o.y, &n.o.z, &n.v.x, &n.v.y, &n.v.z) == 6) {
-      return new Plane(n);
-    }
-  }
-  return nullptr;
 }
 
 bool parse_light(const char * str, light& l)
@@ -131,7 +110,8 @@ bool parse(int argc, const char * const argv[], image_task& cfg)
     if (strcmp(argv[i], "-e") == 0) {
       if (++i >= argc) return false;
       clip& c = cfg.c;
-      if (sscanf(argv[i], "%hu-%hu,%hu-%hu", &c.w.l, &c.w.r, &c.h.l, &c.h.r) != 4) {
+      if (sscanf(argv[i], "%hu-%hu,%hu-%hu",
+                 &c.w.l, &c.w.r, &c.h.l, &c.h.r) != 4) {
         return false;
       }
       cfg.part = true;
@@ -146,7 +126,7 @@ bool parse(int argc, const char * const argv[], image_task& cfg)
     }
     if (strcmp(argv[i], "-m") == 0) {
       if (++i >= argc) return false;
-      auto po = parse_model(argv[i]);
+      auto po = p_model(argv[i]);
       if (po == nullptr) return false;
       cfg.w += po;
       continue;
@@ -182,6 +162,13 @@ bool parse(int argc, const char * const argv[], image_task& cfg)
   return true;
 }
 
+template<typename K, typename T>
+T get(const map<K, T>& mp, const K& k, const T& t)
+{
+  auto pos = mp.find(k);
+  return pos != mp.end() ? pos->second : t;
+}
+
 bool parse(int argc, const char * const argv[], image_task& cfg,
            const atlas& worlds, world_gen def)
 {
@@ -204,14 +191,14 @@ bool parse(int argc, const char * const argv[], image_task& cfg,
 
 void usage(const char * name, const atlas& a)
 {
-  static const char* usages[] = {
+  static const auto usages = {
     "-h, help",
     "-t, test",
     "[-a <aov>] "
     "[-b <division>] "
     "[-c <camera>] "
     "[-d <display>] "
-    "[-e <clip>]"
+    "[-e <clip>] "
     "[-l <light>] "
     "[-m <object>] "
     "[-n <depth>] "
@@ -220,23 +207,35 @@ void usage(const char * name, const atlas& a)
     "[-r <ji>] "
     "[world]"
   };
-  static const char* options[] = {
-    "<aov> := 1 - 179",
-    "<division> := 1X1 - 16X16",
-    "<camera> := '(<pos>, <look>, <up>)'",
-    "<display> := xga | wxga | wqxga | <w>X<h>",
-    "<clip> := w1-w2,h1-h2, e.g. 0-16, 16-32",
-    "<depth> := 0,1,2,3,4,5,6",
-    "<light> := 'light(<pos>, <color>)'",
-    "<object> := 'sphere(<size>, <pos>)' | 'plane(<pos>, <norm>)'",
-    "<color> := '(<r>, <g>, <b>)'",
-    "<pos>, <look>, <up> := '(<x>, <y>, <z>)'",
-    "<ji> := 0-4095,0-4095"
-  };
+
+  ostringstream options;
+  options << "\t<aov> := 1 - 179" << endl
+          << "\t<division> := 1X1 - 16X16" << endl
+          << "\t<camera> := '(<pos>, <look>, <up>)'" << endl
+          << "\t<display> := ";
+  for (auto it : display_modes) {
+    if (it.second.width <= max_width and it.second.height <= max_height) {
+      options << it.first << " | ";
+    }
+  }
+  options << "<w>X<h>" << endl
+          << "\t<clip> := w1-w2,h1-h2, e.g. 0-16, 16-32" << endl
+          << "\t<depth> := ";
+  for (int i=0; i < max_dep; ++i) { options << i << ", "; }
+  options << max_dep << endl
+          << "\t<light> := 'light(<pos>, <color>)'" << endl
+          << "\t<object> := 'sphere(<size>, <pos>)' "
+          << "| 'plane(<pos>, <norm>)'" << endl
+          << "\t<color> := '(<r>, <g>, <b>)'" << endl
+          << "\t<pos>, <look>, <up> := '(<x>, <y>, <z>)'" << endl
+          << "\t<ji> := 0-4095,0-4095" << endl;
+
   printf("Usage:\n");
   for (auto it : usages) printf("\t%s %s\n", name, it);
-  for (auto it : options) printf("\t%s\n", it);
-  printf("\t[world]:\n");
-  for (auto it : a) printf("\t\t%s\n", it.first.c_str());
-  printf("\n");
+  printf("%s", options.str().c_str());
+  if (not a.empty()) {
+    printf("\t[world]:\n");
+    for (auto it : a) printf("\t\t%s\n", it.first.c_str());
+    printf("\n");
+  }
 }

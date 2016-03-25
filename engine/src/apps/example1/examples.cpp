@@ -34,8 +34,8 @@ world* example_1()
 world* example_2()
 {
   auto w = new world;
-  auto p = new Plane(t_vector3{point3{-5, 0, 5}, x_axis});
-  auto q = new Plane(t_vector3{point3{5, 0, 5}, -x_axis});
+  auto p = new plane(t_vector3{point3{-5, 0, 5}, x_axis});
+  auto q = new plane(t_vector3{point3{5, 0, 5}, -x_axis});
   *w += new Chessboard;
   *w += p;
   *w += q;
@@ -48,11 +48,11 @@ world* test_room()
   scalarT x = 100;
   scalarT y = 100;
   scalarT h = 30;
-  auto lw = new Plane(t_vector3{origin - .5 * x * x_axis, x_axis});
-  auto rw = new Plane(t_vector3{origin + .5 * x * x_axis, -x_axis});
-  auto fw = new Plane(t_vector3{origin - .5 * y * y_axis, y_axis});
-  auto bw = new Plane(t_vector3{origin + .5 * y * y_axis, -y_axis});
-  auto c = new Plane(t_vector3{origin + h * z_axis, -z_axis});
+  auto lw = new plane(t_vector3{origin + -.5 * x * x_axis, x_axis});
+  auto rw = new plane(t_vector3{origin + .5 * x * x_axis, -x_axis});
+  auto fw = new plane(t_vector3{origin + -.5 * y * y_axis, y_axis});
+  auto bw = new plane(t_vector3{origin + .5 * y * y_axis, -y_axis});
+  auto c = new plane(t_vector3{origin + h * z_axis, -z_axis});
   for (auto it : {lw, rw, fw, bw, c}) {
     it->m.reflection = .2;
   }
@@ -74,7 +74,7 @@ world* r2d2_bb8()
   {
     auto h = 7;
     auto r = 3;
-    auto p = point3{-5,0,0};
+    auto p = vec3(-5,0,0);
     auto of = oframe(origin + p, frame(-x_axis, -y_axis, z_axis));
     of = of + .5 * h * of.f.Z;
     *w += new r2d2(r, h, of);

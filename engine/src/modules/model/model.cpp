@@ -9,7 +9,6 @@
 
 #include "arith.h"
 #include "color.h"
-#include "guard.h"
 #include "maybe.h"
 #include "point.h"
 
@@ -23,16 +22,19 @@ bool operator<(const intersection& i, const intersection& j)
 maybe<intersection> nearest(const world& w, const ray& r)
 { return nearest(w.objects, r); }
 
-maybe<intersection> simple_object::intersect(const ray& r) const
+maybe<intersection> complex_object::intersect(const ray& r) const
 {
   auto t = meet(r);
   if (t.just) {
-    auto s = at(r + t.it);
-    s.n = s.n + 1e-6 * s.n.v;
-    return just(intersection{s, t.it});
+    const auto p = r + t.it;
+    auto n = at(p);
+    n = n + 1e-6 * n.v;
+    return just(intersection{surface{n, mt(p)}, t.it});
   }
   return nothing<intersection>();
 }
+
+material simple_object::mt(const point3&) const { return m; }
 
 void operator+=(world& w, object* po)
 { w.objects.push_back(unique_ptr<object>(po)); }

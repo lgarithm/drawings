@@ -1,12 +1,6 @@
 #include "builtin_examples.h"
 
-#include <map>
-#include <string>
-
 #include "rey.h"
-
-using std::map;
-using std::string;
 
 world* empty_scene() { return new world; }
 
@@ -27,7 +21,7 @@ world* test_board_1()
 world* test_plane_1()
 {
   auto w = new world;
-  *w += new Plane(t_vector3{origin, z_axis});
+  *w += new plane(t_vector3{origin, z_axis});
   return w;
 }
 
@@ -36,8 +30,8 @@ world* test_plane_2()
   auto w = new world;
   auto r1 = 2 * (x_axis + 2 * z_axis);
   auto r2 = 2 * (-x_axis + 2 * z_axis);
-  *w += new Plane(t_vector3{origin - r1, norm(r1)});
-  *w += new Plane(t_vector3{origin - r2, norm(r2)});
+  *w += new plane(t_vector3{origin + -r1, norm(r1)});
+  *w += new plane(t_vector3{origin + -r2, norm(r2)});
   return w;
 }
 
@@ -66,7 +60,7 @@ world* test_ellipsoid()
 {
   auto w = default_test_scene();
   auto e = new ellipsoid(3,3,2);
-  e->of.o += 5 * z_axis;
+  e->of.o = e->of.o + 5 * z_axis;
   *w += e;
   return w;
 }
@@ -75,7 +69,7 @@ world* test_ellipsoid_2()
 {
   auto w = new world;
   auto e = new ellipsoid(3,3,2);
-  auto f = new Plane(t_vector3{origin - 5 * z_axis, z_axis});
+  auto f = new plane(t_vector3{origin + -5 * z_axis, z_axis});
   f->m.reflection = .2;
   f->m.diffuse = yellow;
 
@@ -89,8 +83,8 @@ world* test_cylinder_surface()
   auto w = default_test_scene();
   auto c1 = new cylinder_surface(3);
   auto c2 = new cylinder_surface(3);
-  c1->of.o += -5 * x_axis;
-  c2->of.o += 5 * x_axis;
+  c1->of.o = c1->of.o + -5 * x_axis;
+  c2->of.o = c2->of.o + 5 * x_axis;
   *w += c1;
   *w += c2;
   return w;
@@ -135,23 +129,22 @@ world* test_cylinder_3()
   return w;
 }
 
-map<string, world_gen> examples()
-{
-  map<string, world_gen> mp;
-  mp["empty"] = empty_scene;
-  mp["test_board_1"] = test_board_1;
-  mp["single_ellipsoid"] = single_ellipsoid;
-  mp["single_cylinder_surface"] = single_cylinder_surface;
-  mp["single_cone_surface"] = single_cone_surface;
-  mp["test_plane_1"] = test_plane_1;
-  mp["test_plane_2"] = test_plane_2;
-  mp["ellipsoid"] = test_ellipsoid;
-  mp["ellipsoid2"] = test_ellipsoid_2;
-  mp["cylinder_surface"] = test_cylinder_surface;
-  mp["cylinder_surface2"] = test_cylinder_surface_2;
-  mp["cone"] = test_cone;
-  mp["cylinder"] = test_cylinder;
-  mp["cylinder2"] = test_cylinder_2;
-  mp["cylinder3"] = test_cylinder_3;
-  return mp;
-}
+static const auto examples_ = atlas({
+    {"empty", empty_scene},
+    {"test_board_1", test_board_1},
+    {"single_ellipsoid", single_ellipsoid},
+    {"single_cylinder_surface", single_cylinder_surface},
+    {"single_cone_surface", single_cone_surface},
+    {"test_plane_1", test_plane_1},
+    {"test_plane_2", test_plane_2},
+    {"ellipsoid", test_ellipsoid},
+    {"ellipsoid2", test_ellipsoid_2},
+    {"cylinder_surface", test_cylinder_surface},
+    {"cylinder_surface2", test_cylinder_surface_2},
+    {"cone", test_cone},
+    {"cylinder", test_cylinder},
+    {"cylinder2", test_cylinder_2},
+    {"cylinder3", test_cylinder_3},
+  });
+
+atlas examples() { return examples_; }

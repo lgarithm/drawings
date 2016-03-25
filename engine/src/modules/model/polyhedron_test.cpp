@@ -13,8 +13,8 @@ void test_1()
   auto h = 4.0;
   auto of = oframe();
   auto b = cylinder_surface(R, of);
-  auto u = Plane(t_vector3(of.o + .5 * h * of.f.Z, of.f.Z));
-  auto d = Plane(t_vector3(of.o - .5 * h * of.f.Z, -of.f.Z));
+  auto u = plane(t_vector3(of.o + .5 * h * of.f.Z, of.f.Z));
+  auto d = plane(t_vector3(of.o + - .5 * h * of.f.Z, -of.f.Z));
 
   auto r = ray(origin + 3 * z_axis, -z_axis);
 

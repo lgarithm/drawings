@@ -27,10 +27,12 @@ gen_makefile(){
     [ -f Makefile.am ] && echo -e "\tmake -f Makefile.am"
     echo
 
+    echo "# Objects"
     for src in `find . | grep .cpp`; do
-        echo "# Objects"
-        gen_object_target $src
+            gen_object_target $src
     done
+    echo "clean:"
+    echo -e "\t-rm *.o"
 }
 
 config(){

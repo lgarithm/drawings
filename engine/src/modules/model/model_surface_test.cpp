@@ -10,7 +10,7 @@
 void test_1()
 {
   auto c = cone_surface{1};
-  auto n = c.n_at(vec3(1, 1, sqrt(2)));
+  auto n = c.n_at(pos3(1, 1, sqrt(2)));
   auto z = n - norm(vec3(1, 1, -sqrt(2)));
   printf("(%f, %f, %f)\n", expand_v(z));
   assert_eq(z.x, 0);

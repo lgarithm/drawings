@@ -6,7 +6,7 @@
 #include "tuple.h"
 
 DEFINE_TUPLE_2_SCALE(numericT, linear_eq, A, B);
-DEFINE_TUPLE_2_PLUS(linear_eq, A, B);
+DEFINE_TUPLE_2_ADD(linear_eq, A, B);
 
 numericT eval(const linear_eq& e, numericT x) { return e.A * x + e.B; }
 
@@ -19,8 +19,8 @@ quad_eq operator*(const linear_eq& l, const linear_eq& r)
 quad_eq sqr(const linear_eq& leq) { return leq * leq; }
 
 DEFINE_TUPLE_3_SCALE(numericT, quad_eq, A, B, C);
-DEFINE_TUPLE_3_PLUS(quad_eq, A, B, C);
-DEFINE_TUPLE_3_MINUS(quad_eq, A, B, C);
+DEFINE_TUPLE_3_ADD(quad_eq, A, B, C);
+DEFINE_TUPLE_3_SUB(quad_eq, A, B, C);
 
 unsigned short real_roots(const quad_eq& e, numericT& x1, numericT& x2)
 {
