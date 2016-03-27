@@ -14,10 +14,10 @@ client_cli: client_cli.go client
 	cd $(builddir)
 	GOPATH=$(gopath) go build -o $(outdir)/client.out client_cli.go
 
-client:
+client: client.go
 	mkdir -p $(builddir)/src/render
 	cp client.go $(builddir)/src/render/
 
-parallel:
+parallel: parallel.go
 	mkdir -p $(builddir)/src/parallel
 	cp parallel.go $(builddir)/src/parallel

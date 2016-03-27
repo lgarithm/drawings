@@ -11,7 +11,8 @@ gen(){
     echo "cd ~/tmp"
     echo "rm -fr engine"
     echo "p='"
-    echo "`base64 engine.tar.bz2 | ./engine/install/chunk.py`'"
+    echo "`base64 engine.tar.bz2 | ./engine/install/chunk.py`"
+    echo "'"
     echo 'echo $p | tr -d " " | base64 --decode | tar -xj'
     echo 'cd engine && ./configure && . ./go-cfg && make all'
     echo "./script/worker.sh"

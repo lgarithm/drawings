@@ -69,17 +69,19 @@ void write_bmp_file(const bmp_head& head,
   fclose(fp);
 }
 
+#define UNCHECK(expr) ({auto _ = expr;})
+
 void stream_bmp(const bmp_head& head, const unsigned char* buffer, int fd)
 {
-  write(fd, &head.magic, 2);
-  write(fd, &head.header, 12);
-  write(fd, &head.info, 40);
+  UNCHECK(write(fd, &head.magic, 2));
+  UNCHECK(write(fd, &head.header, 12));
+  UNCHECK(write(fd, &head.info, 40));
 
   const int dl = 3 * head.info.width;
   const int pad = _pad(head.info.width);
   for (int i=0; i < head.info.height; ++i) {
-    write(fd, buffer, dl);
-    write(fd, zeros, pad);
+    UNCHECK(write(fd, buffer, dl));
+    UNCHECK(write(fd, zeros, pad));
     buffer += dl;
   }
 }

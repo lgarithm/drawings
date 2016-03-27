@@ -62,6 +62,32 @@ bool parse_depth(const char * str, int& n)
   return false;
 }
 
+
+object* parse_model(const char * str)
+{
+  if (HAS_CPP_REGEX) { return p_model(str); }
+  {
+    double s;
+    point3 p;
+    if (sscanf(str, "sphere(%lf, (%lf, %lf, %lf))", &s, &p.x, &p.y, &p.z) == 4) {
+      if (s > 0) return new sphere(s, p);
+    }
+  }
+  {
+    if (strcmp(str, "floor") == 0) {
+      return new Chessboard;
+    }
+  }
+  {
+    t_vector3 n;
+    if (sscanf(str, "plane((%lf, %lf, %lf), (%lf, %lf, %lf))",
+               &n.o.x, &n.o.y, &n.o.z, &n.v.x, &n.v.y, &n.v.z) == 6) {
+      return new plane(n);
+    }
+  }
+  return nullptr;
+}
+
 bool parse_light(const char * str, light& l)
 {
   if (sscanf(str, "light((%lf, %lf, %lf), (%lf, %lf, %lf))",
@@ -126,7 +152,7 @@ bool parse(int argc, const char * const argv[], image_task& cfg)
     }
     if (strcmp(argv[i], "-m") == 0) {
       if (++i >= argc) return false;
-      auto po = p_model(argv[i]);
+      auto po = parse_model(argv[i]);
       if (po == nullptr) return false;
       cfg.w += po;
       continue;

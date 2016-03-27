@@ -85,6 +85,8 @@ int ret_size(const image_task& img_tsk)
   return img_tsk.bmp_padding ? s + 54 : s;
 }
 
+#define UNCHECK(expr) ({auto _ = expr;})
+
 void save_results(const image_task& img_tsk, const unsigned char * buffer,
                   const vector<result*>& rs)
 {
@@ -94,7 +96,7 @@ void save_results(const image_task& img_tsk, const unsigned char * buffer,
     if (!img_tsk.bmp_padding) {
       lo.log("streamming raw pixel");
       printf("will send %d bytes\n", size(d) * 3);
-      write(img_tsk.outfd, buffer, size(d) * 3);
+      UNCHECK(write(img_tsk.outfd, buffer, size(d) * 3));
     } else {
       lo.log("streamming bmp file");
       printf("will send %d bytes\n", size(d) * 3 + 54);
@@ -139,17 +141,26 @@ void run(const image_task& img_tsk)
   run_tasks(ts, img_tsk.use_thread);
   lo.log("end rendering.");
   save_results(img_tsk, buffer, rs);
-  lo.log("image task done");
+  lo.log("image task done.");
 }
 
 int app(int argc, const char * const argv[], const atlas& worlds, world_gen def)
 {
+  printf("\e[1;43mparsing args ...\e[m\n");
   image_task img_tsk;
   if (not parse(argc, argv, img_tsk, worlds, def)) {
     usage(argv[0], worlds);
+    for (int i=0; i < argc; ++i) {
+      printf("\e[1;33mX-Rey\e[m: %s\n", argv[i]);
+    }
+    printf("\n");
     return 0;
+  }
+  if (not img_tsk.outfile.empty()) {
+    printf("\e[1;34mrendering %s ...\e[m\n", img_tsk.outfile.c_str());
   }
   show_image_task(img_tsk);
   run(img_tsk);
+  printf("\e[1;42mDONE\e[m\n");
   return 0;
 }

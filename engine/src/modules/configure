@@ -1,7 +1,6 @@
 # -*- mode: sh -*-
 
 set -e
-
 source ../../configtool
 
 cc='g++ -std=c++0x -I.'

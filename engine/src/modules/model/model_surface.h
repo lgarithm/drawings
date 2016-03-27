@@ -13,7 +13,7 @@ struct algebraic_surface : simple_object
   algebraic_surface();
   algebraic_surface(const oframe&);
 
-  t_vector3 at(const point3&) const override;
+  vector3 at(const point3&) const override;
   virtual vector3 n_at(const point3&) const = 0;
 };
 
@@ -21,7 +21,7 @@ struct quadratic_surface : algebraic_surface
 {
   maybe<scalarT> meet(const ray&) const override;
 
-  quadratic_surface(const oframe& of=oframe());
+  quadratic_surface(const oframe& _=oframe());
   virtual quad_eq equation(const ray&) const = 0;
 };
 
@@ -56,8 +56,8 @@ struct cone_surface : quadratic_surface
 struct bound_cylinder_surface : cylinder_surface
 {
   scalarT h;
-  maybe<scalarT> meet(const ray&) const override;
   bound_cylinder_surface(scalarT, scalarT, const oframe& _=oframe());
+  maybe<scalarT> meet(const ray&) const override;
 };
 
 #endif  // MODEL_SURFACE_H

@@ -12,7 +12,7 @@
 
 struct polygon { std::vector<point2> vertices; };
 
-scalarT area(const polygon&, const point2 = point2{0,0});
+scalarT area(const polygon&, const point2& _=pos2(0,0));
 bool in(const point2&, const polygon&);
 
 struct cylinder : object
@@ -34,7 +34,7 @@ struct space_polygon : simple_object, polygon
   space_polygon(const oframe&, const std::vector<point2>&);
 
   maybe<scalarT> meet(const ray&) const override;
-  t_vector3 at(const point3&) const override;
+  vector3 at(const point3&) const override;
 };
 
 struct polyhedron : object

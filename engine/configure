@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # -*- mode: sh -*-
 
 set -e
@@ -45,10 +44,13 @@ prepare_source(){
         fi
     done
     if [[ ! $(uname -a | grep Darwin) ]]; then
-        echo -e "\x1b[1;32mOverriding overide\x1b[m"
+        echo -e "\x1b[1;32mNot Support c++ overide\x1b[m"
         override_override
+        echo -e "\x1b[1;32mNot Support c++ regex\x1b[m"
+        sed -ir 's/HAS_CPP_REGEX true/HAS_CPP_REGEX false/g' build/include/config.h
+        rm build/include/config.hr
     else
-        echo -e "\x1b[1;32mNOT overriding overide\x1b[m"
+        echo -e "\x1b[1;32mAll c++11 features supported\x1b[m"
     fi
 }
 
@@ -126,8 +128,8 @@ gen_main_makefile(){
     echo
 
     echo "demo: core"
-    echo -e "\tcd build/demo && bash ./configure && make"
-    echo -e "\tcp build/demo/server/a.out build/bin/render-server"
+    echo -e "\tcd build/demo && make"
+    echo -e "\tcp build/demo/server/server_main.out build/bin/render-server"
     echo
 
     echo "proxy:"
@@ -139,12 +141,7 @@ gen_main_makefile(){
 }
 
 prepare_dir(){
-    mkdir -pv build/bin
-    mkdir -pv build/demo
-    mkdir -pv build/include
-    mkdir -pv build/lib
-    mkdir -pv build/share
-    mkdir -pv build/src
+    mkdir -pv build/{bin,demo,include,lib,share,src}
     mkdir -pv output
 }
 
@@ -159,6 +156,8 @@ config(){
     cd ../..
     echo -e "\x1b[1;32mGenerating Main Makefile\x1b[m"
     gen_main_makefile > Makefile
+    echo -e "\x1b[1;32mConfiguring demos\x1b[m"
+    cd build/demo && ./configure
     echo -e "\x1b[1;32mDone\x1b[m"
 }
 

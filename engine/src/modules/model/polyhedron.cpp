@@ -41,7 +41,7 @@ polyhedron unit_cube(scalarT u)
 scalarT area(const point2& o, const point2& p, const point2& q)
 { return .5 * det(p - o, q - o); }
 
-scalarT area(const polygon& g, const point2 o)
+scalarT area(const polygon& g, const point2& o)
 {
   scalarT s = 0;
   int n = g.vertices.size();
@@ -79,16 +79,12 @@ maybe<intersection> cylinder::intersect(const ray& r) const
       if (!ts[idx].just || ts[idx].it < ts[i].it) idx = i;
     }
   }
-  if (ts[idx].just) {
-    auto n = subs[idx]->at(r + ts[idx].it);
-    n = n + 1e-6 * n.v;
-    return just(intersection{surface{n}, ts[idx].it});
-  }
+  if (ts[idx].just) { return just(intersection{subs[idx], ts[idx].it}); }
   return nothing<intersection>();
 }
 
-space_polygon::space_polygon(const oframe& of, const std::vector<point2>& vs) :
-    of(of) { vertices = vs; }
+space_polygon::space_polygon(const oframe& of, const vector<point2>& vs)
+  : of(of) { vertices = vs; }
 
 maybe<scalarT> space_polygon::meet(const ray& r) const
 {
@@ -103,8 +99,7 @@ maybe<scalarT> space_polygon::meet(const ray& r) const
   return nothing<scalarT>();
 }
 
-t_vector3 space_polygon::at(const point3& p) const
-{ return t_vector3{of.o, of.f.Z}; }
+vector3 space_polygon::at(const point3&) const { return of.f.Z; }
 
 maybe<intersection> polyhedron::intersect(const ray& r) const
 {

@@ -2,6 +2,7 @@
 
 #include <vector>
 #if HAS_STD_THREAD
+#include <atomic>
 #include <mutex>
 #include <thread>
 #endif
@@ -10,6 +11,7 @@
 
 using std::vector;
 #if HAS_STD_THREAD
+using std::atomic;
 using std::thread;
 using std::mutex;
 using std::lock_guard;
@@ -29,46 +31,64 @@ void task::operator()()
 {
   e.render(w, l, cam, c, r->p);
   r->c = c;
-  {
-#if HAS_STD_THREAD
-    lock_guard<mutex> lck(wrt);
-#endif
-    printf("\r%s\r", "                                       ");
-    {
-      with_c _(1, 42);
-      printf("finished rendering task #[%d]", id);
-    }
-    fflush(stdout);
-  }
 }
 
 int task::Id = 0;
+
+void show_finished(int id)
+{
+  printf("\r%s\r", "                                       ");
+  {
+    with_c _(1, 42);
+    printf("finished rendering task #[%d]", id);
+  }
+  fflush(stdout);
+}
+
+#if HAS_STD_THREAD
+void run_in_threads(vector<task*>& tasks, int m)
+{
+  auto n = tasks.size();
+  atomic<int> idx(0);
+  vector<thread*> ts(m);
+  for (int i=0; i < m; ++i) {
+    ts[i] = new thread([&](){
+        for (;;) {
+          auto i = idx++;
+          if (i < n) {
+            (*tasks[i])();
+            {
+              lock_guard<mutex> lck(wrt);
+              show_finished(tasks[i]->id);
+            }
+          } else {
+            break ;
+          }
+        }
+      });
+  }
+  for (auto& it : ts) { it->join(); }
+  printf("\n");
+}
+#endif
 
 void run_tasks(vector<task*>& tasks, bool use_thread)
 {
 #if HAS_STD_THREAD
   auto m = thread::hardware_concurrency();
   {
-    with_c _(1, 44);
+    with_c _(0, 45);
     printf("hardware_concurrency: %u", m);
   }
   printf("\n");
-  vector<thread*> ts;
+  if (use_thread) {
+    run_in_threads(tasks, m);
+    return ;
+  }
 #endif
   for (auto tsk : tasks) {
-    if (use_thread) {
-#if HAS_STD_THREAD
-      auto th = new thread(*tsk);
-      ts.push_back(th);
-#else
-      (*tsk)();
-#endif
-    } else {
-      (*tsk)();
-    }
+    (*tsk)();
+    show_finished(tsk->id);
   }
-#if HAS_STD_THREAD
-  for (auto& it : ts) { it->join(); }
-#endif
   printf("\n");
 }

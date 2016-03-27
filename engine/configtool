@@ -1,8 +1,10 @@
 # -*- mode: sh -*-
 
+set -e
 g++ -dumpversion
 
 gen_object_target(){
+    echo "generating .o target for $1" 1>&2
     $cc -MM $1
     echo -e "\t$cc $opts -c $1"
     echo
@@ -17,9 +19,10 @@ gen_dep_objets(){
 }
 
 gen_out_target(){
-    main=`basename $1 .cpp`
-    deps=`gen_dep_objets $1 | tr "\n" " "`
-    echo $main".out: $deps $1"
-    echo -e "\t$cc $opts $deps $1 -o $main.out"
+    echo "generating .out target for $1" 1>&2
+    out=`basename $1 .cpp`.out
+    deps=`gen_dep_objets $1 | tr "\n" " "`" $1"
+    echo "$out: $deps"
+    echo -e "\t$cc $opts $deps $libpath -o $out"
     echo
 }

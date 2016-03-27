@@ -19,7 +19,8 @@ using std::type_index;
 
 void info(const camera& cam)
 {
-  printf("pos: ");
+  printf("camera:\n");
+  printf("\tpos: ");
   pp(cam.of.o);
   printf("\n");
   {
@@ -36,7 +37,8 @@ void info(const camera& cam)
     pp(f.Z);
     printf("\n");
   }
-  printf("near %lf\n", cam.near);
+  printf("\tnear %lf\n", cam.near);
+  printf("\taov %lf\n", cam.aov);
 }
 
 void show_image_task(const image_task& cfg)

@@ -9,7 +9,7 @@ using std::vector;
 unsigned ceil_div(unsigned n, unsigned d) { return n / d + (n % d != 0); }
 
 vector<clip> scheduler::divide()
-{ return divide(ceil_div(size(d), 1024 * 1024)); }
+{ return divide(ceil_div(size(d), 1024 * 1024 / 4)); }
 
 vector<clip> scheduler::divide(unsigned short n) { return divide(1, n); }
 

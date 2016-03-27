@@ -11,6 +11,7 @@
 
 struct interval{ double lo, hi; };
 struct viewport{ interval xr, yr; };
+struct surface{ t_vector3 n; material m; };
 
 struct shader
 {

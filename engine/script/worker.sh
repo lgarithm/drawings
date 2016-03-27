@@ -1,16 +1,13 @@
-rs=build/bin/render-server
-ps=build/bin/server.out
+render_server=build/bin/render-server
+proxy_server=build/bin/server.out
+
+port=8080
 
 run(){
-    port1=7777
-    port2=8080
-
-    $rs $port1 &
+    internal_port=7777
+    $render_server $internal_port &
     pid1=$!
-
-    addr="localhost:$port1"
-    self="localhost:$port2"
-    $ps --addr "$addr" --addrs "" --port $port2 &
+    $proxy_server --addr "localhost:$internal_port" --port $port &
     pid2=$!
 }
 

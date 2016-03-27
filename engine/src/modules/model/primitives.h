@@ -7,18 +7,6 @@
 #include "model.h"
 #include "point.h"
 
-maybe<scalarT> r_dis(const t_vector3&, const ray&);
-
-struct plane_alg_impl : simple_object
-{
-  vector3 n;
-  scalarT d;
-
-  plane_alg_impl(const vector3&, scalarT d);
-
-  maybe<scalarT> meet(const ray&) const override;
-  t_vector3 at(const point3&) const override;
-};
 
 struct plane : simple_object
 {
@@ -27,8 +15,10 @@ struct plane : simple_object
   plane(const t_vector3&);
 
   maybe<scalarT> meet(const ray&) const override;
-  t_vector3 at(const point3&) const override;
+  vector3 at(const point3&) const override;
 };
+
+struct Floor : plane { Floor(); };
 
 struct disc : plane
 {
@@ -37,25 +27,12 @@ struct disc : plane
   maybe<scalarT> meet(const ray&) const override;
 };
 
-struct Floor : simple_object
-{
-  maybe<scalarT> meet(const ray&) const override;
-  t_vector3 at(const point3&) const override;
-
-  Floor();
-};
-
-struct Chessboard : complex_object
+struct Chessboard : plane
 {
   double grid_size;
-
   Chessboard(double=1);
-  maybe<scalarT> meet(const ray&) const override;
-  t_vector3 at(const point3&) const override;
   material mt(const point3&) const override;
 };
-
-struct Mirror : Floor { t_vector3 at(const point3&) const override; };
 
 struct sphere : simple_object
 {
@@ -65,17 +42,26 @@ struct sphere : simple_object
   sphere(double, const point3&);
 
   maybe<scalarT> meet(const ray&) const override;
-  t_vector3 at(const point3&) const override;
+  vector3 at(const point3&) const override;
 };
 
-struct triangle : simple_object
+struct triangle : plane
 {
-  point3 a, b, c;
+  const point3 a, b, c;
 
   triangle(const point3&, const point3&, const point3&);
 
   maybe<scalarT> meet(const ray&) const override;
-  t_vector3 at(const point3&) const override;
 };
+
+struct tetrahedron : object
+{
+  triangle f[4];
+  object* subs[4];
+  tetrahedron(const point3&, const point3&, const point3&, const point3&);
+  maybe<intersection> intersect(const ray&) const override;
+};
+
+maybe<scalarT> r_dis(const t_vector3&, const ray&);
 
 #endif  // PRIMITIVE_H

@@ -20,10 +20,16 @@ static const shader default_shader(black, black);
   color func_name(const ray& r, const world& w, const env& e, int dep)  \
   {                                                                     \
     TRACE_CODE;                                                         \
-    auto i = nearest(w, r);                                             \
-    return (i.just)                                                     \
-      ? default_shader(i.it.s, reflect(i.it.s.n.v, r.v), w, e, dep)     \
-      : default_shader.bgc;                                             \
+    auto i = nearest(w.objects, r);                                     \
+    if (i.just) {                                                       \
+      const auto p = r + i.it.d;                                        \
+      auto n = t_vector3{p, i.it.o->at(p)};                             \
+      n = n + 1e-6 * n.v;                                               \
+      const auto s = surface{n, i.it.o->mt(p)};                         \
+      return default_shader(s, reflect(s.n.v, r.v), w, e, dep);         \
+    } else {                                                            \
+      return default_shader.bgc;                                        \
+    }                                                                   \
   }
 
 
@@ -46,7 +52,7 @@ color shader::operator()(const surface& s, const vector3& r,
     for (const auto& l : e.lights) {
       auto d = len(l.pos - s.n.o);
       auto ldir = norm(l.pos - s.n.o);
-      auto j = nearest(w, ray{s.n.o, ldir});
+      auto j = nearest(w.objects, ray{s.n.o, ldir});
       if (not j.just || d < j.it.d) {
         nc += max(0., dot(ldir, s.n.v)) * s.m.diffuse * l.col +
           pow(max(0., dot(ldir, r)), s.m.roughness) * s.m.specular * l.col;

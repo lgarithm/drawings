@@ -24,6 +24,7 @@ vector4 vec4(scalarT x, scalarT y, scalarT z, scalarT w)
 
 vector4 vec4(const vector3& v, scalarT w) { return vec4(v.x, v.y, v.z, w); }
 
+point2 pos2(scalarT x, scalarT y) { return point2{x, y}; }
 point3 pos3(scalarT x, scalarT y, scalarT z) { return point3{x, y, z}; }
 
 matrix4 mat4(const vector4& o, const vector4& p, const vector4& q,

@@ -1,18 +1,14 @@
-cmd=build/demo/builtin/a.out
+cmd=build/demo/builtin/builtin_examples_main.out
 
-large=4096X4096
-medium=2048X2048
-small=1024X1024
 cam='((0,-30,5), (0,0,0), (0,0,1))'
 red='(.5,0,0)'
 green='(0,.5,0)'
 blue='(0,0,.5)'
 grey='(.7,.7,.7)'
-display=$medium
 
 show_model(){
     $cmd -c "$cam" \
-         -d "$display" \
+         -d 2kf \
          -l "light((0,0,50), (.1,.1,.1))" \
          -l "light((-20,-20,20), $red)" \
          -l "light((-20,20,20), $green)" \

@@ -7,39 +7,14 @@
 #include "point.h"
 
 
-maybe<scalarT> r_dis(const t_vector3& n, const ray& r)
-{
-  assert_unit(r.v, __func__);
-  auto c = dot(n.v, r.v);
-  if (c < 0) {
-    auto l = dot(n.v, n.o - r.o);
-    if (l < 0) return just<scalarT>(l / c);
-  }
-  return nothing<scalarT>();
-}
-
-plane_alg_impl::plane_alg_impl(const vector3& n, scalarT d) : n(n), d(d) { }
-
-maybe<scalarT> plane_alg_impl::meet(const ray& r) const
-{
-  auto u = dot(n, r.v);
-  if (u != 0) {
-    auto t = (dot(r.o, n) + d) / u;
-    if (t > 0) {
-      return just(t);
-    }
-  }
-  return nothing<scalarT>();
-}
-
-t_vector3 plane_alg_impl::at(const point3& p) const { return t_vector3{p, n}; }
-
-
 plane::plane(const t_vector3& n) : n(n) { assert_unit(n.v, __func__); }
 
 maybe<scalarT> plane::meet(const ray& r) const { return r_dis(n, r); }
 
-t_vector3 plane::at(const point3& p) const { return t_vector3{p, n.v}; }
+vector3 plane::at(const point3&) const { return n.v; }
+
+
+Floor::Floor() : plane(t_vector3(origin, z_axis)) { m.diffuse = .4 * grey; }
 
 
 disc::disc(scalarT r, const t_vector3& n) : plane(n), R(r) { }
@@ -54,27 +29,7 @@ maybe<scalarT> disc::meet(const ray& r) const
   return nothing<scalarT>();
 }
 
-
-maybe<scalarT> f_dis(const ray& r)
-{
-  if (r.v.z != 0) {
-    auto d = - r.o.z / r.v.z;
-    if (d > 0) return just<scalarT>(d);
-  }
-  return nothing<scalarT>();
-}
-
-Floor::Floor() { m.diffuse = .4 * grey; }
-
-maybe<scalarT> Floor::meet(const ray& r) const { return f_dis(r); }
-
-t_vector3 Floor::at(const point3& p) const { return t_vector3{p, z_axis}; }
-
-Chessboard::Chessboard(double gs) : grid_size(gs) {}
-
-maybe<scalarT> Chessboard::meet(const ray& r) const { return f_dis(r); }
-
-t_vector3 Chessboard::at(const point3& p) const { return t_vector3{p, z_axis}; }
+Chessboard::Chessboard(double gs) : grid_size(gs), plane(t_vector3(origin, z_axis)) {}
 
 material Chessboard::mt(const point3& p) const
 {
@@ -104,33 +59,45 @@ maybe<scalarT> sphere::meet(const ray& r) const
   return nothing<scalarT>();
 }
 
-t_vector3 sphere::at(const point3& p) const
-{ return t_vector3{p, norm(p - pos)}; }
+vector3 sphere::at(const point3& p) const { return norm(p - pos); }
+
+
+point3 gc(const point3& a, const point3& b, const point3& c)
+{ return origin + (1 / 3.0) * (a + (b - origin) + (c - origin) - origin); }
 
 triangle::triangle(const point3& a, const point3& b, const point3& c)
-  : a(a), b(b), c(c)
-{
-  m.reflection = 1;
-  m.specular = white;
-  m.roughness = 1;
-}
+  : plane(t_vector3{gc(a, b, c), norm(a - origin, b - origin, c - origin)})
+  , a(a), b(b), c(c) { }
 
 maybe<scalarT> triangle::meet(const ray& r) const
 {
-  auto n = norm(a - origin, b - origin, c - origin);
-  auto th = -dot(r.v, n);
-  if (th > 0) {
-    auto d = dis(r.o, simplex2{a, b, c});
-    if (d > 0) {
-      auto t = d / th;
-      auto e = r + t;
-      if (in(e, simplex2{a,b,c})) {
-        return just<scalarT>(d);
-      }
+  auto t = plane::meet(r);
+  if (t.just) {
+    auto e = r + t.it;
+    if (in(e, simplex2{a,b,c})) {
+      return t;
     }
   }
   return nothing<scalarT>();
 }
 
-t_vector3 triangle::at(const point3& p) const
-{ return t_vector3{p, norm(a - origin, b - origin, c - origin)}; }
+
+tetrahedron::tetrahedron(const point3& a, const point3& b, const point3& c,
+                         const point3& d)
+  : f{triangle(a,b,c), triangle(c,b,d), triangle(b,a,d), triangle(a,c,d)}
+  , subs{f, f + 1, f + 2, f + 3} { }
+
+maybe<intersection> tetrahedron::intersect(const ray& r) const
+{ return nearest(subs, r); }
+
+
+maybe<scalarT> r_dis(const t_vector3& n, const ray& r)
+{
+  assert_unit(r.v, __func__);
+  auto c = dot(n.v, r.v);
+  if (c < 0) {
+    auto l = dot(n.v, n.o - r.o);
+    if (l < 0) return just<scalarT>(l / c);
+  }
+  return nothing<scalarT>();
+}

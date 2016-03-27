@@ -1,12 +1,10 @@
 cmd=build/demo/example1/a.out
 
-top='((0,0,10), (0,0,0), (0,1,0))'
 front='((0,-20,5), (0,0,0), (0,0,1))'
-display=xga
 
 $cmd -a 90 \
      -c "$front" \
-     -d $display \
+     -d xga \
      -l 'light((0,0,50), (1,0,0))' \
      -l 'light((15,30,10), (.1,.8,0))' \
      -l 'light((-7,-5, 15), (0,.5,.2))' \

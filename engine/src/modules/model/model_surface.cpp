@@ -14,10 +14,10 @@ algebraic_surface::algebraic_surface() { }
 
 algebraic_surface::algebraic_surface(const oframe& of) : of(of) { }
 
-t_vector3 algebraic_surface::at(const point3& p) const
+vector3 algebraic_surface::at(const point3& p) const
 {
-  auto n = t_vector3{p, n_at(local(of, p))};
-  assert_unit(n.v, __FILE__, __func__);
+  auto n = n_at(local(of, p));
+  assert_unit(n, __FILE__, __func__);
   return n;
 }
 

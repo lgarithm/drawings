@@ -9,43 +9,24 @@
 #include "material.h"
 #include "model.h"
 #include "model-builtin.h"
+#include "parse.h"
 
 using std::istream;
-using std::regex;
 using std::regex_search;
 using std::smatch;
 using std::string;
 using std::istringstream;
 
-struct skipper
-{
-  const string chs;
-  skipper(const string& chs) : chs(chs) { }
-  skipper(char ch) : chs(string(" ") + ch) { }
-};
 
-skipper comma(',');
-skipper lb('(');
-skipper rb(')');
-
-istream& operator>>(istream &in, skipper& s)
+std::regex regex(const string& str)
 {
-  for (; s.chs.find(in.peek()) != -1; in.get());
-  return in;
-}
-
-istream& operator>>(istream &in, point3& p)
-{
-  return in >> p.x >> comma
-            >> p.y >> comma
-            >> p.z;
-}
-
-istream& operator>>(istream &in, vector3& v)
-{
-  return in >> v.x >> comma
-            >> v.y >> comma
-            >> v.z;
+  try{
+    return std::regex(str);
+  }
+  catch (const std::regex_error& e) {
+    printf("%s caught: %s\n", e.what(), str.c_str());
+    throw e;
+  }
 }
 
 maybe<color> p_color(const string& str)
@@ -57,15 +38,12 @@ maybe<color> p_color(const string& str)
     }
   }
   {
-    static const auto p = regex("([^,]+),\\s*([^,]+),\\s*([^,]+)");
-    smatch m;
-    if (regex_search(str, m, p) and m.size() == 4) {
+    istringstream ss(str);
+    color c;
+    if (ss >> c) {
       static const auto f = [](colorT x){ return 0 <= x && x <= 1; };
-      auto r = stod(m[1].str());
-      auto g = stod(m[2].str());
-      auto b = stod(m[3].str());
-      if (f(r) && f(g) && f(b)) {
-        return just(color{r, g, b});
+      if (f(c.r) && f(c.g) && f(c.b)) {
+        return just(c);
       }
     }
   }
@@ -157,7 +135,7 @@ simple_object* p_s_model(const string& str)
   return nullptr;
 }
 
-object* p_model(const string& str)
+object* p_model_regex_unsafe(const string& str)
 {
   static const auto p = regex("([^@]+)(@(.+))?");
   smatch m;
@@ -181,6 +159,17 @@ object* p_model(const string& str)
   }
   if (str == "floor") {
     return new Chessboard;
+  }
+  return nullptr;
+}
+
+object* p_model(const string& str)
+{
+  try {
+    return p_model_regex_unsafe(str);
+  }
+  catch (const std::regex_error& e) {
+    printf("regex_error caught: %s\n", e.what());
   }
   return nullptr;
 }

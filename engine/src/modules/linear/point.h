@@ -14,6 +14,7 @@
 vector3 vec3(scalarT, scalarT, scalarT);
 vector4 vec4(scalarT, scalarT, scalarT, scalarT);
 
+point2 pos2(scalarT, scalarT);
 point3 pos3(scalarT, scalarT, scalarT);
 
 matrix4 mat4(const vector3&, const vector3&, const vector3&, const vector3&);

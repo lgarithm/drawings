@@ -13,26 +13,8 @@ void test_1()
   assert(ceil_div(4096, 16) == 256);
 }
 
-void test_2()
-{
-  scheduler s;
-  {
-    auto d = display{4096, 4096};
-    auto s = scheduler{d};
-    auto a = s.divide();
-    assert(a.size() == 16);
-  }
-  {
-    auto d = display{4097, 4096};
-    auto s = scheduler{d};
-    auto a = s.divide();
-    assert(a.size() == 17);
-  }
-}
-
 int main()
 {
   test(1);
-  test(2);
   return 0;
 }

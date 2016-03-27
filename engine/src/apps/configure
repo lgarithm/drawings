@@ -1,7 +1,6 @@
 # -*- mode: sh -*-
 
 set -e
-
 source ../../configtool
 
 include=-I../../../build/include
@@ -9,44 +8,51 @@ libpath='-L../../../build/lib -lrey'
 
 cc='g++ -std=c++0x'
 
+cc="$cc $include"
 for m in `ls -d */`; do
-  echo "adding $m to include dir"
-  cc=$cc" -I../$m"
+    echo "adding $m to include dir"
+    cc="$cc -I../$m"
 done
 
 opts='-O3 -pthread'
 
 gen_makefile(){
-  if [ -f Makefile.am ]; then
-    cp Makefile.am Makefile
-  else
-    srcs=`ls *.cpp | tr "\n" " "`
-    echo "main:"
-    echo -e "\t$cc $opts $srcs $include $libpath"
-  fi
+    if [ -f Makefile.am ]; then
+        cp Makefile.am Makefile
+    else
+        echo "# Binaries"
+        for m in `ls | grep _main.cpp`; do
+            gen_out_target $m
+        done
+
+        echo "# Objects"
+        for c in `ls *.cpp`; do
+            gen_object_target $c
+        done
+    fi
 }
 
 config(){
-  cd $1
-  gen_makefile $1 > Makefile
-  cd ..
+    cd $1
+    gen_makefile $1 > Makefile
+    cd ..
 }
 
 apps='render bb8 billiard example1 builtin r2d2 server'
 
 for app in $apps; do
-  include=$include" -I../$app"
+    include=$include" -I../$app"
 done
 
 for app in $apps; do
-  config $app
+    config $app
 done
 
 gen_root_makefile(){
-  echo "main:"
-  for app in $apps; do
-    echo -e "\tcd $app && make"
-  done
+    echo "main:"
+    for app in $apps; do
+        echo -e "\tcd $app && make"
+    done
 }
 
 gen_root_makefile > Makefile

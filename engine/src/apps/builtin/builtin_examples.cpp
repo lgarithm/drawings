@@ -129,6 +129,34 @@ world* test_cylinder_3()
   return w;
 }
 
+world* test_cube_1()
+{
+  auto w = new world;
+  auto p = new polyhedron;
+  *p = unit_cube(3);
+  *w += p;
+  return w;
+}
+
+world* test_tetrahedron_1()
+{
+  auto w = new world;
+  {
+    auto a = pos3(0, 0, 5);
+    auto b = pos3(-2, 2, 1);
+    auto c = pos3(0, -2, 1);
+    auto d = pos3(2, 2, 1);
+    auto t = new tetrahedron(a, b, c, d);
+    //for (auto& it : t->f) { it.m.reflection = 0; }
+    *w += t;
+  }
+  auto p = new plane(t_vector3{pos3(0,0,-30), z_axis});
+  p->m.reflection = 0;
+  p->m.diffuse = .1 * grey;
+  *w += p;
+  return w;
+}
+
 static const auto examples_ = atlas({
     {"empty", empty_scene},
     {"test_board_1", test_board_1},
@@ -145,6 +173,8 @@ static const auto examples_ = atlas({
     {"cylinder", test_cylinder},
     {"cylinder2", test_cylinder_2},
     {"cylinder3", test_cylinder_3},
+    {"test_cube_1", test_cube_1},
+    {"test_tetrahedron_1", test_tetrahedron_1},
   });
 
 atlas examples() { return examples_; }

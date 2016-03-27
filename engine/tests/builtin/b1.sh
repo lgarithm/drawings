@@ -1,4 +1,3 @@
 source tests/builtin/builtin-model-test.sh
 
-display=$medium
-show_model test_board_1
+show_model test_board_1 -d 2kf

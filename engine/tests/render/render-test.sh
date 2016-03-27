@@ -1,4 +1,4 @@
-cmd=build/demo/render/a.out
+cmd=build/demo/render/render_main.out
 
 top='((0,0,20), (0,0,0), (0,1,0))'
 front='((0,-20,5), (0,0,0), (0,0,1))'

@@ -85,13 +85,15 @@ render_request parse_http_headers(char * buffer, int n)
   return rr;
 }
 
+#define UNCHECK(expr) ({auto _ = expr;})
+
 void send_static_body(int fd, const char * header_format, const char * body)
 {
   char head[1024];
   int len = strlen(body);
   sprintf(head, header_format, len);
-  write(fd, head, strlen(head));
-  write(fd, body, len);
+  UNCHECK(write(fd, head, strlen(head)));
+  UNCHECK(write(fd, body, len));
 }
 
 void send_text_body(int fd, const char * body)
@@ -101,4 +103,4 @@ void send_html_body(int fd, const char * body)
 { send_static_body(fd, html_header_format, body); }
 
 void send_raw_body(int fd, const char * body)
-{ write(fd, body, strlen(body)); }
+{ UNCHECK(write(fd, body, strlen(body))); }

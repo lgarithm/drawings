@@ -42,6 +42,9 @@ namespace {
   unsigned char s_buffers[max_conn][buffer_size];
 }  // namespace
 
+
+#define UNCHECK(expr) ({auto _ = expr;})
+
 struct render_handler
 {
   const int fd;
@@ -59,7 +62,7 @@ struct render_handler
       for (int i=0; i < argc; ++i) {
         printf("%s\n", argv[i]);
       }
-      write(fd, status_400, sizeof(status_400));
+      UNCHECK(write(fd, status_400, sizeof(status_400)));
       return ;
     }
     for (int i=0; i < argc; ++i) {
@@ -76,7 +79,7 @@ struct render_handler
     if (rr.http_header) {
       char head[1024];
       sprintf(head, byte_header_format, ret_size(img_tsk));
-      write(fd, head, strlen(head));
+      UNCHECK(write(fd, head, strlen(head)));
     }
     run(img_tsk);
   }
@@ -138,7 +141,7 @@ struct connection
     } else if (path == "/index") {
       send_html_body(fd, server_usage_html);
     } else {
-      write(fd, status_404, sizeof(status_404));
+      UNCHECK(write(fd, status_404, sizeof(status_404)));
     }
   }
 };
