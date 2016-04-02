@@ -20,8 +20,6 @@ struct cylinder : object
   bound_cylinder_surface b;
   disc u, d;
 
-  simple_object* subs[3];
-
   cylinder(scalarT, scalarT, const oframe=oframe());
 
   maybe<intersection> intersect(const ray&) const override;

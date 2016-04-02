@@ -5,6 +5,7 @@
 #include <string>
 
 #include "color.h"
+#include "constants.h"
 #include "maybe.h"
 #include "material.h"
 #include "model.h"
@@ -12,6 +13,7 @@
 #include "parse.h"
 
 using std::istream;
+using std::map;
 using std::regex_search;
 using std::smatch;
 using std::string;
@@ -27,6 +29,36 @@ std::regex regex(const string& str)
     printf("%s caught: %s\n", e.what(), str.c_str());
     throw e;
   }
+}
+
+maybe<camera> p_camera(const string& str)
+{
+  {
+    istringstream ss(str);
+    point3 p, l;
+    vector3 u;
+    if (ss
+        >> lb
+        >> lb >> p >> rb >> comma
+        >> lb >> l >> rb >> comma
+        >> lb >> u >> rb >> rb) {
+      return just(camera(observer(p, l, u)));
+    }
+  }
+  {
+    istringstream ss(str);
+    tokenizer name;
+    if (ss >> spaces >> name) {
+      scalarT d;
+      if (not (ss >> lb >> d >> rb)) { d = 10; }
+      auto cs = build_cameras(d);
+      auto it = cs.find(name.str);
+      if (it != cs.end()) {
+        return just(it->second);
+      }
+    }
+  }
+  return nothing<camera>();
 }
 
 maybe<color> p_color(const string& str)

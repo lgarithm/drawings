@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include "affine.h"
+#include "guard.h"
 #include "maybe.h"
 #include "model.h"
 #include "point.h"
@@ -17,17 +19,30 @@ vector3 plane::at(const point3&) const { return n.v; }
 Floor::Floor() : plane(t_vector3(origin, z_axis)) { m.diffuse = .4 * grey; }
 
 
-disc::disc(scalarT r, const t_vector3& n) : plane(n), R(r) { }
+disc::disc(scalarT r, const t_vector3& n) : bound(plane(n)), R(r) { }
 
-maybe<scalarT> disc::meet(const ray& r) const
+bool disc::in(const point3& p) const { return len(p - n.o) < R; }
+
+point3 gc(const point3& a, const point3& b, const point3& c)
+{ return origin + (1 / 3.0) * (a + (b - origin) + (c - origin) - origin); }
+
+triangle::triangle(const point3& a, const point3& b, const point3& c)
+  : bound(plane(t_vector3{gc(a, b, c),
+          norm(a - origin, b - origin, c - origin)}))
+  , a(a), b(b), c(c) { }
+
+bool triangle::in(const point3& p) const { return ::in(p, simplex2{a,b,c}); }
+
+quad::quad(const oframe& of, scalarT w, scalarT h)
+  : bound(plane(t_vector3(of.o, of.f.Z)))
+  , of(of), half_w(.5 * w), half_h(.5 * h) { }
+
+bool quad::in(const point3& p) const
 {
-  auto t = plane::meet(r);
-  if (t.just) {
-    auto d = len(r + t.it - n.o);
-    if (d < R) return t;
-  }
-  return nothing<scalarT>();
+  auto q = local(of, p);
+  return fabs(q.x) < half_w and fabs(q.y) < half_h;
 }
+
 
 Chessboard::Chessboard(double gs) : grid_size(gs), plane(t_vector3(origin, z_axis)) {}
 
@@ -60,26 +75,6 @@ maybe<scalarT> sphere::meet(const ray& r) const
 }
 
 vector3 sphere::at(const point3& p) const { return norm(p - pos); }
-
-
-point3 gc(const point3& a, const point3& b, const point3& c)
-{ return origin + (1 / 3.0) * (a + (b - origin) + (c - origin) - origin); }
-
-triangle::triangle(const point3& a, const point3& b, const point3& c)
-  : plane(t_vector3{gc(a, b, c), norm(a - origin, b - origin, c - origin)})
-  , a(a), b(b), c(c) { }
-
-maybe<scalarT> triangle::meet(const ray& r) const
-{
-  auto t = plane::meet(r);
-  if (t.just) {
-    auto e = r + t.it;
-    if (in(e, simplex2{a,b,c})) {
-      return t;
-    }
-  }
-  return nothing<scalarT>();
-}
 
 
 tetrahedron::tetrahedron(const point3& a, const point3& b, const point3& c,

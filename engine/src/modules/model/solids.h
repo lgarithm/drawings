@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "linear.h"
+#include "affine.h"
 #include "point.h"
 
 struct face_index { std::vector<unsigned short> vi; };

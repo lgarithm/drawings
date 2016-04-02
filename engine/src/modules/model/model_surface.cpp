@@ -8,7 +8,6 @@
 #include "debug.h"
 #include "guard.h"
 
-using std::string;
 
 algebraic_surface::algebraic_surface() { }
 
@@ -84,14 +83,10 @@ vector3 cone_surface::n_at(const point3& p) const
 
 bound_cylinder_surface::bound_cylinder_surface(scalarT r, scalarT h,
                                                const oframe& of)
-  : cylinder_surface(r, of), h(h) { }
+  : bound(cylinder_surface(r, of)), h(h) { }
 
-maybe<scalarT> bound_cylinder_surface::meet(const ray& r) const
+bool bound_cylinder_surface::in(const point3& p) const
 {
-  auto t = quadratic_surface::meet(r);
-  if (t.just) {
-    auto zz = local(of, r + t.it).z * 2;
-    if (-h < zz && zz < h) return t;
-  }
-  return nothing<scalarT>();
+  auto zz = local(of, p).z * 2;
+  return -h < zz && zz < h;
 }

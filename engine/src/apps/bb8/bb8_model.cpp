@@ -10,17 +10,9 @@ using std::max;
 using std::min;
 
 bb8_head::bb8_head(double size, const oframe& of)
-  : sphere(size, of.o), of(of) { }
+  : bound(sphere(size, of.o)), of(of) { }
 
-maybe<scalarT> bb8_head::meet(const ray& r) const
-{
-  auto t = sphere::meet(r);
-  if (t.just) {
-    auto p = local(of, r + t.it);
-    if (p.z > 0) return t;
-  }
-  return nothing<scalarT>();
-}
+bool bb8_head::in(const point3& p) const { return local(of, p).z > 0; }
 
 material bb8_head::mt(const point3& p) const
 {

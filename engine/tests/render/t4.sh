@@ -1,9 +1,8 @@
 source tests/render/render-test.sh
 
-cam='((0, -30, 0), (0,0,0), (0,0,1))'
 lc='(.1, .1, .1)'
 
-$cmd -c "$cam" \
+$cmd -c "front(30)" \
      -d 2kf \
      -m 'sphere(4, (0,0,8)) @ dc(green), rf=0' \
      -m 'sphere(4, (-7,0,-2)) @ dc(blue)' \

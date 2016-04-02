@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "linear.h"
+#include "affine.h"
 #include "point.h"
 
 using std::vector;

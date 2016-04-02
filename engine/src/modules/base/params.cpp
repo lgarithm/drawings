@@ -46,11 +46,9 @@ bool parse_division(const char * str, division& dd)
 
 bool parse_camera(const char * str, camera& c)
 {
-  point3 p, l;
-  vector3 u;
-  if (sscanf(str, "((%lf, %lf, %lf), (%lf, %lf, %lf), (%lf, %lf, %lf))",
-             &p.x, &p.y, &p.z, &l.x, &l.y, &l.z, &u.x, &u.y, &u.z) == 9) {
-    c.of = observer(p, l, u);
+  auto t = p_camera(str);
+  if (t.just) {
+    c.of = t.it.of;
     return true;
   }
   return false;
@@ -99,7 +97,7 @@ bool parse_light(const char * str, light& l)
   return false;
 }
 
-bool parse(int argc, const char * const argv[], image_task& cfg)
+bool parse_inline(int argc, const char * const argv[], image_task& cfg)
 {
   for (int i=1; i < argc; ++i) {
     if (strcmp(argv[i], "-h") == 0) {
@@ -188,6 +186,47 @@ bool parse(int argc, const char * const argv[], image_task& cfg)
   return true;
 }
 
+vector<string> parse_file(const char * name)
+{
+  printf("from file %s\n", name);
+  vector<string> args({"render"});
+  char line[1 << 10];
+  FILE* fp = fopen(name, "r");
+  for (int lino = 0; fgets(line, 999, fp); lino++) {
+    if (strncmp("#!", line, 2) == 0 && lino == 0) continue;
+    if (strncmp("!!", line, 2) == 0) continue;
+    char * p = line;
+    int l = strlen(line);
+    for (; l > 0 && isspace(line[l-1]); --l);
+    line[l] = '\0';
+    if (l > 0) {
+      auto flg = string(line, 2);
+      args.push_back(flg);
+      if (l > 3) {
+        auto val = string(line + 3);
+        args.push_back(val);
+      }
+    }
+  }
+  fclose(fp);
+  return args;
+}
+
+bool parse(int argc, const char * const argv[], image_task& cfg)
+{
+  if (argc > 1 and strcmp(argv[1], "-f") == 0) {
+    if (argc > 2) {
+      auto args = parse_file(argv[2]);
+      int n = args.size();
+      const char * a[n];
+      for (int i=0; i < n; ++i) a[i] = args[i].c_str();
+      return parse_inline(n, a, cfg);
+    }
+    return false;
+  }
+  return parse_inline(argc, argv, cfg);
+}
+
 template<typename K, typename T>
 T get(const map<K, T>& mp, const K& k, const T& t)
 {
@@ -231,7 +270,8 @@ void usage(const char * name, const atlas& a)
     "[-o <outfile>] "
     "[-p] "
     "[-r <ji>] "
-    "[world]"
+    "[world]",
+    "-f <script.rey.txt>",
   };
 
   ostringstream options;

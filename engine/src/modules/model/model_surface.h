@@ -53,11 +53,11 @@ struct cone_surface : quadratic_surface
 };
 
 
-struct bound_cylinder_surface : cylinder_surface
+struct bound_cylinder_surface : bound<cylinder_surface>
 {
   scalarT h;
   bound_cylinder_surface(scalarT, scalarT, const oframe& _=oframe());
-  maybe<scalarT> meet(const ray&) const override;
+  bool in(const point3&) const override;
 };
 
 #endif  // MODEL_SURFACE_H

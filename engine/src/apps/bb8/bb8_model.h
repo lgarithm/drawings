@@ -3,13 +3,13 @@
 
 #include "rey.h"
 
-struct bb8_head : sphere
+struct bb8_head : bound<sphere>
 {
   oframe of;
 
   bb8_head(double, const oframe&);
 
-  maybe<scalarT> meet(const ray&) const override;
+  bool in(const point3&) const override;
   material mt(const point3&) const override;
 };
 

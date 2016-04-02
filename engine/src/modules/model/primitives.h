@@ -1,8 +1,8 @@
 #ifndef PRIMITIVE_H
 #define PRIMITIVE_H
 
-#include "linear.h"
-#include "guard.h"
+#include "affine.h"
+#include "guard.h"  // for transitive closure
 #include "maybe.h"
 #include "model.h"
 #include "point.h"
@@ -20,11 +20,32 @@ struct plane : simple_object
 
 struct Floor : plane { Floor(); };
 
-struct disc : plane
+struct disc : bound<plane>
 {
   scalarT R;
+
   disc(scalarT, const t_vector3&);
-  maybe<scalarT> meet(const ray&) const override;
+
+  bool in(const point3&) const override;
+};
+
+struct triangle : bound<plane>
+{
+  const point3 a, b, c;
+
+  triangle(const point3&, const point3&, const point3&);
+
+  bool in(const point3&) const override;
+};
+
+struct quad : bound<plane>
+{
+  oframe of;
+  scalarT half_w, half_h;
+
+  quad(const oframe&, scalarT, scalarT);
+
+  bool in(const point3&) const override;
 };
 
 struct Chessboard : plane
@@ -43,15 +64,6 @@ struct sphere : simple_object
 
   maybe<scalarT> meet(const ray&) const override;
   vector3 at(const point3&) const override;
-};
-
-struct triangle : plane
-{
-  const point3 a, b, c;
-
-  triangle(const point3&, const point3&, const point3&);
-
-  maybe<scalarT> meet(const ray&) const override;
 };
 
 struct tetrahedron : object

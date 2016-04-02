@@ -157,6 +157,14 @@ world* test_tetrahedron_1()
   return w;
 }
 
+world* test_quad_1()
+{
+  auto w = new world;
+  auto of = oframe(pos3(-12, 0, 5), frame(y_axis, z_axis, x_axis));
+  *w += new quad(of, 20, 20);
+  return w;
+}
+
 static const auto examples_ = atlas({
     {"empty", empty_scene},
     {"test_board_1", test_board_1},
@@ -175,6 +183,7 @@ static const auto examples_ = atlas({
     {"cylinder3", test_cylinder_3},
     {"test_cube_1", test_cube_1},
     {"test_tetrahedron_1", test_tetrahedron_1},
+    {"test_quad_1", test_quad_1},
   });
 
 atlas examples() { return examples_; }

@@ -5,6 +5,21 @@
 
 #include "testing.h"
 
+void test_0()
+{
+  assert(x_axis.x == 1);
+  assert(x_axis.y == 0);
+  assert(x_axis.z == 0);
+
+  assert(y_axis.x == 0);
+  assert(y_axis.y == 1);
+  assert(y_axis.z == 0);
+
+  assert(z_axis.x == 0);
+  assert(z_axis.y == 0);
+  assert(z_axis.z == 1);
+}
+
 void test_1()
 {
   auto p = vec3(1,2,3);
@@ -19,11 +34,6 @@ void test_2()
   auto p = vec3(1,1,1);
   p = norm(p);
   assert(len(p) == 1);
-/*
-  auto q = vec3(0,0,0);
-  q = norm(q);
-  assert(len(q) == 0);
-*/
   auto a = vec3(1,0,0);
   auto b = vec3(0,1,0);
   auto c = vec3(0,0,1);
@@ -99,6 +109,7 @@ void test_6()
 
 int main()
 {
+  test(0);
   test(1);
   test(2);
   test(3);

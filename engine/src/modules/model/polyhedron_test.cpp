@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "constants.h"  // !!
 #include "solids.h"
 #include "testing.h"
 

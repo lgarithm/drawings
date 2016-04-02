@@ -11,7 +11,7 @@
 #include "primitives.h"
 #include "solids.h"
 
-using std::max;
+using std::min;
 using std::vector;
 
 polygon unit_square(scalarT u=1)
@@ -65,23 +65,11 @@ cylinder::cylinder(scalarT r, scalarT h, const oframe of)
   : b(r, h, of)
   , u(r, t_vector3(of.o + .5 * h * of.f.Z, of.f.Z))
   , d(r, t_vector3(of.o + - .5 * h * of.f.Z, -of.f.Z))
-  , subs{&b, &u, &d}
   { }
 
 maybe<intersection> cylinder::intersect(const ray& r) const
-{
-  const int n = 3;
-  maybe<scalarT> ts[n];
-  for (int i=0; i < n; ++i) ts[i] = subs[i]->meet(r);
-  auto idx = 0;
-  for (int i=1; i < n; ++i) {
-    if (ts[i].just) {
-      if (!ts[idx].just || ts[idx].it < ts[i].it) idx = i;
-    }
-  }
-  if (ts[idx].just) { return just(intersection{subs[idx], ts[idx].it}); }
-  return nothing<intersection>();
-}
+{ return min({b.intersect(r), u.intersect(r), d.intersect(r)}); }
+
 
 space_polygon::space_polygon(const oframe& of, const vector<point2>& vs)
   : of(of) { vertices = vs; }

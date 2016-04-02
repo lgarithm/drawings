@@ -10,7 +10,7 @@
 #include "material.h"
 #include "maybe.h"
 #include "point.h"
-#include "linear.h"
+#include "affine.h"
 
 typedef t_vector3 ray;
 
@@ -39,6 +39,18 @@ struct simple_object : complex_object
 {
   material m;
   inline material mt(const point3&) const override { return m; }
+};
+
+template<typename T> struct bound : T
+{
+  bound(const T& g) : T(g) { }
+  maybe<intersection> intersect(const ray& r) const override
+  {
+    auto t = T::meet(r);
+    if (t.just and in(r + t.it)) { return just(intersection{this, t.it}); }
+    return nothing<intersection>();
+  }
+  virtual bool in(const point3&) const = 0;
 };
 
 struct world{ std::vector<std::unique_ptr<object>> objects; };

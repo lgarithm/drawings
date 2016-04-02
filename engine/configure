@@ -119,7 +119,7 @@ gen_main_makefile(){
     done
     echo
 
-    echo "install: core"
+    echo "install: core demo"
     echo -e "\tmkdir -p $prefix"
     echo -e "\tcp -r build/bin $prefix/"
     echo -e "\tcp -r build/lib $prefix/"
@@ -130,6 +130,7 @@ gen_main_makefile(){
     echo "demo: core"
     echo -e "\tcd build/demo && make"
     echo -e "\tcp build/demo/server/server_main.out build/bin/render-server"
+    echo -e "\tcp build/demo/render/render_main.out build/bin/render"
     echo
 
     echo "proxy:"

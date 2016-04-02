@@ -1,9 +1,6 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-#include <map>
-#include <string>
-
 #include "config.h"
 
 typedef COLOR_T colorT;
@@ -50,16 +47,5 @@ static const auto yellow = red + green;
 static const auto orange = red + .5 * green;
 static const auto white = red + green + blue;
 static const auto grey = .5 * (black + white);
-
-static const auto colors = std::map<std::string, color>({
-    {"black", black},
-    {"red", red},
-    {"green", green},
-    {"blue", blue},
-    {"yellow", yellow},
-    {"orange", orange},
-    {"white", white},
-    {"grey", grey},
-  });
 
 #endif  // COLOR_H

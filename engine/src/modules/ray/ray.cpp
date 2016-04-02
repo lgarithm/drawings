@@ -50,12 +50,13 @@ color shader::operator()(const surface& s, const vector3& r,
   auto nc = def;
   {
     for (const auto& l : e.lights) {
-      auto d = len(l.pos - s.n.o);
-      auto ldir = norm(l.pos - s.n.o);
-      auto j = nearest(w.objects, ray{s.n.o, ldir});
+      const auto lv = l.pos - s.n.o;
+      const auto d = len(lv);
+      const auto ldir = 1.0 / d * lv;
+      const auto j = nearest(w.objects, ray{s.n.o, ldir});
       if (not j.just || d < j.it.d) {
-        nc += max(0., dot(ldir, s.n.v)) * s.m.diffuse * l.col +
-          pow(max(0., dot(ldir, r)), s.m.roughness) * s.m.specular * l.col;
+        nc += (max(0., dot(ldir, s.n.v)) * s.m.diffuse +
+               pow(max(0., dot(ldir, r)), s.m.roughness) * s.m.specular) * l.col;
       }
     }
   }
