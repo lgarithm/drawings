@@ -10,12 +10,12 @@ void test_1()
     assert(p.z == 0);
     assert(p.y == d);
   };
-  t(camera::top(99), 99);
-  t(camera::bottom(99), 99);
-  t(camera::front(99), 99);
-  t(camera::back(99), 99);
-  t(camera::left(99), 99);
-  t(camera::right(99), 99);
+  t(top(99), 99);
+  t(bottom(99), 99);
+  t(front(99), 99);
+  t(back(99), 99);
+  t(left(99), 99);
+  t(right(99), 99);
 }
 
 int main()

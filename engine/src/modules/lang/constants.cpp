@@ -11,11 +11,11 @@ using std::string;
 map<string, camera> build_cameras(scalarT d)
 {
   map<string, camera> cs;
-  cs["top"] = camera::top(d);
-  cs["bottom"] = camera::bottom(d);
-  cs["front"] = camera::front(d);
-  cs["back"] = camera::back(d);
-  cs["left"] = camera::left(d);
-  cs["right"] = camera::right(d);
+  cs["top"] = top(d);
+  cs["bottom"] = bottom(d);
+  cs["front"] = front(d);
+  cs["back"] = back(d);
+  cs["left"] = left(d);
+  cs["right"] = right(d);
   return cs;
 }

@@ -14,12 +14,13 @@ struct camera
   camera();
   camera(const oframe&);
 
-  static const camera top(scalarT=10);
-  static const camera bottom(scalarT=10);
-  static const camera front(scalarT=10);
-  static const camera back(scalarT=10);
-  static const camera left(scalarT=10);
-  static const camera right(scalarT=10);
 };
+
+camera top(scalarT=10);
+camera bottom(scalarT=10);
+camera front(scalarT=10);
+camera back(scalarT=10);
+camera left(scalarT=10);
+camera right(scalarT=10);
 
 #endif  // VIEW_H

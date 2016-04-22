@@ -67,7 +67,8 @@ object* parse_model(const char * str)
   {
     double s;
     point3 p;
-    if (sscanf(str, "sphere(%lf, (%lf, %lf, %lf))", &s, &p.x, &p.y, &p.z) == 4) {
+    if (sscanf(str, "sphere(%lf, (%lf, %lf, %lf))",
+               &s, &p.x, &p.y, &p.z) == 4) {
       if (s > 0) return new sphere(s, p);
     }
   }
@@ -240,15 +241,15 @@ bool parse(int argc, const char * const argv[], image_task& cfg,
   if (not parse(argc, argv, cfg)) {
     return false;
   }
+  auto fn = def;
   if (not cfg.args.empty()) {
-    auto fn = get<string, world_gen>(worlds, cfg.args[0], def);
-    if (fn != nullptr) {
-      unique_ptr<world> w(fn());
-      for (auto& it : w->objects) {
-        cfg.w += it.release();
-      }
-    } else {
-      return false;
+    fn = get<string, world_gen>(worlds, cfg.args[0], def);
+    if (fn == nullptr) return false;
+  }
+  if (fn != nullptr) {
+    unique_ptr<world> w(fn());
+    for (auto& it : w->objects) {
+      cfg.w += it.release();
     }
   }
   return true;

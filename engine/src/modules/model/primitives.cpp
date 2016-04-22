@@ -44,7 +44,8 @@ bool quad::in(const point3& p) const
 }
 
 
-Chessboard::Chessboard(double gs) : grid_size(gs), plane(t_vector3(origin, z_axis)) {}
+Chessboard::Chessboard(double gs) :
+  grid_size(gs), plane(t_vector3(origin, z_axis)) { }
 
 material Chessboard::mt(const point3& p) const
 {

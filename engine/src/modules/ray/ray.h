@@ -11,16 +11,6 @@
 
 struct interval{ double lo, hi; };
 struct viewport{ interval xr, yr; };
-struct surface{ t_vector3 n; material m; };
-
-struct shader
-{
-  const color bgc;
-  const color def;
-  shader(const color&, const color&);
-  color operator()(const surface&, const vector3&,
-                   const world&, const env&, int) const;
-};
 
 struct engine
 {
