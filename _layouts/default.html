@@ -3,16 +3,18 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    {% include style.html root="/drawings" %}
   </head>
 
   <body>
-    <div class="page-content">
-      <div class="wrapper">
-        {{ content }}
+    <section class="main-content">
+      <div class="page-content">
+        <div class="wrapper">
+          {{ content }}
+        </div>
       </div>
-    </div>
-
-    {% include footer.html %}
+      {% include footer.html %}
+    </section>
   </body>
 
   <!-- load mathJax from cdn -->
