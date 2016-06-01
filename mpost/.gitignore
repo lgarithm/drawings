@@ -1,0 +1,7 @@
+*.aux
+fig.[0-9]*
+*.log
+*.mpx
+*.out
+*.pdf
+*.toc
