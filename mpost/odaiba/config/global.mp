@@ -1,13 +1,5 @@
 % global metrics
 
-% head
-numeric g.h.size;
-g.h.size := 2cm;
-
-% corn:
-numeric g.c.size;
-g.c.size := 1cm;
-
 % body
 numeric g.b.ul, g.b.ll, g.b.h;
 g.b.ul := 6cm;
@@ -16,20 +8,11 @@ g.b.h := 5cm;
 numeric g.b.size;
 g.b.size := 5cm;
 
-numeric g.w.w, g.w.h;
-g.w.w := 6cm;
-g.w.hh := 2cm;
-g.w.h := 2.5cm;
-numeric g.w.size;
-g.w.size := 2.5cm;
-
 % armour
 numeric g.s.size;
 g.s.size = 2.5cm;
 numeric g.s.h;  % thickness
 g.s.h = g.s.size / 10;
-numeric g.s.l.size, g.s.r.size;
-g.s.l.size = g.s.r.size = g.s.size;
 
 % arm 1
 numeric g.a.u.len, g.a.u.w, g.a.u.a;

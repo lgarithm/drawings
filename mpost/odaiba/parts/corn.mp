@@ -1,8 +1,12 @@
 % prefix: g.c
-def def_part_cc(suffix cc) =
+def def_part_g_c(suffix cc) =
   begingroup;
+    % parameters:
+    numeric cc.size;
+    cc.size := 1cm;
+
     pair o;
-    o := (0, -g.c.size / 2);
+    o := (0, -cc.size / 2);
 
     pair o';
     o' := o scaled .6;
@@ -46,5 +50,3 @@ def def_part_cc(suffix cc) =
     add_self_label_to(cc, o');
   endgroup;
 enddef;
-
-def_part_cc(g.c);

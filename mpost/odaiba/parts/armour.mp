@@ -1,6 +1,10 @@
 % prefix: g.s.l
-def def_part_cc(suffix cc) =
+def def_part_g_s_l(suffix cc) =
   begingroup;
+    % parameters:
+    numeric cc.size;
+    cc.size = g.s.size;
+
     numeric cc.th[];
     cc.th[1] := 80;
     cc.th[2] := 70;
@@ -63,16 +67,15 @@ def def_part_cc(suffix cc) =
   endgroup;
 enddef;
 
-def_part_cc(g.s.l);
-
 % prefix: g.s.r
-def def_part_cc(suffix cc) =
+def def_part_g_s_r(suffix cc) =
   begingroup;
+    % parameters:
+    numeric cc.size;
+    cc.size = g.s.size;
     % layer: path
     append_to_list(cc.ps, g.s.l.ps, ymirror);
     % layer: vpath
     append_to_list(cc.qs, g.s.l.qs, ymirror);
   endgroup;
 enddef;
-
-def_part_cc(g.s.r);

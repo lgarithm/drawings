@@ -138,3 +138,5 @@ mpxerr.tex
 *.bmp
 *.tar
 *.bz2
+
+.DS_Store

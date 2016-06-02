@@ -1,5 +1,5 @@
 % prefix: g.a.j.l
-def def_part_cc(suffix cc) =
+def def_part_g_a_j_l(suffix cc) =
   begingroup;
     % parameters:
     numeric r, l, l';
@@ -42,11 +42,11 @@ def def_part_cc(suffix cc) =
   endgroup;
 enddef;
 
-def_part_cc(g.a.j.l);
+def_part_g_a_j_l(g.a.j.l);
 
 
 % prefix: g.a.j.r
-def def_part_cc(suffix cc) =
+def def_part_g_a_j_r(suffix cc) =
   begingroup;
 % layer: path
     append_to_list(cc.ps, g.a.j.l.ps, ymirror);
@@ -55,12 +55,12 @@ def def_part_cc(suffix cc) =
   endgroup;
 enddef;
 
-def_part_cc(g.a.j.r);
+def_part_g_a_j_r(g.a.j.r);
 
 
 
 % prefix: g.l.j.l
-def def_part_cc(suffix cc) =
+def def_part_g_l_j_l(suffix cc) =
   begingroup;
 % parameters:
     numeric r, l, l';
@@ -103,11 +103,11 @@ def def_part_cc(suffix cc) =
   endgroup;
 enddef;
 
-def_part_cc(g.l.j.l);
+def_part_g_l_j_l(g.l.j.l);
 
 
 % prefix: g.l.j.r
-def def_part_cc(suffix cc) =
+def def_part_g_l_j_r(suffix cc) =
   begingroup;
     % layer: path
     append_to_list(cc.ps, g.l.j.l.ps, ymirror);
@@ -116,4 +116,4 @@ def def_part_cc(suffix cc) =
   endgroup;
 enddef;
 
-def_part_cc(g.l.j.r);
+def_part_g_l_j_r(g.l.j.r);

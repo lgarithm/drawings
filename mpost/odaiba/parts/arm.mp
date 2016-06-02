@@ -1,6 +1,8 @@
 % prefix: g.a.u.l
-def def_part_cc(suffix cc) =
+def def_part_g_a_u_l(suffix cc) =
   begingroup;
+    % parameters:
+
     numeric w, l;
     w := g.a.u.w;
     l := g.a.u.len;
@@ -37,23 +39,18 @@ def def_part_cc(suffix cc) =
   endgroup;
 enddef;
 
-def_part_cc(g.a.u.l);
-
 % prefix: g.a.u.r
-% layer: path
-def def_part_cc(suffix cc) =
+def def_part_g_a_u_r(suffix cc) =
   begingroup;
+    % layer: path
     append_to_list(cc.ps, g.a.u.l.ps, ymirror);
-% layer: vpath
+    % layer: vpath
     append_to_list(cc.qs, g.a.u.l.qs, ymirror);
   endgroup;
 enddef;
 
-def_part_cc(g.a.u.r);
-
-
 % prefix: g.a.l.l
-def def_part_cc(suffix cc) =
+def def_part_g_a_l_l(suffix cc) =
   begingroup;
     numeric w, l;
     w := g.a.l.w;
@@ -72,12 +69,12 @@ def def_part_cc(suffix cc) =
     d' := ymirror d;
     e' := ymirror e;
 
-% layer: path
+    % layer: path
     add_to_list(cc.ps, a -- b -- c -- d -- d' -- c' -- b' -- a' -- cycle);
-% layer: vpath
+    % layer: vpath
     add_to_list(cc.qs, d -- e)
-      add_to_list(cc.qs, d' -- e');
-% layer: label
+    add_to_list(cc.qs, d' -- e');
+    % layer: label
     add_self_label_to(cc, a);
     add_self_label_to(cc, b);
     add_self_label_to(cc, c);
@@ -91,10 +88,8 @@ def def_part_cc(suffix cc) =
   endgroup;
 enddef;
 
-def_part_cc(g.a.l.l);
-
 % prefix: g.a.l.r
-def def_part_cc(suffix cc) =
+def def_part_g_a_l_r(suffix cc) =
   begingroup;
     % layer: path
     append_to_list(cc.ps, g.a.l.l.ps, ymirror);
@@ -102,5 +97,3 @@ def def_part_cc(suffix cc) =
     append_to_list(cc.qs, g.a.l.l.qs, ymirror);
   endgroup;
 enddef;
-
-def_part_cc(g.a.l.r);

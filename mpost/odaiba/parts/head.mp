@@ -1,6 +1,11 @@
 % prefix: g.h
-def def_part_cc(suffix cc) =
+def def_part_g_h(suffix cc) =
   begingroup;
+    % parameters:
+    numeric cc.size;
+    cc.size = 2cm;
+    
+    % control points:
     pair a, b, c, d;
     a := (-g.h.size / 2, 0);
     b := 1.5 [origin, a];
@@ -30,5 +35,3 @@ def def_part_cc(suffix cc) =
     add_self_label_to(cc, d');
   endgroup;
 enddef;
-
-def_part_cc(g.h);

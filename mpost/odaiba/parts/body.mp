@@ -1,6 +1,7 @@
 % prefix: g.b
-def def_part_cc(suffix cc) =
+def def_part_g_b(suffix cc) =
   begingroup;
+    % parameters:
     numeric g.b.ha, g.b.hb, g.b.hc;
     g.b.ha := 3cm;
     g.b.hb := 1cm;
@@ -8,11 +9,11 @@ def def_part_cc(suffix cc) =
 
     % layer: vpath
     add_to_list(cc.qs, origin
-	-- (-g.b.ll / 2, 0)
-	-- (-g.b.ul / 2, g.b.h)
-	-- (g.b.ul / 2, g.b.h)
-	-- (g.b.ll / 2, 0)
-	-- cycle);
+        -- (-g.b.ll / 2, 0)
+        -- (-g.b.ul / 2, g.b.h)
+        -- (g.b.ul / 2, g.b.h)
+        -- (g.b.ll / 2, 0)
+        -- cycle);
 
     pair a, b, c, d, e, f, g;
     a := (-g.b.ul / 2, g.b.h);
@@ -55,11 +56,16 @@ def def_part_cc(suffix cc) =
   endgroup;
 enddef;
 
-def_part_cc(g.b);
-
 % prefix: g.w
-def def_part_cc(suffix cc) =
+def def_part_g_w(suffix cc) =
   begingroup;
+    % parameters:
+    numeric cc.w, cc.h, cc.hh, cc.sisze;
+    cc.w := 6cm;
+    cc.hh := 2cm;
+    cc.h := 2.5cm;
+    cc.size := 2.5cm;
+
     % control points:
     pair a, b, c;
     a := (-cc.w / 2 * .8, 0);
@@ -89,5 +95,3 @@ def def_part_cc(suffix cc) =
     add_self_label_to(cc, c');
   endgroup;
 enddef;
-
-def_part_cc(g.w);

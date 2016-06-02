@@ -1,7 +1,5 @@
-% prefix: g.l
-
 % prefix: g.l.u.l
-def def_part_cc(suffix cc) =
+def def_part_g_l_u_l(suffix cc) =
   begingroup;
     numeric w, l;
     w := g.l.u.w;
@@ -40,11 +38,11 @@ def def_part_cc(suffix cc) =
   endgroup;
 enddef;
 
-def_part_cc(g.l.u.l);
+def_part_g_l_u_l(g.l.u.l);
 
 
 % prefix: g.l.u.r
-def def_part_cc(suffix cc) =
+def def_part_g_l_u_r(suffix cc) =
   begingroup;
 % layer: path
     append_to_list(cc.ps, g.l.u.l.ps, ymirror);
@@ -53,10 +51,10 @@ def def_part_cc(suffix cc) =
   endgroup;
 enddef;
 
-def_part_cc(g.l.u.r);
+def_part_g_l_u_r(g.l.u.r);
 
 % prefix: g.l.l.l
-def def_part_cc(suffix cc) =
+def def_part_g_l_l_l(suffix cc) =
   begingroup;
     numeric w, l;
     w := g.l.l.w;
@@ -94,11 +92,9 @@ def def_part_cc(suffix cc) =
   endgroup;
 enddef;
 
-def_part_cc(g.l.l.l);
-
 
 % prefix: g.l.l.r
-def def_part_cc(suffix cc) =
+def def_part_g_l_l_r(suffix cc) =
   begingroup;
     % layer: path
     append_to_list(cc.ps, g.l.l.l.ps, ymirror);
@@ -106,5 +102,3 @@ def def_part_cc(suffix cc) =
     append_to_list(cc.qs, g.l.l.l.qs, ymirror);
   endgroup;
 enddef;
-
-def_part_cc(g.l.l.r);

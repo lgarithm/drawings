@@ -22,7 +22,10 @@
   (pl "<img src=\"svg-" src ".svg\"/>"))
 
 (define (main)
-  (html (lambda () (tag "body" (lambda () (map img imgs))))))
+  (html (lambda ()
+	  (tag "head" (lambda ()
+			(tag "title" (lambda () (display "rx-78-2")))))
+	  (tag "body" (lambda () (map img imgs))))))
 
 (define imgs '(0 1 2
                  118
