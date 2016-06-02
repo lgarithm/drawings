@@ -1,7 +1,10 @@
 *.aux
 fig.[0-9]*
+*.html
 *.log
+*.mps
 *.mpx
 *.out
 *.pdf
+*.svg
 *.toc

@@ -4,7 +4,10 @@ verbatimtex;
 \begin{document};
 etex;
 
-% eps
+% svg
+prologues := 3;
+outputtemplate := "html/%j-%c.svg";
+outputformat := "svg";
 input includes;
 
 verbatimtex;
