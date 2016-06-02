@@ -1,1 +1,2 @@
-jekyll s -P 8080 -H 0.0.0.0
+jekyll b -d _site/drawings
+cd _site && python -m SimpleHTTPServer 8080
