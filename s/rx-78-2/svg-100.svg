@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!-- Created by MetaPost 1.803 on 2016.06.02:2102 -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="216.171143" height="617.179871" viewBox="0 0 216.171143 617.179871">
+<!-- Original BoundingBox: -108.085571 424.946777 108.085571 617.179871 -->
+  <path d="M51.307098 191.803223L51.307098 78.417419L164.692902 78.417419L164.692902 191.803223Z" style="stroke:rgb(0.000000%,0.000000%,0.000000%); stroke-width: 0.500000;stroke-linecap: round;stroke-linejoin: round;stroke-miterlimit: 10.000000;fill: none;"></path>
+  <path d="M51.307098 191.803223L22.960632 191.803223L22.960632 106.763855C30.364105 95.469910,40.013153 85.820892,51.307098 78.417419C85.733643 55.850006,130.266357 55.850006,164.692902 78.417419C175.986847 85.820892,185.635895 95.469910,193.039368 106.763855L193.039368 191.803223L164.692902 191.803223Z" style="stroke:rgb(0.000000%,0.000000%,0.000000%); stroke-width: 0.500000;stroke-linecap: round;stroke-linejoin: round;stroke-miterlimit: 10.000000;fill: none;"></path>
+  <path d="M51.307098 78.417419C51.307098 47.106812,76.689392 21.724518,108.000000 21.724518C139.310608 21.724518,164.692902 47.106812,164.692902 78.417419" style="stroke:rgb(0.000000%,0.000000%,0.000000%); stroke-width: 0.500000;stroke-linecap: round;stroke-linejoin: round;stroke-miterlimit: 10.000000;fill: none;"></path>
+  <path d="M108.000000 67.079010L84.021515 49.657501L91.338409 27.138062L124.661591 27.138062L131.978485 49.657501Z" style="stroke:rgb(0.000000%,0.000000%,0.000000%); stroke-width: 0.500000;stroke-linecap: round;stroke-linejoin: round;stroke-miterlimit: 10.000000;fill: none;"></path>
+  <path d="M81.041107 58.830597L0.164429 0.070129L87.679962 38.397766" style="stroke:rgb(0.000000%,0.000000%,0.000000%); stroke-width: 0.500000;stroke-linecap: round;stroke-linejoin: round;stroke-miterlimit: 10.000000;fill: none;"></path>
+  <path d="M134.958893 58.830597L215.835571 0.070129L128.320038 38.397766" style="stroke:rgb(0.000000%,0.000000%,0.000000%); stroke-width: 0.500000;stroke-linecap: round;stroke-linejoin: round;stroke-miterlimit: 10.000000;fill: none;"></path>
+  <path d="M108.000000 78.417419L81.041107 58.830597L84.021515 49.657501" style="stroke:rgb(0.000000%,0.000000%,0.000000%); stroke-width: 0.500000;stroke-linecap: round;stroke-linejoin: round;stroke-miterlimit: 10.000000;fill: none;"></path>
+  <path d="M108.000000 78.417419L134.958893 58.830597L131.978485 49.657501" style="stroke:rgb(0.000000%,0.000000%,0.000000%); stroke-width: 0.500000;stroke-linecap: round;stroke-linejoin: round;stroke-miterlimit: 10.000000;fill: none;"></path>
+  <path d="M108.000000 78.417419L108.000000 67.079010" style="stroke:rgb(0.000000%,0.000000%,0.000000%); stroke-width: 0.500000;stroke-linecap: round;stroke-linejoin: round;stroke-miterlimit: 10.000000;fill: none;"></path>
+</svg>
