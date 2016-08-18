@@ -5,4 +5,4 @@
 #include "tuple-3.h"
 #include "tuple-4.h"
 
-#endif  // TUPLE_H
+#endif // TUPLE_H

@@ -4,13 +4,15 @@
 #include "config.h"
 #include "tuple.h"
 
-#define DEFINE_DET_2X2(T) T det(T A, T B, T C, T D) { return A * D - B * C; }
+#define DEFINE_DET_2X2(T)                                                      \
+    T det(T A, T B, T C, T D) { return A * D - B * C; }
 
-#define DEFINE_CROSS_PROD(T, X, Y, Z)           \
-  T cross(const T& p, const T& q)               \
-  { return T{det(p.Y, p.Z, q.Y, q.Z),           \
-        det(p.Z, p.X, q.Z, q.X),                \
-        det(p.X, p.Y, q.X, q.Y)}; }
+#define DEFINE_CROSS_PROD(T, X, Y, Z)                                          \
+    T cross(const T &p, const T &q)                                            \
+    {                                                                          \
+        return T{det(p.Y, p.Z, q.Y, q.Z), det(p.Z, p.X, q.Z, q.X),             \
+                 det(p.X, p.Y, q.X, q.Y)};                                     \
+    }
 
 typedef SCALAR_T scalarT;
 
@@ -48,13 +50,13 @@ DECLARE_TUPLE_3_L_1_1(scalarT, point3, vector3, x, y, z);
 DEFINE_TUPLE_3(simplex2, point3, a, b, c);
 DEFINE_TUPLE_4(matrix4, vector4, o, p, q, r);
 
-vector3 cross(const vector3&, const vector3&);
-vector3 reflect(const vector3&, const vector3&);
+vector3 cross(const vector3 &, const vector3 &);
+vector3 reflect(const vector3 &, const vector3 &);
 
-scalarT det(const matrix4&);
-scalarT vol6(const point3&, const point3&, const point3&, const point3&);
-scalarT area2(const point3&, const point3&, const point3&);
-scalarT dis(const point3&, const simplex2&);
-bool in(const point3&, const simplex2& s);
+scalarT det(const matrix4 &);
+scalarT vol6(const point3 &, const point3 &, const point3 &, const point3 &);
+scalarT area2(const point3 &, const point3 &, const point3 &);
+scalarT dis(const point3 &, const simplex2 &);
+bool in(const point3 &, const simplex2 &s);
 
-#endif  // POINT_IMPL_MACRO_H
+#endif // POINT_IMPL_MACRO_H

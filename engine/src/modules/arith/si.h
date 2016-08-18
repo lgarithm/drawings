@@ -15,4 +15,4 @@
 
 // #define HORIZON (1.6 * KILO_METER)
 
-#endif  // SI_H
+#endif // SI_H

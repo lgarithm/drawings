@@ -6,58 +6,51 @@
 #include "model.h"
 #include "point.h"
 
-struct algebraic_surface : simple_object
-{
-  oframe of;
+struct algebraic_surface : simple_object {
+    oframe of;
 
-  algebraic_surface();
-  algebraic_surface(const oframe&);
+    algebraic_surface();
+    algebraic_surface(const oframe &);
 
-  vector3 at(const point3&) const override;
-  virtual vector3 n_at(const point3&) const = 0;
+    vector3 at(const point3 &) const override;
+    virtual vector3 n_at(const point3 &) const = 0;
 };
 
-struct quadratic_surface : algebraic_surface
-{
-  maybe<scalarT> meet(const ray&) const override;
+struct quadratic_surface : algebraic_surface {
+    maybe<scalarT> meet(const ray &) const override;
 
-  quadratic_surface(const oframe& _=oframe());
-  virtual quad_eq equation(const ray&) const = 0;
+    quadratic_surface(const oframe &_ = oframe());
+    virtual quad_eq equation(const ray &) const = 0;
 };
 
-struct ellipsoid : quadratic_surface
-{
-  scalarT a, b, c;
+struct ellipsoid : quadratic_surface {
+    scalarT a, b, c;
 
-  ellipsoid(scalarT, scalarT, scalarT);
-  quad_eq equation(const ray&) const override;
-  vector3 n_at(const point3&) const override;
+    ellipsoid(scalarT, scalarT, scalarT);
+    quad_eq equation(const ray &) const override;
+    vector3 n_at(const point3 &) const override;
 };
 
-struct cylinder_surface : quadratic_surface
-{
-  scalarT R;
+struct cylinder_surface : quadratic_surface {
+    scalarT R;
 
-  cylinder_surface(scalarT, const oframe& _=oframe());
-  quad_eq equation(const ray&) const override;
-  vector3 n_at(const point3&) const override;
+    cylinder_surface(scalarT, const oframe &_ = oframe());
+    quad_eq equation(const ray &) const override;
+    vector3 n_at(const point3 &) const override;
 };
 
-struct cone_surface : quadratic_surface
-{
-  scalarT k;
+struct cone_surface : quadratic_surface {
+    scalarT k;
 
-  cone_surface(scalarT);
-  quad_eq equation(const ray&) const override;
-  vector3 n_at(const point3&) const override;
+    cone_surface(scalarT);
+    quad_eq equation(const ray &) const override;
+    vector3 n_at(const point3 &) const override;
 };
 
-
-struct bound_cylinder_surface : bound<cylinder_surface>
-{
-  scalarT h;
-  bound_cylinder_surface(scalarT, scalarT, const oframe& _=oframe());
-  bool in(const point3&) const override;
+struct bound_cylinder_surface : bound<cylinder_surface> {
+    scalarT h;
+    bound_cylinder_surface(scalarT, scalarT, const oframe &_ = oframe());
+    bool in(const point3 &)const override;
 };
 
-#endif  // MODEL_SURFACE_H
+#endif // MODEL_SURFACE_H

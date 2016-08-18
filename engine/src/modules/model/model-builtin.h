@@ -5,4 +5,4 @@
 #include "polyhedron.h"
 #include "primitives.h"
 
-#endif  // MODEL_BUILTIN_H
+#endif // MODEL_BUILTIN_H

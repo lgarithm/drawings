@@ -7,4 +7,4 @@
 #define HAS_STD_THREAD true
 #define HAS_CPP_REGEX true
 
-#endif  // CONFIG_H
+#endif // CONFIG_H

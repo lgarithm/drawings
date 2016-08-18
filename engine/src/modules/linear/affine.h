@@ -3,37 +3,38 @@
 
 #include "linear.h"
 
-struct t_vector2{ point2 o; vector2 v; };
-
-struct t_vector3
-{
-  point3 o;
-  vector3 v;
-
-  t_vector3() {}  // TODO : depre
-  t_vector3(const point3&, const vector3&);
+struct t_vector2 {
+    point2 o;
+    vector2 v;
 };
 
-struct oframe
-{
-  point3 o;
-  frame f;
+struct t_vector3 {
+    point3 o;
+    vector3 v;
 
-  oframe();
-  oframe(const point3&, const frame&);
+    t_vector3() {} // TODO : depre
+    t_vector3(const point3 &, const vector3 &);
 };
 
-point3 local(const oframe&, const point3&);
-point3 global(const oframe&, const point3&);
+struct oframe {
+    point3 o;
+    frame f;
 
-t_vector3 local(const oframe&, const t_vector3&);
-t_vector3 global(const oframe&, const t_vector3&);
+    oframe();
+    oframe(const point3 &, const frame &);
+};
 
-oframe observer(const point3&, const point3&, const vector3&);
+point3 local(const oframe &, const point3 &);
+point3 global(const oframe &, const point3 &);
 
-oframe operator+(const oframe&, const vector3&);
+t_vector3 local(const oframe &, const t_vector3 &);
+t_vector3 global(const oframe &, const t_vector3 &);
 
-point3 operator+(const t_vector3&, scalarT);
-t_vector3 operator+(const t_vector3&, const vector3&);
+oframe observer(const point3 &, const point3 &, const vector3 &);
 
-#endif  // AFFINE_H
+oframe operator+(const oframe &, const vector3 &);
+
+point3 operator+(const t_vector3 &, scalarT);
+t_vector3 operator+(const t_vector3 &, const vector3 &);
+
+#endif // AFFINE_H

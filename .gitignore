@@ -140,3 +140,5 @@ mpxerr.tex
 *.bz2
 
 .DS_Store
+
+**/.vscode/*

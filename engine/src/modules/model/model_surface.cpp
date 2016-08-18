@@ -8,85 +8,86 @@
 #include "debug.h"
 #include "guard.h"
 
+algebraic_surface::algebraic_surface() {}
 
-algebraic_surface::algebraic_surface() { }
+algebraic_surface::algebraic_surface(const oframe &of) : of(of) {}
 
-algebraic_surface::algebraic_surface(const oframe& of) : of(of) { }
-
-vector3 algebraic_surface::at(const point3& p) const
+vector3 algebraic_surface::at(const point3 &p) const
 {
-  auto n = n_at(local(of, p));
-  assert_unit(n, __FILE__, __func__);
-  return n;
+    auto n = n_at(local(of, p));
+    assert_unit(n, __FILE__, __func__);
+    return n;
 }
 
-
-quadratic_surface::quadratic_surface(const oframe& of)
-  : algebraic_surface(of) { }
-
-
-maybe<scalarT> quadratic_surface::meet(const ray& r) const
+quadratic_surface::quadratic_surface(const oframe &of) : algebraic_surface(of)
 {
-  const auto r_ = local(of, r);
-  const auto e = equation(r_);
-  if (eval(e, 0) < 0) return nothing<scalarT>();
-  numericT t, t_;
-  if (not min_positive_root(e, t)) return nothing<scalarT>();
-  assert(fabs(eval(e, t)) < 1e-1);
-  return just(t);
 }
 
-
-ellipsoid::ellipsoid(scalarT a, scalarT b, scalarT c) : a(a), b(b), c(c) { }
-
-quad_eq ellipsoid::equation(const ray& r) const
+maybe<scalarT> quadratic_surface::meet(const ray &r) const
 {
-  return (quad_eq{0, 0, -1} +
-          sqr(1. / a * linear_eq{r.v.x, r.o.x}) +
-          sqr(1. / b * linear_eq{r.v.y, r.o.y}) +
-          sqr(1. / c * linear_eq{r.v.z, r.o.z}));
+    const auto r_ = local(of, r);
+    const auto e = equation(r_);
+    if (eval(e, 0) < 0)
+        return nothing<scalarT>();
+    numericT t, t_;
+    if (not min_positive_root(e, t))
+        return nothing<scalarT>();
+    assert(fabs(eval(e, t)) < 1e-1);
+    return just(t);
 }
 
-vector3 ellipsoid::n_at(const point3& p) const
-{ return norm(p / pos3(a * a, b * b, c * c) - origin); }
+ellipsoid::ellipsoid(scalarT a, scalarT b, scalarT c) : a(a), b(b), c(c) {}
 
-
-cylinder_surface::cylinder_surface(scalarT R, const oframe& of)
-  : quadratic_surface(of), R(R) { }
-
-quad_eq cylinder_surface::equation(const ray& r) const
+quad_eq ellipsoid::equation(const ray &r) const
 {
-  return (quad_eq{0, 0, -R * R} +
-          sqr(linear_eq{r.v.x, r.o.x}) +
-          sqr(linear_eq{r.v.y, r.o.y}));
+    return (quad_eq{0, 0, -1} + sqr(1. / a * linear_eq{r.v.x, r.o.x}) +
+            sqr(1. / b * linear_eq{r.v.y, r.o.y}) +
+            sqr(1. / c * linear_eq{r.v.z, r.o.z}));
 }
 
-vector3 cylinder_surface::n_at(const point3& p) const
-{ return norm(vec3(p.x, p.y, 0)); }
-
-
-cone_surface::cone_surface(scalarT k) : k(k) { }
-
-quad_eq cone_surface::equation(const ray& r) const
+vector3 ellipsoid::n_at(const point3 &p) const
 {
-  return (sqr(linear_eq{r.v.x, r.o.x}) +
-          sqr(linear_eq{r.v.y, r.o.y}) -
-          sqr(k * linear_eq{r.v.z, r.o.z}));
+    return norm(p / pos3(a * a, b * b, c * c) - origin);
 }
 
-vector3 cone_surface::n_at(const point3& p) const
+cylinder_surface::cylinder_surface(scalarT R, const oframe &of)
+    : quadratic_surface(of), R(R)
 {
-  //  assert(p.z > 0);
-  return norm(vec3(p.x, p.y, -k * k * p.z));
 }
 
+quad_eq cylinder_surface::equation(const ray &r) const
+{
+    return (quad_eq{0, 0, -R * R} + sqr(linear_eq{r.v.x, r.o.x}) +
+            sqr(linear_eq{r.v.y, r.o.y}));
+}
+
+vector3 cylinder_surface::n_at(const point3 &p) const
+{
+    return norm(vec3(p.x, p.y, 0));
+}
+
+cone_surface::cone_surface(scalarT k) : k(k) {}
+
+quad_eq cone_surface::equation(const ray &r) const
+{
+    return (sqr(linear_eq{r.v.x, r.o.x}) + sqr(linear_eq{r.v.y, r.o.y}) -
+            sqr(k * linear_eq{r.v.z, r.o.z}));
+}
+
+vector3 cone_surface::n_at(const point3 &p) const
+{
+    //  assert(p.z > 0);
+    return norm(vec3(p.x, p.y, -k * k * p.z));
+}
 
 bound_cylinder_surface::bound_cylinder_surface(scalarT r, scalarT h,
-                                               const oframe& of)
-  : bound(cylinder_surface(r, of)), h(h) { }
-
-bool bound_cylinder_surface::in(const point3& p) const
+                                               const oframe &of)
+    : bound(cylinder_surface(r, of)), h(h)
 {
-  auto zz = local(of, p).z * 2;
-  return -h < zz && zz < h;
+}
+
+bool bound_cylinder_surface::in(const point3 &p) const
+{
+    auto zz = local(of, p).z * 2;
+    return -h < zz && zz < h;
 }

@@ -6,18 +6,18 @@
 
 #include "model.h"
 
-struct trace_logger{};
-
-struct scope_logger
-{
-  const std::string k;
-
-  scope_logger(const std::string k);
-  ~scope_logger();
-
-  static std::map<std::string, int> depth;
+struct trace_logger {
 };
 
-void log_trace(const ray&, int dep);
+struct scope_logger {
+    const std::string k;
 
-#endif  // PROFILE_H
+    scope_logger(const std::string k);
+    ~scope_logger();
+
+    static std::map<std::string, int> depth;
+};
+
+void log_trace(const ray &, int dep);
+
+#endif // PROFILE_H

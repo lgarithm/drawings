@@ -3,17 +3,16 @@
 
 #include "color.h"
 
-struct material
-{
-  color diffuse;
-  color specular;
-  unsigned char roughness;
-  colorT reflection;
+struct material {
+    color diffuse;
+    color specular;
+    unsigned char roughness;
+    colorT reflection;
 
-  material();
+    material();
 
-  // TODO
-  // static const material
+    // TODO
+    // static const material
 };
 
-#endif  // MATERIAL_H
+#endif // MATERIAL_H

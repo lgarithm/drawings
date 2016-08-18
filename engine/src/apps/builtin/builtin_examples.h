@@ -4,6 +4,6 @@
 #include "model.h"
 
 atlas examples();
-world* default_test_scene();
+world *default_test_scene();
 
-#endif  // BUILTIN_EXAMPLE_H
+#endif // BUILTIN_EXAMPLE_H

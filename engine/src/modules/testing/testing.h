@@ -6,7 +6,7 @@
 
 #include "logger.h"
 
-template<typename T>void assert_eq(T x, T y) { assert(x == y); }
+template <typename T> void assert_eq(T x, T y) { assert(x == y); }
 
 void assert_eq(double x, double y);
 
@@ -18,12 +18,15 @@ void assert_eq(double x, double y);
 #define __64(s) __32(s s)
 #define ___(s) __64(s)
 
-#define test(x)                                         \
-  {                                                     \
-    {with_c __(1, 42); printf("%*s", 80, ___(".")); }   \
-    printf("\n");                                       \
-    slogger _("test_"#x);                               \
-    test_##x();                                         \
-  }
+#define test(x)                                                                \
+    {                                                                          \
+        {                                                                      \
+            with_c __(1, 42);                                                  \
+            printf("%*s", 80, ___("."));                                       \
+        }                                                                      \
+        printf("\n");                                                          \
+        slogger _("test_" #x);                                                 \
+        test_##x();                                                            \
+    }
 
-#endif  // TESTING_H
+#endif // TESTING_H

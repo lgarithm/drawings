@@ -7,43 +7,41 @@
 #include "model.h"
 #include "model_surface.h"
 #include "primitives.h"
-#include "solids.h"  // For transitive closure
+#include "solids.h" // For transitive closure
 
-
-struct polygon { std::vector<point2> vertices; };
-
-scalarT area(const polygon&, const point2& _=pos2(0,0));
-bool in(const point2&, const polygon&);
-
-struct cylinder : object
-{
-  bound_cylinder_surface b;
-  disc u, d;
-
-  cylinder(scalarT, scalarT, const oframe=oframe());
-
-  maybe<intersection> intersect(const ray&) const override;
+struct polygon {
+    std::vector<point2> vertices;
 };
 
-struct space_polygon : simple_object, polygon
-{
-  oframe of;
+scalarT area(const polygon &, const point2 &_ = pos2(0, 0));
+bool in(const point2 &, const polygon &);
 
-  space_polygon(const oframe&, const std::vector<point2>&);
+struct cylinder : object {
+    bound_cylinder_surface b;
+    disc u, d;
 
-  maybe<scalarT> meet(const ray&) const override;
-  vector3 at(const point3&) const override;
+    cylinder(scalarT, scalarT, const oframe = oframe());
+
+    maybe<intersection> intersect(const ray &) const override;
 };
 
-struct polyhedron : object
-{
-  std::vector<space_polygon> faces;
+struct space_polygon : simple_object, polygon {
+    oframe of;
 
-  maybe<intersection> intersect(const ray&) const override;
+    space_polygon(const oframe &, const std::vector<point2> &);
 
-  //polyhedron();
+    maybe<scalarT> meet(const ray &) const override;
+    vector3 at(const point3 &) const override;
 };
 
-polyhedron unit_cube(scalarT=1);
+struct polyhedron : object {
+    std::vector<space_polygon> faces;
 
-#endif  // POLYHEDRON_H
+    maybe<intersection> intersect(const ray &) const override;
+
+    // polyhedron();
+};
+
+polyhedron unit_cube(scalarT = 1);
+
+#endif // POLYHEDRON_H

@@ -2,5 +2,7 @@
 
 #include "color.h"
 
-material::material() : diffuse(white), specular(grey), roughness(200),
-                       reflection(.7) {}
+material::material()
+    : diffuse(white), specular(grey), roughness(200), reflection(.7)
+{
+}
