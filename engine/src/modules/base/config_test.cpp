@@ -15,7 +15,7 @@ void test_2()
 {
     float d = 0;
     float n = 0 / d;
-    assert(isnan(n));
+    assert(std::isnan(n));
 }
 
 int main()
