@@ -30,8 +30,8 @@ override_override(){
 
 prepare_source(){
     echo -n "" > cp.log
-    for m in `ls src/modules`; do
-        move src/modules/$m
+    for m in `ls src/rey`; do
+        move src/rey/$m
     done
     for a in `ls src/apps`; do
         if [ -d src/apps/$a ]; then
@@ -55,7 +55,7 @@ prepare_source(){
 }
 
 gen_lib_target(){
-    objs=`find ../../src/modules | grep .cpp | grep -v test | awk -F "/" '{print $6}' | sed 's/.cpp$/.o/' | tr "\n" " "`
+    objs=`find ../../src/rey | grep .cpp | grep -v test | awk -F "/" '{print $6}' | sed 's/.cpp$/.o/' | tr "\n" " "`
     echo "librey.a: $objs"
     echo -e "\tar rcs librey.a $objs"
     echo
@@ -134,7 +134,7 @@ gen_main_makefile(){
     echo
 
     echo "proxy:"
-    echo -e "\tcd src/modules/parallel && make -f Makefile.am"
+    echo -e "\tcd src/rey/parallel && make -f Makefile.am"
     echo
 
     echo "clean:"
