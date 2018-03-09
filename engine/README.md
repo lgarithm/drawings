@@ -1,2 +1,2 @@
-Graphics Engine
+Rey - A Graphics Engine
 ======
