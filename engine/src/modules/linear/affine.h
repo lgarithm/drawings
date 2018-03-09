@@ -1,5 +1,5 @@
-#ifndef AFFINE_H
-#define AFFINE_H
+#pragma once
+
 
 #include "linear.h"
 
@@ -37,4 +37,4 @@ oframe operator+(const oframe &, const vector3 &);
 point3 operator+(const t_vector3 &, scalarT);
 t_vector3 operator+(const t_vector3 &, const vector3 &);
 
-#endif // AFFINE_H
+

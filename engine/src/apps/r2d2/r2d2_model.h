@@ -1,5 +1,5 @@
-#ifndef R2D2_MODEL_H
-#define R2D2_MODEL_H
+#pragma once
+
 
 #include "rey.h"
 
@@ -25,4 +25,4 @@ struct r2d2 : object {
     maybe<intersection> intersect(const ray &r) const override;
 };
 
-#endif // R2D2_MODEL_H
+

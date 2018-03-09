@@ -1,5 +1,5 @@
-#ifndef HTTP_H
-#define HTTP_H
+#pragma once
+
 
 #include <string>
 #include <vector>
@@ -66,4 +66,4 @@ void send_text_body(int, const char *);
 void send_html_body(int, const char *);
 void send_raw_body(int, const char *);
 
-#endif
+

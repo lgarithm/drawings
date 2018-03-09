@@ -1,5 +1,5 @@
-#ifndef DISPLAY_H
-#define DISPLAY_H
+#pragma once
+
 
 #include <vector>
 
@@ -41,4 +41,4 @@ unsigned size(const clip &);
 display from_clip(const clip &);
 clip full(const display &);
 
-#endif // DISPLAY_H
+

@@ -1,5 +1,5 @@
-#ifndef TASK_H
-#define TASK_H
+#pragma once
+
 
 #include <string>
 #include <vector>
@@ -35,4 +35,4 @@ struct image_task {
     image_task();
 };
 
-#endif // TASK_H
+

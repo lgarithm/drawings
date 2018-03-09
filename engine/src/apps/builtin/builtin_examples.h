@@ -1,9 +1,9 @@
-#ifndef BUILTIN_EXAMPLE_H
-#define BUILTIN_EXAMPLE_H
+#pragma once
+
 
 #include "model.h"
 
 atlas examples();
 world *default_test_scene();
 
-#endif // BUILTIN_EXAMPLE_H
+

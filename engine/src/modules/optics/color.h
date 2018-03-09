@@ -1,5 +1,4 @@
-#ifndef COLOR_H
-#define COLOR_H
+#pragma once
 
 #include "config.h"
 
@@ -57,5 +56,3 @@ static const auto yellow = red + green;
 static const auto orange = red + .5 * green;
 static const auto white = red + green + blue;
 static const auto grey = .5 * (black + white);
-
-#endif // COLOR_H

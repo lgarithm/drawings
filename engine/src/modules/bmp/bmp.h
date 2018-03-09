@@ -3,8 +3,7 @@
  * bmp head
  */
 
-#ifndef _BMP_H_
-#define _BMP_H_
+#pragma once
 
 #include <cstdio>
 
@@ -53,5 +52,3 @@ struct bmp_head {
 void write_bmp_chunk(FILE *, const unsigned char *, int, int = 1);
 void write_bmp_file(const bmp_head &, const unsigned char *, const char *);
 void stream_bmp(const bmp_head &, const unsigned char *, int);
-
-#endif

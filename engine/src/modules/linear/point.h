@@ -1,5 +1,4 @@
-#ifndef POINT_H
-#define POINT_H
+#pragma once
 
 #ifdef USE_TEMPLATE
 
@@ -29,5 +28,3 @@ static const auto origin = pos3(0, 0, 0);
 static const auto x_axis = vec3(1, 0, 0);
 static const auto y_axis = vec3(0, 1, 0);
 static const auto z_axis = vec3(0, 0, 1);
-
-#endif // POINT_H

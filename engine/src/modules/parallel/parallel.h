@@ -1,5 +1,5 @@
-#ifndef PARALLEL_H
-#define PARALLEL_H
+#pragma once
+
 
 #include <vector>
 
@@ -33,4 +33,4 @@ struct task {
 
 void run_tasks(std::vector<task *> &, bool = false);
 
-#endif // PARALLEL_H
+

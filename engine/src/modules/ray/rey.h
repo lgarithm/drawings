@@ -1,5 +1,5 @@
-#ifndef REY_H
-#define REY_H
+#pragma once
+
 
 #include "app.h"
 #include "arith.h"
@@ -9,4 +9,4 @@
 #include "params.h"
 #include "ray.h"
 
-#endif // REY_H
+

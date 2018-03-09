@@ -12,9 +12,9 @@
 using std::vector;
 #if HAS_STD_THREAD
 using std::atomic;
-using std::thread;
-using std::mutex;
 using std::lock_guard;
+using std::mutex;
+using std::thread;
 mutex wrt;
 #endif
 

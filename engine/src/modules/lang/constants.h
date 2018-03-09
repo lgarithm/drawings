@@ -1,5 +1,5 @@
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#pragma once
+
 
 #include <map>
 #include <string>
@@ -34,4 +34,4 @@ static const auto display_modes = std::map<std::string, display>({
 std::map<std::string, camera> build_cameras(scalarT d = 10);
 // static const auto cameras = build_cameras();  // ?? !!
 
-#endif // CONSTANTS_H
+

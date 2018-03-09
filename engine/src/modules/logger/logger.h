@@ -1,5 +1,5 @@
-#ifndef LOGGER_H
-#define LOGGER_H
+#pragma once
+
 
 #include <string>
 
@@ -29,4 +29,4 @@ struct slogger {
     ~slogger();
 };
 
-#endif // LOGGER_H
+

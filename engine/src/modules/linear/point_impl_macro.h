@@ -1,5 +1,5 @@
-#ifndef POINT_IMPL_MACRO_H
-#define POINT_IMPL_MACRO_H
+#pragma once
+
 
 #include "config.h"
 #include "tuple.h"
@@ -59,4 +59,4 @@ scalarT area2(const point3 &, const point3 &, const point3 &);
 scalarT dis(const point3 &, const simplex2 &);
 bool in(const point3 &, const simplex2 &s);
 
-#endif // POINT_IMPL_MACRO_H
+

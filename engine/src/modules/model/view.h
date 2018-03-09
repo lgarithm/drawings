@@ -1,5 +1,5 @@
-#ifndef VIEW_H
-#define VIEW_H
+#pragma once
+
 
 #include "affine.h"
 
@@ -21,4 +21,4 @@ camera back(scalarT = 10);
 camera left(scalarT = 10);
 camera right(scalarT = 10);
 
-#endif // VIEW_H
+

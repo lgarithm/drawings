@@ -1,5 +1,5 @@
-#ifndef SERVER_H
-#define SERVER_H
+#pragma once
+
 
 #include <string>
 
@@ -40,4 +40,4 @@ template <typename T> struct wrapper {
 
 template <typename T> wrapper<T> wrap(T *d) { return wrapper<T>(d); }
 
-#endif // SERVER_H
+

@@ -1,5 +1,5 @@
-#ifndef POLYHEDRON_H
-#define POLYHEDRON_H
+#pragma once
+
 
 #include <vector>
 
@@ -44,4 +44,4 @@ struct polyhedron : object {
 
 polyhedron unit_cube(scalarT = 1);
 
-#endif // POLYHEDRON_H
+

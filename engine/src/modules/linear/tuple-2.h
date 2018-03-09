@@ -1,5 +1,5 @@
-#ifndef TUPLE_2_H
-#define TUPLE_2_H
+#pragma once
+
 
 #define DEFINE_TUPLE_2(NAME, T, X, Y)                                          \
     struct NAME {                                                              \
@@ -57,4 +57,4 @@
 #define DEFINE_TUPLE_2_DIS(T, V, X, Y)                                         \
     DECLARE_TUPLE_2_DIS(T, V, X, Y) { return V{p.X - q.X, p.Y - q.Y}; }
 
-#endif // TUPLE_2_H
+

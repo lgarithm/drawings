@@ -1,5 +1,5 @@
-#ifndef POINT_IMPL_TPL_H
-#define POINT_IMPL_TPL_H
+#pragma once
+
 
 template <typename T> struct point2_t {
     T x, y;
@@ -55,4 +55,4 @@ using point3 = point3_t<scalarT>;
 using vector2 = point2;
 using vector3 = point3;
 
-#endif // POINT_IMPL_TPL_H
+

@@ -1,5 +1,5 @@
-#ifndef TUPLE_3_H
-#define TUPLE_3_H
+#pragma once
+
 
 #define DEFINE_TUPLE_3(NAME, T, X, Y, Z)                                       \
     struct NAME {                                                              \
@@ -103,4 +103,4 @@
         return p.X * q.X + p.Y * q.Y + p.Z * q.Z;                              \
     }
 
-#endif // TUPLE_3_H
+

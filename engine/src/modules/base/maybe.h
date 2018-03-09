@@ -1,5 +1,5 @@
-#ifndef MAYBE_H
-#define MAYBE_H
+#pragma once
+
 
 template <typename T> struct maybe {
     bool just;
@@ -21,4 +21,4 @@ template <typename T> bool operator<(const maybe<T> &x, const maybe<T> &y)
 
 #define inject(m, f) (m.just ? f(m.it) : m)
 
-#endif // MAYBE_H
+

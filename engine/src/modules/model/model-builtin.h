@@ -1,8 +1,8 @@
-#ifndef MODEL_BUILTIN_H
-#define MODEL_BUILTIN_H
+#pragma once
+
 
 #include "model_surface.h"
 #include "polyhedron.h"
 #include "primitives.h"
 
-#endif // MODEL_BUILTIN_H
+

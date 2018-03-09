@@ -1,5 +1,5 @@
-#ifndef RAY_H
-#define RAY_H
+#pragma once
+
 
 #include "bmp.h"
 #include "color.h"
@@ -31,4 +31,4 @@ struct engine {
 color rasterize(const world &, const env &, const camera &, const display &,
                 const viewport &, int, int, int dep);
 
-#endif // RAY_H
+

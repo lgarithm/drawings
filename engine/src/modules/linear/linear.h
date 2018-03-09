@@ -1,5 +1,5 @@
-#ifndef LINEAR_H
-#define LINEAR_H
+#pragma once
+
 
 #include "point.h"
 
@@ -13,4 +13,4 @@ struct frame {
 point3 local(const frame &, const point3 &);
 point3 global(const frame &, const point3 &);
 
-#endif // LINEAR_H
+

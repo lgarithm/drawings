@@ -1,5 +1,5 @@
-#ifndef BB8_MODEL_H
-#define BB8_MODEL_H
+#pragma once
+
 
 #include "rey.h"
 
@@ -29,4 +29,4 @@ struct bb8 : object {
     maybe<intersection> intersect(const ray &) const override;
 };
 
-#endif // BB8_MODEL_H
+

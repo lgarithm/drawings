@@ -10,7 +10,7 @@ DEFINE_TUPLE_3_MUL(color, r, g, b);
 DEFINE_TUPLE_3_INC(color, r, g, b);
 DEFINE_TUPLE_3_EQU(color, r, g, b);
 
-#endif // USE_TEMPLATE
+#endif
 
 RGB rgb(const color &c)
 {

@@ -1,5 +1,5 @@
-#ifndef PRIMITIVE_H
-#define PRIMITIVE_H
+#pragma once
+
 
 #include "affine.h"
 #include "guard.h" // for transitive closure
@@ -70,4 +70,4 @@ struct tetrahedron : object {
 
 maybe<scalarT> r_dis(const t_vector3 &, const ray &);
 
-#endif // PRIMITIVE_H
+

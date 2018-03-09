@@ -1,5 +1,5 @@
-#ifndef GUARD_H
-#define GUARD_H
+#pragma once
+
 
 #define USE_GUARD
 
@@ -12,4 +12,4 @@ void assert_unit(const vector3 &, const std::string = "");
 void assert_zero(scalarT, const std::string = "");
 void assert_non_negative_zero(scalarT, const std::string = "");
 
-#endif // GUARD_H
+

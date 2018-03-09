@@ -1,5 +1,5 @@
-#ifndef SI_H
-#define SI_H
+#pragma once
+
 
 #define METER 1
 
@@ -15,4 +15,4 @@
 
 // #define HORIZON (1.6 * KILO_METER)
 
-#endif // SI_H
+

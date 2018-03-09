@@ -1,5 +1,5 @@
-#ifndef PROFILE_H
-#define PROFILE_H
+#pragma once
+
 
 #include <map>
 #include <string>
@@ -20,4 +20,4 @@ struct scope_logger {
 
 void log_trace(const ray &, int dep);
 
-#endif // PROFILE_H
+

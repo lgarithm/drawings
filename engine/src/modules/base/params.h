@@ -1,5 +1,5 @@
-#ifndef PARAMS_H
-#define PARAMS_H
+#pragma once
+
 
 #include <string>
 #include <vector>
@@ -21,4 +21,4 @@ bool parse(int argc, const char *const argv[], image_task &, const atlas &,
            world_gen);
 void usage(const char *name, const atlas &);
 
-#endif // PARAMS_H
+

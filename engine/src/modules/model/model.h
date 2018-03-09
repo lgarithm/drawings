@@ -1,5 +1,5 @@
-#ifndef MODEL_H
-#define MODEL_H
+#pragma once
+
 
 #include <map>
 #include <memory>
@@ -86,4 +86,4 @@ struct env {
 };
 typedef env *(*env_gen)();
 
-#endif // MODEL_H
+

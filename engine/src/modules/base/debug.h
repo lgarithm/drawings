@@ -1,5 +1,5 @@
-#ifndef DEBUG_H
-#define DEBUG_H
+#pragma once
+
 
 #include <cstdio>
 
@@ -27,4 +27,4 @@ template <typename T> std::string to_str(const T &p)
     return s;
 }
 
-#endif // DEBUG_H
+

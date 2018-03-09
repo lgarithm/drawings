@@ -1,5 +1,5 @@
-#ifndef SOLIDS_H
-#define SOLIDS_H
+#pragma once
+
 
 #include <vector>
 
@@ -19,4 +19,4 @@ index_model cube(scalarT r, const point3 &o);
 std::vector<point3> at(const index_model &idx_m, const face_index &fi);
 oframe localize(std::vector<point3> &vs);
 
-#endif // SOLIDS_H
+

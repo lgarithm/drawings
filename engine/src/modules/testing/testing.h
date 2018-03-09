@@ -1,5 +1,5 @@
-#ifndef TESTING_H
-#define TESTING_H
+#pragma once
+
 
 #include <cassert>
 #include <cmath>
@@ -29,4 +29,4 @@ void assert_eq(double x, double y);
         test_##x();                                                            \
     }
 
-#endif // TESTING_H
+

@@ -1,5 +1,5 @@
-#ifndef PARSE_H
-#define PARSE_H
+#pragma once
+
 
 #include <cctype>
 
@@ -72,4 +72,4 @@ inline std::istream &operator>>(std::istream &in, color &c)
     return in >> c.r >> comma >> c.g >> comma >> c.b;
 }
 
-#endif // PARSE_H
+

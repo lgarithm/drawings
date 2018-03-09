@@ -1,5 +1,4 @@
-#ifndef ARITH_H
-#define ARITH_H
+#pragma once
 
 #include <cmath>
 
@@ -29,4 +28,4 @@ bool min_positive_root(const quad_eq &e, numericT &x);
 
 static auto const radian = 180 / M_PI;
 
-#endif // ARITH_H
+

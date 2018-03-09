@@ -1,5 +1,5 @@
-#ifndef MODEL_SURFACE_H
-#define MODEL_SURFACE_H
+#pragma once
+
 
 #include "arith.h"
 #include "maybe.h"
@@ -53,4 +53,4 @@ struct bound_cylinder_surface : bound<cylinder_surface> {
     bool in(const point3 &)const override;
 };
 
-#endif // MODEL_SURFACE_H
+

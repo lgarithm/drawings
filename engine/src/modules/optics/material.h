@@ -1,5 +1,5 @@
-#ifndef MATERIAL_H
-#define MATERIAL_H
+#pragma once
+
 
 #include "color.h"
 
@@ -15,4 +15,4 @@ struct material {
     // static const material
 };
 
-#endif // MATERIAL_H
+

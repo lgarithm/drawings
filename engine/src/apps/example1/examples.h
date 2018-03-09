@@ -1,5 +1,5 @@
-#ifndef EXAMPLE_H
-#define EXAMPLE_H
+#pragma once
+
 
 #include "bb8_model.h"
 #include "model.h"
@@ -7,4 +7,4 @@
 
 atlas examples();
 
-#endif // EXAMPLE_H
+
