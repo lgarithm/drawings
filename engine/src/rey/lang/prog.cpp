@@ -4,20 +4,20 @@
 #include <sstream>
 #include <string>
 
-#include <rey/optics/color.h>
-#include <rey/lang/constants.h>
-#include <rey/optics/material.h>
 #include <rey/base/maybe.h>
+#include <rey/lang/constants.h>
+#include <rey/lang/parse.h>
 #include <rey/model/model-builtin.h>
 #include <rey/model/model.h>
-#include "parse.h"
+#include <rey/optics/color.h>
+#include <rey/optics/material.h>
 
 using std::istream;
+using std::istringstream;
 using std::map;
 using std::regex_search;
 using std::smatch;
 using std::string;
-using std::istringstream;
 
 std::regex regex(const string &str)
 {
@@ -45,14 +45,10 @@ maybe<camera> p_camera(const string &str)
         tokenizer name;
         if (ss >> spaces >> name) {
             scalarT d;
-            if (not(ss >> lb >> d >> rb)) {
-                d = 10;
-            }
+            if (not(ss >> lb >> d >> rb)) { d = 10; }
             auto cs = build_cameras(d);
             auto it = cs.find(name.str);
-            if (it != cs.end()) {
-                return just(it->second);
-            }
+            if (it != cs.end()) { return just(it->second); }
         }
     }
     return nothing<camera>();
@@ -62,18 +58,14 @@ maybe<color> p_color(const string &str)
 {
     {
         auto it = colors.find(str);
-        if (it != colors.end()) {
-            return just(it->second);
-        }
+        if (it != colors.end()) { return just(it->second); }
     }
     {
         istringstream ss(str);
         color c;
         if (ss >> c) {
             static const auto f = [](colorT x) { return 0 <= x && x <= 1; };
-            if (f(c.r) && f(c.g) && f(c.b)) {
-                return just(c);
-            }
+            if (f(c.r) && f(c.g) && f(c.b)) { return just(c); }
         }
     }
     return nothing<color>();
@@ -88,9 +80,7 @@ maybe<material> p_material(const string &str)
         smatch m;
         if (regex_search(str, m, p)) {
             auto c = p_color(m[1].str());
-            if (c.just) {
-                mt.diffuse = c.it;
-            }
+            if (c.just) { mt.diffuse = c.it; }
         }
     }
     {
@@ -98,9 +88,7 @@ maybe<material> p_material(const string &str)
         smatch m;
         if (regex_search(str, m, p)) {
             auto c = p_color(m[1].str());
-            if (c.just) {
-                mt.specular = c.it;
-            }
+            if (c.just) { mt.specular = c.it; }
         }
     }
     {
@@ -132,9 +120,7 @@ object *p_builtin_model(const string &str)
     if (regex_search(str, m, p)) {
         const string name = m[1].str();
         istringstream ss(m[2].str());
-        if (name == "floor") {
-            return new Chessboard;
-        }
+        if (name == "floor") { return new Chessboard; }
     }
     return nullptr;
 }
@@ -150,9 +136,7 @@ simple_object *p_s_model(const string &str)
             double s;
             point3 p;
             if (ss >> s >> comma >> lb >> p >> rb) {
-                if (s > 0) {
-                    return new sphere(s, p);
-                }
+                if (s > 0) { return new sphere(s, p); }
             }
         } else if (name == "plane") {
             point3 o;
@@ -173,8 +157,7 @@ object *p_model_regex_unsafe(const string &str)
         material mt;
         if (m.size() == 4) {
             auto mmt = p_material(m[3].str());
-            if (mmt.just)
-                mt = mmt.it;
+            if (mmt.just) mt = mmt.it;
         }
         {
             auto po = p_s_model(m[1].str());
@@ -185,13 +168,10 @@ object *p_model_regex_unsafe(const string &str)
         }
         {
             auto po = p_builtin_model(m[1].str());
-            if (po)
-                return po;
+            if (po) return po;
         }
     }
-    if (str == "floor") {
-        return new Chessboard;
-    }
+    if (str == "floor") { return new Chessboard; }
     return nullptr;
 }
 

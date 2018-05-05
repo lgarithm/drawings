@@ -34,28 +34,25 @@ void test_2()
 void test_3()
 {
     static const char *succ[] = {
-        "sphere(1,(1,1,1))", "sphere(1, (1, 1, 1))", "sphere(3, (-4,0,3))",
+        "sphere(1,(1,1,1))",
+        "sphere(1, (1, 1, 1))",
+        "sphere(3, (-4,0,3))",
     };
-    for (auto it : succ) {
-        assert(p_model(it));
-    }
+    for (auto it : succ) { assert(p_model(it)); }
 }
 
 void test_4()
 {
     static const char *fail[] = {
-        "sphere(1)", "sphere (1, (1, 1, 1))",
+        "sphere(1)",
+        "sphere (1, (1, 1, 1))",
     };
-    for (auto it : fail) {
-        assert(p_model(it) == nullptr);
-    }
+    for (auto it : fail) { assert(p_model(it) == nullptr); }
 }
 
 int main()
 {
-    if (not HAS_CPP_REGEX) {
-        return 0;
-    }
+    if (not HAS_CPP_REGEX) { return 0; }
     test(1);
     test(2);
     test(3);

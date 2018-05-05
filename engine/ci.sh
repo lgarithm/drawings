@@ -11,8 +11,8 @@ main(){
     echo -e "\x1b[1;43mBuilding\x1b[m"
     make all
     
-    # echo -e "\x1b[1;43mRunning basic checks\x1b[m"
-    # make check
+    echo -e "\x1b[1;43mRunning basic checks\x1b[m"
+    make check
     
     echo -e "\x1b[1;43mRunning demos\x1b[m"
     ./tests/all-tests.sh

@@ -1,3 +1,15 @@
+# https://docs.travis-ci.com/user/languages/cpp/
 language: cpp
+
+# https://docs.travis-ci.com/user/docker/
+services:
+- docker
+
+before_install:
+- docker info
+- docker build --rm -t rey-engine engine
+
 script:
-  - cd engine && ./configure && make && make check
+# The default is
+# - ./configure && make && make test
+- docker run --rm -it rey-engine make -C /src check
