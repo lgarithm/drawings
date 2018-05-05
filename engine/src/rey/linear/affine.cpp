@@ -1,4 +1,4 @@
-#include "affine.h"
+#include <rey/linear/affine.h>
 
 t_vector3::t_vector3(const point3 &o, const vector3 &v) : o(o), v(v) {}
 

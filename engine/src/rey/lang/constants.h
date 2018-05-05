@@ -4,9 +4,9 @@
 #include <map>
 #include <string>
 
-#include "color.h"
-#include "display.h"
-#include "view.h"
+#include <rey/optics/color.h>
+#include <rey/ray/display.h>
+#include <rey/model/view.h>
 
 static const auto colors = std::map<std::string, color>({
     {"black", black},

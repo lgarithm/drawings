@@ -1,8 +1,8 @@
 #pragma once
 
 
-#include "config.h"
-#include "tuple.h"
+#include <rey/base/config.h>
+#include <rey/linear/tuple.h>
 
 #define DEFINE_DET_2X2(T)                                                      \
     T det(T A, T B, T C, T D) { return A * D - B * C; }

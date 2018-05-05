@@ -1,4 +1,4 @@
-#include "server.h"
+#include <rey/parallel/server.h>
 
 #include <cstdio>
 #include <cstdlib>
@@ -16,12 +16,12 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "app.h"
-#include "bmp.h"
-#include "debug.h"
-#include "http.h"
-#include "model.h"
-#include "params.h"
+#include <rey/base/app.h>
+#include <rey/bmp/bmp.h>
+#include <rey/base/debug.h>
+#include <rey/parallel/http.h>
+#include <rey/model/model.h>
+#include <rey/base/params.h>
 
 using std::atomic;
 using std::string;

@@ -1,10 +1,10 @@
 #pragma once
 
 
-#include "arith.h"
-#include "maybe.h"
-#include "model.h"
-#include "point.h"
+#include <rey/arith/arith.h>
+#include <rey/base/maybe.h>
+#include <rey/model/model.h>
+#include <rey/linear/point.h>
 
 struct algebraic_surface : simple_object {
     oframe of;

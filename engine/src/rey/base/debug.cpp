@@ -1,4 +1,4 @@
-#include "debug.h"
+#include <rey/base/debug.h>
 
 #include <cstdio>
 
@@ -7,10 +7,10 @@
 #include <typeindex>
 #include <typeinfo>
 
-#include "model-builtin.h"
-#include "model.h"
-#include "params.h"
-#include "view.h"
+#include <rey/model/model-builtin.h>
+#include <rey/model/model.h>
+#include <rey/base/params.h>
+#include <rey/model/view.h>
 
 using std::map;
 using std::string;

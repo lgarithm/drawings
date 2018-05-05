@@ -1,8 +1,8 @@
-#include "display.h"
+#include <rey/ray/display.h>
 
 #include <cassert>
 
-#include "testing.h"
+#include <rey/testing/testing.h>
 
 void test_1()
 {

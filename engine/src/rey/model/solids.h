@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "affine.h"
-#include "point.h"
+#include <rey/linear/affine.h>
+#include <rey/linear/point.h>
 
 struct face_index {
     std::vector<unsigned short> vi;

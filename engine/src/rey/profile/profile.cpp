@@ -1,11 +1,11 @@
-#include "profile.h"
+#include <rey/profile/profile.h>
 
 #include <cstdio>
 
 #include <map>
 #include <string>
 
-#include "model.h"
+#include <rey/model/model.h>
 
 using std::map;
 using std::string;

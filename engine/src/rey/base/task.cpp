@@ -3,10 +3,10 @@
 #include <string>
 #include <vector>
 
-#include "display.h"
-#include "model.h"
-#include "point.h"
-#include "view.h"
+#include <rey/ray/display.h>
+#include <rey/model/model.h>
+#include <rey/linear/point.h>
+#include <rey/model/view.h>
 
 using std::vector;
 using std::string;

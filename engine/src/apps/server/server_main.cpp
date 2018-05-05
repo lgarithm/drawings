@@ -4,7 +4,9 @@
 #include <signal.h>
 #include <unistd.h>
 
-#include "server.h"
+
+
+#include <rey/parallel/server.h>
 
 auto serve = wrap<server>(nullptr);
 void term(int) {}

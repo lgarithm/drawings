@@ -1,8 +1,8 @@
-#include "model.h"
+#include <rey/model/model.h>
 
 #include <cassert>
 #include <cmath>
 
-#include "testing.h"
+#include <rey/testing/testing.h>
 
 int main() { return 0; }

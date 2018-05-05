@@ -6,11 +6,11 @@
 #include <utility>
 #include <vector>
 
-#include "affine.h"
-#include "color.h"
-#include "material.h"
-#include "maybe.h"
-#include "point.h"
+#include <rey/linear/affine.h>
+#include <rey/optics/color.h>
+#include <rey/optics/material.h>
+#include <rey/base/maybe.h>
+#include <rey/linear/point.h>
 
 typedef t_vector3 ray;
 
@@ -31,6 +31,7 @@ inline bool operator<(const intersection &i, const intersection &j)
 
 struct object {
     virtual maybe<intersection> intersect(const ray &) const = 0;
+    virtual ~object(){}
 };
 
 typedef object *(*obj_gen)();

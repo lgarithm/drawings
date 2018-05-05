@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "model.h"
+#include <rey/model/model.h>
 #include "task.h"
 
 int app(int, const char *const argv[], const atlas &_ = atlas(),

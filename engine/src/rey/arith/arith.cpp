@@ -1,9 +1,10 @@
-#include "arith.h"
+#include <rey/arith/arith.h>
 
 #include <cmath>
 #include <cstdio>
 
-#include "tuple.h"
+
+#include <rey/linear/tuple.h>
 
 DEFINE_TUPLE_2_SCALE(numericT, linear_eq, A, B);
 DEFINE_TUPLE_2_ADD(linear_eq, A, B);

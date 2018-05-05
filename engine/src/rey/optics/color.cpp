@@ -1,4 +1,4 @@
-#include "color.h"
+#include <rey/optics/color.h>
 
 #ifdef USE_TEMPLATE
 

@@ -1,5 +1,5 @@
 #include "r2d2_model.h"
-#include "rey.h"
+#include <rey/ray/rey.h>
 
 world *default_test_scene()
 {

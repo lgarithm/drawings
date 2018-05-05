@@ -1,4 +1,4 @@
-#include "display.h"
+#include <rey/ray/display.h>
 
 #include <algorithm>
 #include <vector>

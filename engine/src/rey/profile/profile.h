@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-#include "model.h"
+#include <rey/model/model.h>
 
 struct trace_logger {
 };

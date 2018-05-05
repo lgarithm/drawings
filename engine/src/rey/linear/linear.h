@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "point.h"
+#include <rey/linear/point.h>
 
 struct frame {
     vector3 X, Y, Z;

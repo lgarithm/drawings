@@ -3,10 +3,10 @@
 
 #include <vector>
 
-#include "maybe.h"
-#include "model.h"
+#include <rey/base/maybe.h>
+#include <rey/model/model.h>
 #include "model_surface.h"
-#include "primitives.h"
+#include <rey/model/primitives.h>
 #include "solids.h" // For transitive closure
 
 struct polygon {

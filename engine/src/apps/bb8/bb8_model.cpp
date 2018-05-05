@@ -1,10 +1,10 @@
-#include "bb8_model.h"
+#include <apps/bb8/bb8_model.h>
 
 #include <cmath>
 
 #include <algorithm>
 
-#include "rey.h"
+#include <rey/ray/rey.h>
 
 using std::max;
 using std::min;

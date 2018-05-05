@@ -1,10 +1,10 @@
-#include "primitives.h"
+#include <rey/model/primitives.h>
 
 #include <cassert>
 #include <cmath>
 
-#include "model.h"
-#include "testing.h"
+#include <rey/model/model.h>
+#include <rey/testing/testing.h>
 
 void test_0()
 {

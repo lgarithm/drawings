@@ -1,9 +1,9 @@
-#include "prog.h"
+#include <rey/lang/prog.h>
 
 #include <cassert>
 
-#include "debug.h"
-#include "testing.h"
+#include <rey/base/debug.h>
+#include <rey/testing/testing.h>
 
 void test_1()
 {

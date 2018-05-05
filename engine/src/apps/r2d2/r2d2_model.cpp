@@ -1,8 +1,8 @@
-#include "r2d2_model.h"
+#include <apps/r2d2/r2d2_model.h>
 
 #include <algorithm>
 
-#include "rey.h"
+#include <rey/ray/rey.h>
 
 using namespace std;
 

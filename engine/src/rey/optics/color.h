@@ -1,6 +1,6 @@
 #pragma once
 
-#include "config.h"
+#include <rey/base/config.h>
 
 typedef COLOR_T colorT;
 
@@ -31,7 +31,7 @@ using color = colorT<colorT>;
 
 #else
 
-#include "tuple.h"
+#include <rey/linear/tuple.h>
 
 DEFINE_TUPLE_3(color, colorT, r, g, b);
 

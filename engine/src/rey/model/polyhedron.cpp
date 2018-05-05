@@ -7,8 +7,8 @@
 #include <utility>
 #include <vector>
 
-#include "arith.h"
-#include "primitives.h"
+#include <rey/arith/arith.h>
+#include <rey/model/primitives.h>
 #include "solids.h"
 
 using std::min;

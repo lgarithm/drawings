@@ -1,11 +1,11 @@
 #pragma once
 
 
-#include "affine.h"
-#include "guard.h" // for transitive closure
-#include "maybe.h"
-#include "model.h"
-#include "point.h"
+#include <rey/linear/affine.h>
+#include <rey/base/guard.h> // for transitive closure
+#include <rey/base/maybe.h>
+#include <rey/model/model.h>
+#include <rey/linear/point.h>
 
 struct plane : simple_object {
     t_vector3 n;

@@ -1,4 +1,4 @@
-#include "bmp.h"
+#include <rey/bmp/bmp.h>
 
 #include <cassert>
 

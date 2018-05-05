@@ -1,9 +1,9 @@
-#include "model.h"
+#include <rey/model/model.h>
 
 #include <memory>
 
-#include "maybe.h"
-#include "point.h"
+#include <rey/base/maybe.h>
+#include <rey/linear/point.h>
 
 using std::unique_ptr;
 

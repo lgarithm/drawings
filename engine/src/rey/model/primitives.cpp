@@ -1,12 +1,12 @@
-#include "primitives.h"
+#include <rey/model/primitives.h>
 
 #include <cmath>
 
-#include "affine.h"
-#include "guard.h"
-#include "maybe.h"
-#include "model.h"
-#include "point.h"
+#include <rey/linear/affine.h>
+#include <rey/base/guard.h>
+#include <rey/base/maybe.h>
+#include <rey/model/model.h>
+#include <rey/linear/point.h>
 
 plane::plane(const t_vector3 &n) : n(n) { assert_unit(n.v, __func__); }
 

@@ -1,10 +1,10 @@
-#include "params.h"
+#include <rey/base/params.h>
 
 #include <cassert>
 
-#include "display.h"
-#include "model.h"
-#include "testing.h"
+#include <rey/ray/display.h>
+#include <rey/model/model.h>
+#include <rey/testing/testing.h>
 
 void test_1()
 {

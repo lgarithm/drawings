@@ -4,10 +4,10 @@
 #include <string>
 #include <vector>
 
-#include "display.h"
-#include "model.h"
-#include "ray.h"
-#include "view.h"
+#include <rey/ray/display.h>
+#include <rey/model/model.h>
+#include <rey/ray/ray.h>
+#include <rey/model/view.h>
 
 struct image_task {
     std::vector<std::string> args;

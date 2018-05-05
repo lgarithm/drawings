@@ -1,14 +1,14 @@
-#include "ray.h"
+#include <rey/ray/ray.h>
 
 #include <cassert>
 #include <cmath>
 
 #include <algorithm>
 
-#include "color.h"
-#include "guard.h"
-#include "model.h"
-#include "profile.h"
+#include <rey/optics/color.h>
+#include <rey/base/guard.h>
+#include <rey/model/model.h>
+#include <rey/profile/profile.h>
 
 using std::max;
 using std::min;

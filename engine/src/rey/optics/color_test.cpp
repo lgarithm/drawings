@@ -1,6 +1,6 @@
-#include "color.h"
+#include <rey/optics/color.h>
 
-#include "testing.h"
+#include <rey/testing/testing.h>
 
 void test_1()
 {

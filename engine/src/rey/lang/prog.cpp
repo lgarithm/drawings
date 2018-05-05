@@ -1,15 +1,15 @@
-#include "prog.h"
+#include <rey/lang/prog.h>
 
 #include <regex>
 #include <sstream>
 #include <string>
 
-#include "color.h"
-#include "constants.h"
-#include "material.h"
-#include "maybe.h"
-#include "model-builtin.h"
-#include "model.h"
+#include <rey/optics/color.h>
+#include <rey/lang/constants.h>
+#include <rey/optics/material.h>
+#include <rey/base/maybe.h>
+#include <rey/model/model-builtin.h>
+#include <rey/model/model.h>
 #include "parse.h"
 
 using std::istream;

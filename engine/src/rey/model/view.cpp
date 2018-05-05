@@ -1,6 +1,6 @@
-#include "view.h"
+#include <rey/model/view.h>
 
-#include "affine.h"
+#include <rey/linear/affine.h>
 
 namespace
 {

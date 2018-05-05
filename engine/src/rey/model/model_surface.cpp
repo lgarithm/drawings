@@ -4,9 +4,9 @@
 
 #include <string>
 
-#include "arith.h"
-#include "debug.h"
-#include "guard.h"
+#include <rey/arith/arith.h>
+#include <rey/base/debug.h>
+#include <rey/base/guard.h>
 
 algebraic_surface::algebraic_surface() {}
 

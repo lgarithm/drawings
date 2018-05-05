@@ -1,7 +1,6 @@
 #pragma once
 
-
-#include "affine.h"
+#include <rey/linear/affine.h>
 
 struct camera {
     oframe of;
@@ -20,5 +19,3 @@ camera front(scalarT = 10);
 camera back(scalarT = 10);
 camera left(scalarT = 10);
 camera right(scalarT = 10);
-
-

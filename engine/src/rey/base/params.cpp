@@ -1,4 +1,4 @@
-#include "params.h"
+#include <rey/base/params.h>
 
 #include <cstdio>
 #include <cstring>
@@ -9,10 +9,10 @@
 #include <string>
 #include <vector>
 
-#include "display.h"
-#include "model-builtin.h"
-#include "model.h"
-#include "prog.h"
+#include <rey/ray/display.h>
+#include <rey/model/model-builtin.h>
+#include <rey/model/model.h>
+#include <rey/lang/prog.h>
 
 using std::endl;
 using std::map;

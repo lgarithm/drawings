@@ -2,9 +2,9 @@
 
 #include <algorithm>
 
-#include "constants.h" // !!
+#include <rey/lang/constants.h>
 #include "solids.h"
-#include "testing.h"
+#include <rey/testing/testing.h>
 
 using std::max_element;
 

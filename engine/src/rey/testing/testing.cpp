@@ -1,8 +1,8 @@
-#include "testing.h"
+#include <rey/testing/testing.h>
 
 #include <cstdio>
 
-#include "logger.h"
+#include <rey/logger/logger.h>
 
 namespace
 {

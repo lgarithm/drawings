@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "affine.h"
-#include "point.h"
+#include <rey/linear/affine.h>
+#include <rey/linear/point.h>
 
 using std::vector;
 

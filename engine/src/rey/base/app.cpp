@@ -1,4 +1,4 @@
-#include "app.h"
+#include <rey/base/app.h>
 
 #include <cassert>
 #include <cstdio>
@@ -11,14 +11,14 @@
 
 #include <unistd.h>
 
-#include "bmp.h"
-#include "debug.h"
-#include "display.h"
-#include "logger.h"
-#include "model.h"
-#include "parallel.h"
-#include "params.h"
-#include "ray.h"
+#include <rey/bmp/bmp.h>
+#include <rey/base/debug.h>
+#include <rey/ray/display.h>
+#include <rey/logger/logger.h>
+#include <rey/model/model.h>
+#include <rey/parallel/parallel.h>
+#include <rey/base/params.h>
+#include <rey/ray/ray.h>
 
 using std::map;
 using std::move;

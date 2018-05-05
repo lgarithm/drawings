@@ -1,9 +1,9 @@
-#include "constants.h"
+#include <rey/lang/constants.h>
 
 #include <map>
 #include <string>
 
-#include "view.h"
+#include <rey/model/view.h>
 
 using std::map;
 using std::string;

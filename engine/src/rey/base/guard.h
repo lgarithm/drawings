@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include "point.h"
+#include <rey/linear/point.h>
 
 void assert_unit(const vector3 &, const std::string, const std::string);
 void assert_unit(const vector3 &, const std::string = "");

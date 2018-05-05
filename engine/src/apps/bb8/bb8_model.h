@@ -1,7 +1,8 @@
 #pragma once
 
 
-#include "rey.h"
+#include <rey/ray/rey.h>
+
 
 struct bb8_head : bound<sphere> {
     oframe of;

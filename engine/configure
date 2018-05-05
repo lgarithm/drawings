@@ -1,170 +1,24 @@
-#!/bin/bash
-# -*- mode: sh -*-
+#!/bin/sh
 
 set -e
 
-source ./configtool
+cd $(dirname $0)
 
-cc='g++ -std=c++0x -I../include'
+ROOT=$(pwd)
+BUILD_DIR=$(pwd)/build
+mkdir -p $BUILD_DIR
+cd $BUILD_DIR
 
-opts='-O3 -fPIC'
+CMAKE_FLAGS="-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_BUILD_TYPE=Release"
 
-move(){
-    for h in `find $1 | grep "\.h"`; do
-        cp -v $h build/include | tee -a cp.log
-    done
-    for c in `find $1 | grep "\.cpp"`; do
-        cp -v $c build/src | tee -a cp.log
-    done
-}
+cmake $CMAKE_FLAGS $ROOT
 
-override_override(){
-    sed -f override.sed -ir build/include/*.h
-    rm build/include/*.hr
-    for h in `find build/demo/**/*`; do
-        echo $h
-        sed -f override.sed -ir $h
-        rm ${h}r
-    done
-}
 
-prepare_source(){
-    echo -n "" > cp.log
-    for m in `ls src/rey`; do
-        move src/rey/$m
-    done
-    for a in `ls src/apps`; do
-        if [ -d src/apps/$a ]; then
-            mkdir -p build/demo/$a
-            for b in `ls src/apps/$a`; do
-                cp -v src/apps/$a/$b build/demo/$a | tee -a cp.log
-            done
-        else
-            cp -v src/apps/$a build/demo | tee -a cp.log
-        fi
-    done
-    if [[ ! $(uname -a | grep Darwin) ]]; then
-        echo -e "\x1b[1;32mNot Support c++ overide\x1b[m"
-        override_override
-        echo -e "\x1b[1;32mNot Support c++ regex\x1b[m"
-        sed -ir 's/HAS_CPP_REGEX true/HAS_CPP_REGEX false/g' build/include/config.h
-        rm build/include/config.hr
-    else
-        echo -e "\x1b[1;32mAll c++11 features supported\x1b[m"
-    fi
-}
 
-gen_lib_target(){
-    objs=`find ../../src/rey | grep .cpp | grep -v test | awk -F "/" '{print $6}' | sed 's/.cpp$/.o/' | tr "\n" " "`
-    echo "librey.a: $objs"
-    echo -e "\tar rcs librey.a $objs"
-    echo
-    echo "librey.so: $objs"
-    echo -e "\t$cc $opts -shared -o librey.so $objs"
-    echo
-}
+# if [ $(uname) == "Darwin" ]; then
+#     NPROC=$(sysctl -n hw.ncpu)
+# else
+#     NPROC=$(nproc)
+# fi
 
-gen_build_makefile(){
-    echo "default: all_tests all_libraries all_binaries"
-    echo
-
-    echo "all_tests: "`ls | grep _test.cpp | sed 's/.cpp$/.out/' | tr "\n" " "`
-    echo
-    echo "all_libraries: librey.a librey.so"
-    echo
-    echo "all_binaries: "`ls | grep _main.cpp | sed s'/.cpp/.out/' | tr "\n" " "`
-    echo
-
-    echo "# Binaries"
-    for m in `ls | grep _main.cpp`; do
-        gen_out_target $m
-    done
-
-    echo "# Tests"
-    for t in `ls *_test.cpp`; do
-        gen_out_target $t
-    done
-
-    echo "# Libs"
-    gen_lib_target
-
-    echo "# Objects"
-    for c in `ls *.cpp`; do
-        gen_object_target $c
-    done
-
-    echo "# Clean"
-    echo "clean:"
-    echo -e "\t-rm *.a *.o *.out *.so"
-}
-
-gen_main_makefile(){
-    echo "default: core demo"
-    echo
-    echo "all: core demo proxy"
-    echo
-    echo "core:"
-    echo -e "\tcd build/src && make"
-    echo -e "\tcp build/src/*.a build/lib"
-    echo -e "\tcp build/src/*.so build/share"
-    echo
-
-    echo "check: core"
-
-    for t in `ls build/src/ | grep _test.cpp`; do
-        echo -e "\t./build/src/`basename $t .cpp`.out"
-    done
-    for m in `ls build/src/ | grep _main.cpp`; do
-        echo -e "\t./build/src/`basename $m .cpp`.out -t"
-    done
-    echo
-
-    echo "install: core demo"
-    echo -e "\tmkdir -p $prefix"
-    echo -e "\tcp -r build/bin $prefix/"
-    echo -e "\tcp -r build/lib $prefix/"
-    echo -e "\tcp -r build/include $prefix/"
-    echo -e "\tcp -r build/share $prefix/"
-    echo
-
-    echo "demo: core"
-    echo -e "\tcd build/demo && make"
-    echo -e "\tcp build/demo/server/server_main.out build/bin/render-server"
-    echo -e "\tcp build/demo/render/render_main.out build/bin/render"
-    echo
-
-    echo "proxy:"
-    echo -e "\tcd src/rey/parallel && make -f Makefile.am"
-    echo
-
-    echo "clean:"
-    echo -e "\tcd build && make clean"
-}
-
-prepare_dir(){
-    mkdir -pv build/{bin,demo,include,lib,share,src}
-    mkdir -pv output
-}
-
-config(){
-    echo -e "\x1b[1;32mCreating Dir\x1b[m"
-    prepare_dir
-    echo -e "\x1b[1;32mCopying Source\x1b[m"
-    prepare_source
-    echo -e "\x1b[1;32mGenerating Build Makefile\x1b[m"
-    cd build/src
-    gen_build_makefile > Makefile
-    cd ../..
-    echo -e "\x1b[1;32mGenerating Main Makefile\x1b[m"
-    gen_main_makefile > Makefile
-    echo -e "\x1b[1;32mConfiguring demos\x1b[m"
-    cd build/demo && ./configure
-    echo -e "\x1b[1;32mDone\x1b[m"
-}
-
-main(){
-    prefix=$HOME/local/librey
-    config
-}
-
-main
+# make -j$NPROC
