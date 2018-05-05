@@ -7,14 +7,10 @@
 #include <typeindex>
 #include <typeinfo>
 
+#include <rey/base/params.h>
 #include <rey/model/model-builtin.h>
 #include <rey/model/model.h>
-#include <rey/base/params.h>
 #include <rey/model/view.h>
-
-using std::map;
-using std::string;
-using std::type_index;
 
 void info(const camera &cam)
 {
@@ -47,12 +43,10 @@ void show_image_task(const image_task &cfg)
     printf("trace depth: %d\n", cfg.dep);
     printf("%lu objects\n", cfg.w.objects.size());
     printf("%lu lights\n", cfg.lights.lights.size());
-    for (auto &it : cfg.args) {
-        printf("args: %s\n", it.c_str());
-    }
+    for (auto &it : cfg.args) { printf("args: %s\n", it.c_str()); }
 }
 
-typedef map<type_index, string> dnames;
+using dnames = std::map<std::type_index, std::string>;
 
 dnames _names()
 {
@@ -66,11 +60,11 @@ dnames _names()
 
 dnames names = _names();
 
-string what(const object *po)
+std::string what(const object *po)
 {
     auto my_name = names[typeid(po)];
     if (my_name.empty()) {
-        my_name = "<" + string(typeid(po).name()) + ">";
+        my_name = "<" + std::string(typeid(po).name()) + ">";
     }
     return my_name;
 }

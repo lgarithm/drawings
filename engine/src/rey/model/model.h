@@ -11,7 +11,7 @@
 #include <rey/optics/color.h>
 #include <rey/optics/material.h>
 
-typedef t_vector3 ray;
+using ray = t_vector3;
 
 struct neibourhood {
     virtual vector3 at(const point3 &) const = 0;
@@ -45,7 +45,9 @@ template <typename T> struct bound : T {
     std::optional<intersection> intersect(const ray &r) const override
     {
         auto t = T::meet(r);
-        if (t.has_value() and in(r + t.value())) { return just(intersection{this, t.value()}); }
+        if (t.has_value() and in(r + t.value())) {
+            return just(intersection{this, t.value()});
+        }
         return nothing<intersection>();
     }
     virtual bool in(const point3 &)const = 0;
@@ -57,7 +59,7 @@ struct world {
 
 void operator+=(world &, object *);
 typedef world *(*world_gen)();
-typedef std::map<std::string, world_gen> atlas;
+using atlas = std::map<std::string, world_gen>;
 
 inline bool near_than(const std::optional<intersection> &i,
                       const std::optional<intersection> &j)
@@ -67,7 +69,8 @@ inline bool near_than(const std::optional<intersection> &i,
     return i.value().d < j.value().d;
 }
 
-template <typename T> std::optional<intersection> nearest(const T &oo, const ray &r)
+template <typename T>
+std::optional<intersection> nearest(const T &oo, const ray &r)
 {
     auto i = nothing<intersection>();
     for (const auto &it : oo) {

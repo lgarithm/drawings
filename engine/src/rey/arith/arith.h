@@ -5,7 +5,7 @@
 #include <rey/base/config.h>
 #include <rey/linear/tuple.h>
 
-typedef SCALAR_T numericT;
+using numericT = SCALAR_T;
 
 template <typename T> bool zero(T x) { return fabs(x) < 1e-12; }
 

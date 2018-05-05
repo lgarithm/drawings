@@ -2,7 +2,7 @@
 
 #include <rey/base/config.h>
 
-typedef COLOR_T colorT;
+using colorT = COLOR_T;
 
 #ifdef USE_TEMPLATE
 
@@ -41,7 +41,7 @@ DECLARE_TUPLE_3_MUL(color, r, g, b);
 DECLARE_TUPLE_3_INC(color, r, g, b);
 DECLARE_TUPLE_3_EQU(color, r, g, b);
 
-#endif // USE_TEMPLATE
+#endif  // USE_TEMPLATE
 
 struct RGB {
     unsigned char r, g, b;
