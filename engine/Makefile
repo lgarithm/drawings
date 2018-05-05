@@ -4,8 +4,11 @@ else
 	NPROC = $(shell nproc)
 endif
 
-all:
+all: build
 	make -C build
+
+build:
+	./configure
 
 check:
 	./tests/run-unit-tests.sh

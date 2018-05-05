@@ -3,7 +3,7 @@
 #include <rey/linear/point.h>
 #include <rey/model/model.h>
 #include <rey/model/view.h>
-#include <rey/ray/display.h>
+#include <rey/tracing/display.h>
 
 image_task::image_task()
     : cam(observer(point3{0, -20, 10}, origin, z_axis)),

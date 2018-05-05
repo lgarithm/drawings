@@ -11,20 +11,17 @@
 
 #include <unistd.h>
 
-#include <rey/bmp/bmp.h>
 #include <rey/base/debug.h>
-#include <rey/ray/display.h>
+#include <rey/base/params.h>
+#include <rey/bmp/bmp.h>
 #include <rey/logger/logger.h>
 #include <rey/model/model.h>
 #include <rey/parallel/parallel.h>
-#include <rey/base/params.h>
-#include <rey/ray/ray.h>
+#include <rey/profile/tracer.hpp>
+#include <rey/tracing/display.h>
+#include <rey/tracing/tracing.h>
 
-using std::map;
-using std::move;
-using std::vector;
-using std::string;
-using std::unique_ptr;
+namespace fs = std::experimental::filesystem;
 
 namespace
 {
@@ -32,13 +29,15 @@ clogger lo;
 static const int buffer_size = 3 * max_width * max_height;
 // TODO : !!!!! separate per thread !!!!
 unsigned char g_buffer[buffer_size];
-} // namespace
+}  // namespace
 
-void save(const char *name, const display &d, const unsigned char *buffer)
+void save(const fs::path &filepath, const display &d,
+          const unsigned char *buffer)
 {
     bmp_head head;
     head.init(d.width, d.height);
-    write_bmp_file(head, buffer, name);
+    // fs::create_directory(filepath.parent_path());
+    write_bmp_file(head, buffer, filepath.c_str());
 }
 
 void stream(int fd, const display &d, const unsigned char *buffer)
@@ -49,14 +48,13 @@ void stream(int fd, const display &d, const unsigned char *buffer)
 }
 
 void create_render_tasks(const image_task &img_tsk, const engine &e,
-                         unsigned char *buffer, vector<task *> &ts,
-                         vector<result *> &rs)
+                         unsigned char *buffer, std::vector<task *> &ts,
+                         std::vector<result *> &rs)
 {
     auto sch = scheduler{img_tsk.d};
     auto a = (img_tsk.dd.m > 1 || img_tsk.dd.n > 1) ? sch.divide(img_tsk.dd)
                                                     : sch.divide();
-    if (img_tsk.part)
-        a = {img_tsk.c};
+    if (img_tsk.part) a = {img_tsk.c};
 
     unsigned char *p = buffer;
     auto idx = 0;
@@ -88,7 +86,7 @@ int ret_size(const image_task &img_tsk)
 #define UNCHECK(expr) ({ auto _ = expr; })
 
 void save_results(const image_task &img_tsk, const unsigned char *buffer,
-                  const vector<result *> &rs)
+                  const std::vector<result *> &rs)
 {
     auto d = img_tsk.part ? from_clip(img_tsk.c) : img_tsk.d;
 
@@ -109,19 +107,19 @@ void save_results(const image_task &img_tsk, const unsigned char *buffer,
             sprintf(name, "%s.%dX%d.part.[%d-%d)X[%d-%d).bmp",
                     img_tsk.outfile.c_str(), img_tsk.dd.m, img_tsk.dd.n,
                     it->c.w.l, it->c.w.r, it->c.h.l, it->c.h.r);
-            lo.log("saving as " + string(name));
+            lo.log("saving as " + std::string(name));
             save(name, from_clip(it->c), it->p);
         }
     } else {
-        lo.log("saving as " + img_tsk.outfile);
-        save(img_tsk.outfile.c_str(), d, buffer);
+        lo.log("saving as " + img_tsk.outfile.string());
+        save(img_tsk.outfile, d, buffer);
     }
 }
 
 void run(const image_task &img_tsk)
 {
-    if (img_tsk.t)
-        return;
+    TRACE(__func__);
+    if (img_tsk.t) return;
     engine e(img_tsk.dep, img_tsk.d);
     if (img_tsk.single) {
         auto g = e.rasterize(img_tsk.w, img_tsk.lights, img_tsk.cam, img_tsk.i,
@@ -132,8 +130,8 @@ void run(const image_task &img_tsk)
         return;
     }
 
-    vector<result *> rs;
-    vector<task *> ts;
+    std::vector<result *> rs;
+    std::vector<task *> ts;
     unsigned char *buffer = img_tsk.buffer ? img_tsk.buffer : g_buffer;
     create_render_tasks(img_tsk, e, buffer, ts, rs);
 

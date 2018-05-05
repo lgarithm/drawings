@@ -13,3 +13,4 @@ script:
 # The default is
 # - ./configure && make && make test
 - docker run --rm -it rey-engine make -C /src check
+- docker run --rm -it rey-engine /src/tests/bb8/b1.sh

@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include <rey/ray/rey.h>
+#include <rey/rey>
 
 using namespace std;
 

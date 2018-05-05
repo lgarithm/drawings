@@ -7,6 +7,7 @@ blue='(0,0,.5)'
 grey='(.7,.7,.7)'
 
 view(){
+    mkdir -p output  # required for test
     $cmd -c "$cam" \
     -d 4kf \
     -l "light((0,0,50), (.1,.1,.1))" \

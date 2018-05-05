@@ -1,5 +1,5 @@
 #include <apps/bb8/bb8_model.h>
-#include <rey/ray/rey.h>
+#include <rey/rey>
 
 world *bb8_example_1()
 {

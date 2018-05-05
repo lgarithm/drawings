@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <rey/ray/rey.h>
+#include <rey/rey>
 
 struct r2d2_head : sphere {
     oframe of;

@@ -1,6 +1,6 @@
 #include "builtin_examples.h"
 
-#include <rey/ray/rey.h>
+#include <rey/rey>
 
 world *empty_scene() { return new world; }
 

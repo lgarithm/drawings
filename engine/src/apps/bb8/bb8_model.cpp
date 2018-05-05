@@ -4,7 +4,7 @@
 
 #include <algorithm>
 
-#include <rey/ray/rey.h>
+#include <rey/rey>
 
 using std::max;
 using std::min;

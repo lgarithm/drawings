@@ -1,13 +1,13 @@
-#include <rey/ray/ray.h>
+#include <rey/tracing/tracing.h>
 
 #include <cassert>
 #include <cmath>
 
 #include <algorithm>
 
-#include <rey/optics/color.h>
 #include <rey/base/guard.h>
 #include <rey/model/model.h>
+#include <rey/optics/color.h>
 #include <rey/profile/profile.h>
 
 using std::max;
@@ -31,17 +31,37 @@ struct shader {
 
 static const shader default_shader(black, black);
 
+struct tracer {
+    color operator()(const ray &r, const vector<unique_ptr<object>> &os,
+                     const vector<light> &ls, int dep) const;
+};
+
+color tracer::operator()(const ray &r, const vector<unique_ptr<object>> &os,
+                         const vector<light> &ls, int dep) const
+{
+    const auto i = nearest(os, r);
+    if (i.has_value()) {
+        const auto p = r + i.value().d;
+        auto n = t_vector3{p, i.value().o->at(p)};
+        n = n + 1e-6 * n.v;
+        return default_shader(surface{n, i.value().o->mt(p)}, reflect(n.v, r.v),
+                              os, ls, dep);
+    } else {
+        return default_shader.bgc;
+    }
+}
+
 #define DEFINE_TRACE_FUNC(func_name, TRACE_CODE)                               \
     color func_name(const ray &r, const vector<unique_ptr<object>> &os,        \
                     const vector<light> &ls, int dep)                          \
     {                                                                          \
         TRACE_CODE;                                                            \
         const auto i = nearest(os, r);                                         \
-        if (i.has_value()) {                                                          \
-            const auto p = r + i.value().d;                                         \
-            auto n = t_vector3{p, i.value().o->at(p)};                              \
+        if (i.has_value()) {                                                   \
+            const auto p = r + i.value().d;                                    \
+            auto n = t_vector3{p, i.value().o->at(p)};                         \
             n = n + 1e-6 * n.v;                                                \
-            return default_shader(surface{n, i.value().o->mt(p)},                   \
+            return default_shader(surface{n, i.value().o->mt(p)},              \
                                   reflect(n.v, r.v), os, ls, dep);             \
         } else {                                                               \
             return default_shader.bgc;                                         \

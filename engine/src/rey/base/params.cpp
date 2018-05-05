@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include <rey/ray/display.h>
+#include <rey/tracing/display.h>
 #include <rey/model/model-builtin.h>
 #include <rey/model/model.h>
 #include <rey/lang/prog.h>

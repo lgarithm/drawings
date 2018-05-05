@@ -1,7 +1,7 @@
 #include "examples.h"
 
 #include <apps/bb8/bb8_model.h>
-#include <rey/ray/rey.h>
+#include <rey/rey>
 
 namespace
 {
