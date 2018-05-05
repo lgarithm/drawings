@@ -1,16 +1,15 @@
 #pragma once
 
-
 #include <map>
 #include <memory>
 #include <utility>
 #include <vector>
 
+#include <rey/base/maybe.h>
 #include <rey/linear/affine.h>
+#include <rey/linear/point.h>
 #include <rey/optics/color.h>
 #include <rey/optics/material.h>
-#include <rey/base/maybe.h>
-#include <rey/linear/point.h>
 
 typedef t_vector3 ray;
 
@@ -24,14 +23,9 @@ struct intersection {
     scalarT d;
 };
 
-inline bool operator<(const intersection &i, const intersection &j)
-{
-    return i.d < j.d;
-}
-
 struct object {
     virtual maybe<intersection> intersect(const ray &) const = 0;
-    virtual ~object(){}
+    virtual ~object() {}
 };
 
 typedef object *(*obj_gen)();
@@ -51,9 +45,7 @@ template <typename T> struct bound : T {
     maybe<intersection> intersect(const ray &r) const override
     {
         auto t = T::meet(r);
-        if (t.just and in(r + t.it)) {
-            return just(intersection{this, t.it});
-        }
+        if (t.just and in(r + t.it)) { return just(intersection{this, t.it}); }
         return nothing<intersection>();
     }
     virtual bool in(const point3 &)const = 0;
@@ -67,13 +59,20 @@ void operator+=(world &, object *);
 typedef world *(*world_gen)();
 typedef std::map<std::string, world_gen> atlas;
 
+inline bool near_than(const maybe<intersection> &i,
+                      const maybe<intersection> &j)
+{
+    if (!i.just) { return false; }
+    if (!j.just) { return true; }
+    return i.it.d < j.it.d;
+}
+
 template <typename T> maybe<intersection> nearest(const T &oo, const ray &r)
 {
     auto i = nothing<intersection>();
     for (const auto &it : oo) {
         auto j = it->intersect(r);
-        if (j < i)
-            i = j;
+        if (near_than(j, i)) i = j;
     }
     return i;
 }
@@ -82,9 +81,9 @@ struct light {
     point3 pos;
     color col;
 };
+
 struct env {
     std::vector<light> lights;
 };
+
 typedef env *(*env_gen)();
-
-

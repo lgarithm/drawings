@@ -9,10 +9,7 @@
 
 #include <rey/arith/arith.h>
 #include <rey/model/primitives.h>
-#include "solids.h"
-
-using std::min;
-using std::vector;
+#include <rey/model/solids.h>
 
 polygon unit_square(scalarT u = 1)
 {
@@ -32,8 +29,7 @@ polyhedron unit_cube(scalarT u)
         auto vs = at(idx_m, it);
         auto of = localize(vs);
         polygon p;
-        for (auto &v : vs)
-            p.vertices.push_back(point2{v.x, v.y});
+        for (auto &v : vs) p.vertices.push_back(point2{v.x, v.y});
         pd.faces.push_back(space_polygon(of, p.vertices));
     }
     return pd;
@@ -72,10 +68,10 @@ cylinder::cylinder(scalarT r, scalarT h, const oframe of)
 
 maybe<intersection> cylinder::intersect(const ray &r) const
 {
-    return min({b.intersect(r), u.intersect(r), d.intersect(r)});
+    return nearest<std::initializer_list<const object *>>({&b, &u, &d}, r);
 }
 
-space_polygon::space_polygon(const oframe &of, const vector<point2> &vs)
+space_polygon::space_polygon(const oframe &of, const std::vector<point2> &vs)
     : of(of)
 {
     vertices = vs;
@@ -87,9 +83,7 @@ maybe<scalarT> space_polygon::meet(const ray &r) const
     if (t.just) {
         auto p = r + t.it;
         auto q = local(of, p);
-        if (in(point2{q.x, q.y}, *this)) {
-            return just<scalarT>(t.it);
-        }
+        if (in(point2{q.x, q.y}, *this)) { return just<scalarT>(t.it); }
     }
     return nothing<scalarT>();
 }
@@ -98,9 +92,7 @@ vector3 space_polygon::at(const point3 &) const { return of.f.Z; }
 
 maybe<intersection> polyhedron::intersect(const ray &r) const
 {
-    vector<const object *> oo(faces.size());
-    for (int i = 0; i < faces.size(); ++i) {
-        oo[i] = &faces[i];
-    }
+    std::vector<const object *> oo(faces.size());
+    for (int i = 0; i < faces.size(); ++i) { oo[i] = &faces[i]; }
     return nearest(oo, r);
 }

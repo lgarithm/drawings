@@ -46,13 +46,9 @@ material r2d2_body::mt(const point3 &p) const
     auto q = local(of, p);
     auto d1 = atan2(q.y, q.x) * radian;
     if (-2 < q.z && q.z < 1.5) {
-        if (90 - 15 < d1 && d1 < 90 + 15) {
-            m.diffuse = blue;
-        }
+        if (90 - 15 < d1 && d1 < 90 + 15) { m.diffuse = blue; }
     } else if ((1.8 < q.z && q.z < 2.4) || (2.6 < q.z && q.z < 3.2)) {
-        if (90 - 30 < d1 && d1 < 90 + 30) {
-            m.diffuse = blue;
-        }
+        if (90 - 30 < d1 && d1 < 90 + 30) { m.diffuse = blue; }
     }
     return m;
 }
@@ -65,5 +61,6 @@ r2d2::r2d2(scalarT r, scalarT h, const oframe &of)
 
 maybe<intersection> r2d2::intersect(const ray &r) const
 {
-    return min({body.intersect(r), head.intersect(r), bottom.intersect(r)});
+    return nearest<std::initializer_list<const object *>>(
+        {&body, &head, &bottom}, r);
 }
