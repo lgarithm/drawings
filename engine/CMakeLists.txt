@@ -12,8 +12,10 @@ file(GLOB all_srcs src/rey/**/*.cpp)
 list(REMOVE_ITEM all_srcs ${test_srcs}) 
 
 add_library(rey ${all_srcs})
-# target_link_libraries(rey stdc++fs)
 target_link_libraries(rey pthread)
+IF(${CMAKE_SYSTEM} MATCHES "Linux")
+    target_link_libraries(rey stdc++fs)
+endif()
 
 foreach(src ${test_srcs})
     get_filename_component(base_name ${src} NAME)
