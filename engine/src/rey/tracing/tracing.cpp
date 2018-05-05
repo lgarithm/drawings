@@ -20,67 +20,39 @@ struct surface {
     material m;
 };
 
-struct shader {
-    const color bgc;
-    const color def;
-    shader(const color &, const color &);
-    color operator()(const surface &, const vector3 &,
-                     const vector<unique_ptr<object>> &, const vector<light> &,
-                     int) const;
-};
-
-static const shader default_shader(black, black);
-
 struct tracer {
-    color operator()(const ray &r, const vector<unique_ptr<object>> &os,
-                     const vector<light> &ls, int dep) const;
+    const color bgc;  // background color
+    const color def;
+
+    tracer(const color &, const color &);
+
+    color shade(const surface &, const vector3 &,
+                const vector<unique_ptr<object>> &, const vector<light> &,
+                int) const;
+
+    color trace(const ray &r, const vector<unique_ptr<object>> &os,
+                const vector<light> &ls, int dep) const;
 };
 
-color tracer::operator()(const ray &r, const vector<unique_ptr<object>> &os,
-                         const vector<light> &ls, int dep) const
+tracer::tracer(const color &b, const color &d) : bgc(b), def(d) {}
+
+color tracer::trace(const ray &r, const vector<unique_ptr<object>> &os,
+                    const vector<light> &ls, int dep) const
 {
     const auto i = nearest(os, r);
     if (i.has_value()) {
         const auto p = r + i.value().d;
         auto n = t_vector3{p, i.value().o->at(p)};
         n = n + 1e-6 * n.v;
-        return default_shader(surface{n, i.value().o->mt(p)}, reflect(n.v, r.v),
-                              os, ls, dep);
-    } else {
-        return default_shader.bgc;
+        return shade(surface{n, i.value().o->mt(p)}, reflect(n.v, r.v), os, ls,
+                     dep);
     }
+    return bgc;
 }
 
-#define DEFINE_TRACE_FUNC(func_name, TRACE_CODE)                               \
-    color func_name(const ray &r, const vector<unique_ptr<object>> &os,        \
-                    const vector<light> &ls, int dep)                          \
-    {                                                                          \
-        TRACE_CODE;                                                            \
-        const auto i = nearest(os, r);                                         \
-        if (i.has_value()) {                                                   \
-            const auto p = r + i.value().d;                                    \
-            auto n = t_vector3{p, i.value().o->at(p)};                         \
-            n = n + 1e-6 * n.v;                                                \
-            return default_shader(surface{n, i.value().o->mt(p)},              \
-                                  reflect(n.v, r.v), os, ls, dep);             \
-        } else {                                                               \
-            return default_shader.bgc;                                         \
-        }                                                                      \
-    }
-
-#define NO_TRACE
-#define LOG_TRACE                                                              \
-    scope_logger __(__func__);                                                 \
-    log_trace(r, dep);
-
-DEFINE_TRACE_FUNC(trace, NO_TRACE)
-DEFINE_TRACE_FUNC(trace_with_log, LOG_TRACE)
-
-shader::shader(const color &b, const color &d) : bgc(b), def(d) {}
-
-color shader::operator()(const surface &s, const vector3 &r,
-                         const vector<unique_ptr<object>> &os,
-                         const vector<light> &ls, int dep) const
+color tracer::shade(const surface &s, const vector3 &r,
+                    const vector<unique_ptr<object>> &os,
+                    const vector<light> &ls, int dep) const
 {
     assert_unit(s.n.v, __FILE__, __func__);
     auto nc = def;
@@ -98,10 +70,12 @@ color shader::operator()(const surface &s, const vector3 &r,
             }
         }
     }
-    auto rc =
+    const auto rc =
         dep > 0 ? s.m.reflection * trace(ray{s.n.o, r}, os, ls, dep - 1) : grey;
     return nc + rc;
 }
+
+static const tracer default_tracer(black, black);
 
 color rasterize(const world &w, const env &e, const camera &cam,
                 const display &d, const viewport &v, int i, int j, int dep)
@@ -112,7 +86,8 @@ color rasterize(const world &w, const env &e, const camera &cam,
     auto fc =
         point3{f(v.xr, i, d.width - 1), cam.near, f(v.yr, j, d.height - 1)};
     auto cc = global(cam.of, fc);
-    return trace(ray{cc, norm(cc - cam.of.o)}, w.objects, e.lights, dep);
+    return default_tracer.trace(ray{cc, norm(cc - cam.of.o)}, w.objects,
+                                e.lights, dep);
 }
 
 viewport fit(const camera &cam, const display &d)

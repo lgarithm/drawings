@@ -1,11 +1,8 @@
 #pragma once
 
-#include <rey/base/guard.h>
-#include <rey/bmp/bmp.h>
 #include <rey/model/model.h>
 #include <rey/model/view.h>
 #include <rey/optics/color.h>
-#include <rey/profile/profile.h>
 #include <rey/tracing/display.h>
 
 struct interval {
