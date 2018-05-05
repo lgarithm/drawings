@@ -10,7 +10,7 @@
 
 plane::plane(const t_vector3 &n) : n(n) { assert_unit(n.v, __func__); }
 
-maybe<scalarT> plane::meet(const ray &r) const { return r_dis(n, r); }
+std::optional<scalarT> plane::meet(const ray &r) const { return r_dis(n, r); }
 
 vector3 plane::at(const point3 &) const { return n.v; }
 
@@ -66,7 +66,7 @@ material Chessboard::mt(const point3 &p) const
 
 sphere::sphere(double size, const point3 &pos) : size(size), pos(pos) {}
 
-maybe<scalarT> sphere::meet(const ray &r) const
+std::optional<scalarT> sphere::meet(const ray &r) const
 {
     auto ro = pos - r.o;
     auto v = dot(ro, r.v);
@@ -89,12 +89,12 @@ tetrahedron::tetrahedron(const point3 &a, const point3 &b, const point3 &c,
 {
 }
 
-maybe<intersection> tetrahedron::intersect(const ray &r) const
+std::optional<intersection> tetrahedron::intersect(const ray &r) const
 {
     return nearest(subs, r);
 }
 
-maybe<scalarT> r_dis(const t_vector3 &n, const ray &r)
+std::optional<scalarT> r_dis(const t_vector3 &n, const ray &r)
 {
     assert_unit(r.v, __func__);
     auto c = dot(n.v, r.v);

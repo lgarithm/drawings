@@ -7,11 +7,11 @@
 
 using std::unique_ptr;
 
-maybe<intersection> complex_object::intersect(const ray &r) const
+std::optional<intersection> complex_object::intersect(const ray &r) const
 {
     auto t = meet(r);
-    if (t.just) {
-        return just(intersection{this, t.it});
+    if (t.has_value()) {
+        return just(intersection{this, t.value()});
     }
     return nothing<intersection>();
 }

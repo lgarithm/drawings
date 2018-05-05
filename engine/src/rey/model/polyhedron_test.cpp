@@ -23,11 +23,11 @@ void test_1()
     auto t2 = u.meet(r);
     auto t3 = d.meet(r);
 
-    assert(!t1.just);
-    assert(t2.just);
-    assert(!t3.just);
+    assert(!t1.has_value());
+    assert(t2.has_value());
+    assert(!t3.has_value());
 
-    // maybe<scalarT> ts[] = {t1, t2, t3};
+    // std::optional<scalarT> ts[] = {t1, t2, t3};
     // auto idx = max_element(ts, ts + 3) - ts;
     // assert(idx == 1);
 }
@@ -38,8 +38,8 @@ void test_2()
         auto c = new cylinder(3, 4);
         auto r = ray(origin + 3 * z_axis, -z_axis);
         auto i = c->intersect(r);
-        assert(i.just);
-        assert(i.it.d == 1);
+        assert(i.has_value());
+        assert(i.value().d == 1);
     }
 }
 

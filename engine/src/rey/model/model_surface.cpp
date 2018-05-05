@@ -23,7 +23,7 @@ quadratic_surface::quadratic_surface(const oframe &of) : algebraic_surface(of)
 {
 }
 
-maybe<scalarT> quadratic_surface::meet(const ray &r) const
+std::optional<scalarT> quadratic_surface::meet(const ray &r) const
 {
     const auto r_ = local(of, r);
     const auto e = equation(r_);

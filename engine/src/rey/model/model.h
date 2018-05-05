@@ -24,15 +24,15 @@ struct intersection {
 };
 
 struct object {
-    virtual maybe<intersection> intersect(const ray &) const = 0;
+    virtual std::optional<intersection> intersect(const ray &) const = 0;
     virtual ~object() {}
 };
 
 typedef object *(*obj_gen)();
 
 struct complex_object : object, neibourhood {
-    maybe<intersection> intersect(const ray &) const override;
-    virtual maybe<scalarT> meet(const ray &) const = 0;
+    std::optional<intersection> intersect(const ray &) const override;
+    virtual std::optional<scalarT> meet(const ray &) const = 0;
 };
 
 struct simple_object : complex_object {
@@ -42,10 +42,10 @@ struct simple_object : complex_object {
 
 template <typename T> struct bound : T {
     bound(const T &g) : T(g) {}
-    maybe<intersection> intersect(const ray &r) const override
+    std::optional<intersection> intersect(const ray &r) const override
     {
         auto t = T::meet(r);
-        if (t.just and in(r + t.it)) { return just(intersection{this, t.it}); }
+        if (t.has_value() and in(r + t.value())) { return just(intersection{this, t.value()}); }
         return nothing<intersection>();
     }
     virtual bool in(const point3 &)const = 0;
@@ -59,15 +59,15 @@ void operator+=(world &, object *);
 typedef world *(*world_gen)();
 typedef std::map<std::string, world_gen> atlas;
 
-inline bool near_than(const maybe<intersection> &i,
-                      const maybe<intersection> &j)
+inline bool near_than(const std::optional<intersection> &i,
+                      const std::optional<intersection> &j)
 {
-    if (!i.just) { return false; }
-    if (!j.just) { return true; }
-    return i.it.d < j.it.d;
+    if (!i.has_value()) { return false; }
+    if (!j.has_value()) { return true; }
+    return i.value().d < j.value().d;
 }
 
-template <typename T> maybe<intersection> nearest(const T &oo, const ray &r)
+template <typename T> std::optional<intersection> nearest(const T &oo, const ray &r)
 {
     auto i = nothing<intersection>();
     for (const auto &it : oo) {

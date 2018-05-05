@@ -67,7 +67,7 @@ bb8::bb8(double size, const oframe &of)
 {
 }
 
-maybe<intersection> bb8::intersect(const ray &r) const
+std::optional<intersection> bb8::intersect(const ray &r) const
 {
     return nearest<std::initializer_list<const object *>>({&body, &head}, r);
 }

@@ -66,7 +66,7 @@ cylinder::cylinder(scalarT r, scalarT h, const oframe of)
 {
 }
 
-maybe<intersection> cylinder::intersect(const ray &r) const
+std::optional<intersection> cylinder::intersect(const ray &r) const
 {
     return nearest<std::initializer_list<const object *>>({&b, &u, &d}, r);
 }
@@ -77,20 +77,20 @@ space_polygon::space_polygon(const oframe &of, const std::vector<point2> &vs)
     vertices = vs;
 }
 
-maybe<scalarT> space_polygon::meet(const ray &r) const
+std::optional<scalarT> space_polygon::meet(const ray &r) const
 {
     auto t = r_dis(t_vector3{of.o, of.f.Z}, r);
-    if (t.just) {
-        auto p = r + t.it;
+    if (t.has_value()) {
+        auto p = r + t.value();
         auto q = local(of, p);
-        if (in(point2{q.x, q.y}, *this)) { return just<scalarT>(t.it); }
+        if (in(point2{q.x, q.y}, *this)) { return just<scalarT>(t.value()); }
     }
     return nothing<scalarT>();
 }
 
 vector3 space_polygon::at(const point3 &) const { return of.f.Z; }
 
-maybe<intersection> polyhedron::intersect(const ray &r) const
+std::optional<intersection> polyhedron::intersect(const ray &r) const
 {
     std::vector<const object *> oo(faces.size());
     for (int i = 0; i < faces.size(); ++i) { oo[i] = &faces[i]; }

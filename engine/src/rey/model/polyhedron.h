@@ -22,7 +22,7 @@ struct cylinder : object {
 
     cylinder(scalarT, scalarT, const oframe = oframe());
 
-    maybe<intersection> intersect(const ray &) const override;
+    std::optional<intersection> intersect(const ray &) const override;
 };
 
 struct space_polygon : simple_object, polygon {
@@ -30,14 +30,14 @@ struct space_polygon : simple_object, polygon {
 
     space_polygon(const oframe &, const std::vector<point2> &);
 
-    maybe<scalarT> meet(const ray &) const override;
+    std::optional<scalarT> meet(const ray &) const override;
     vector3 at(const point3 &) const override;
 };
 
 struct polyhedron : object {
     std::vector<space_polygon> faces;
 
-    maybe<intersection> intersect(const ray &) const override;
+    std::optional<intersection> intersect(const ray &) const override;
 
     // polyhedron();
 };

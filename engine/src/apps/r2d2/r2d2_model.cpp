@@ -8,7 +8,7 @@ using namespace std;
 
 r2d2_head::r2d2_head(scalarT r, const oframe &of) : sphere(r, of.o), of(of) {}
 
-maybe<scalarT> r2d2_head::meet(const ray &r) const
+std::optional<scalarT> r2d2_head::meet(const ray &r) const
 {
     const auto t = sphere::meet(r);
     const auto f = [&](scalarT d) {
@@ -59,7 +59,7 @@ r2d2::r2d2(scalarT r, scalarT h, const oframe &of)
 {
 }
 
-maybe<intersection> r2d2::intersect(const ray &r) const
+std::optional<intersection> r2d2::intersect(const ray &r) const
 {
     return nearest<std::initializer_list<const object *>>(
         {&body, &head, &bottom}, r);

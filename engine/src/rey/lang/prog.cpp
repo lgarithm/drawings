@@ -29,7 +29,7 @@ std::regex regex(const string &str)
     }
 }
 
-maybe<camera> p_camera(const string &str)
+std::optional<camera> p_camera(const string &str)
 {
     {
         istringstream ss(str);
@@ -54,7 +54,7 @@ maybe<camera> p_camera(const string &str)
     return nothing<camera>();
 }
 
-maybe<color> p_color(const string &str)
+std::optional<color> p_color(const string &str)
 {
     {
         auto it = colors.find(str);
@@ -71,7 +71,7 @@ maybe<color> p_color(const string &str)
     return nothing<color>();
 }
 
-maybe<material> p_material(const string &str)
+std::optional<material> p_material(const string &str)
 {
     static const auto pc = string("\\(\\s*([^)]+)\\s*\\)");
     material mt;
@@ -80,7 +80,7 @@ maybe<material> p_material(const string &str)
         smatch m;
         if (regex_search(str, m, p)) {
             auto c = p_color(m[1].str());
-            if (c.just) { mt.diffuse = c.it; }
+            if (c.has_value()) { mt.diffuse = c.value(); }
         }
     }
     {
@@ -88,7 +88,7 @@ maybe<material> p_material(const string &str)
         smatch m;
         if (regex_search(str, m, p)) {
             auto c = p_color(m[1].str());
-            if (c.just) { mt.specular = c.it; }
+            if (c.has_value()) { mt.specular = c.value(); }
         }
     }
     {
@@ -157,7 +157,7 @@ object *p_model_regex_unsafe(const string &str)
         material mt;
         if (m.size() == 4) {
             auto mmt = p_material(m[3].str());
-            if (mmt.just) mt = mmt.it;
+            if (mmt.has_value()) mt = mmt.value();
         }
         {
             auto po = p_s_model(m[1].str());

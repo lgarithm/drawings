@@ -9,18 +9,18 @@ void test_1()
 {
     {
         auto m = p_material("dc(red)");
-        assert(m.just);
-        assert(m.it.diffuse == red);
+        assert(m.has_value());
+        assert(m.value().diffuse == red);
     }
     {
         auto m = p_material("dc(1, 0, 0)");
-        assert(m.just);
-        assert(m.it.diffuse == red);
+        assert(m.has_value());
+        assert(m.value().diffuse == red);
     }
     {
         auto m = p_material("sc(1, 0, 0)");
-        assert(m.just);
-        assert(m.it.specular == red);
+        assert(m.has_value());
+        assert(m.value().specular == red);
     }
 }
 
