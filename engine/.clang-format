@@ -13,4 +13,6 @@ SortIncludes: true
 ColumnLimit: 80
 SpacesBeforeTrailingComments: 2
 
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+
 # TODO: require one blank line between blocks

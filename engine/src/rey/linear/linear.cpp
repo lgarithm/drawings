@@ -1,4 +1,4 @@
-#include "linear.h"
+#include <rey/linear/linear.h>
 
 frame::frame() : X(x_axis), Y(y_axis), Z(z_axis) {}
 

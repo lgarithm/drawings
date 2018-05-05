@@ -1,13 +1,12 @@
 #pragma once
 
-
 #include <vector>
 
+#include <rey/model/model_surface.h>
 #include <rey/base/maybe.h>
 #include <rey/model/model.h>
-#include "model_surface.h"
 #include <rey/model/primitives.h>
-#include "solids.h" // For transitive closure
+#include <rey/model/solids.h>  // For transitive closure
 
 struct polygon {
     std::vector<point2> vertices;
@@ -43,5 +42,3 @@ struct polyhedron : object {
 };
 
 polyhedron unit_cube(scalarT = 1);
-
-

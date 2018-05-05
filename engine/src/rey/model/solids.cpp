@@ -1,4 +1,4 @@
-#include "solids.h"
+#include <rey/model/solids.h>
 
 #include <vector>
 
@@ -31,8 +31,7 @@ index_model cuboid(const point3 &p, const point3 &q)
 
     for (int i = 0; i < 6; ++i) {
         face_index f;
-        for (int j = 0; j < 4; ++j)
-            f.vi.push_back(_cube_faces_indexes[i][j]);
+        for (int j = 0; j < 4; ++j) f.vi.push_back(_cube_faces_indexes[i][j]);
         idx_m.faces.push_back(f);
     }
 
@@ -44,17 +43,14 @@ index_model cube(scalarT r, const point3 &o)
     auto a = r / 2;
     auto p = vec3(a, a, a);
     index_model idx_m = cuboid(origin + -p, origin + p);
-    for (auto &v : idx_m.vertices) {
-        v = v + (o - origin);
-    }
+    for (auto &v : idx_m.vertices) { v = v + (o - origin); }
     return idx_m;
 }
 
 vector<point3> at(const index_model &idx_m, const face_index &fi)
 {
     vector<point3> vs;
-    for (auto i : fi.vi)
-        vs.push_back(idx_m.vertices[i]);
+    for (auto i : fi.vi) vs.push_back(idx_m.vertices[i]);
     return vs;
 }
 
@@ -65,7 +61,6 @@ oframe localize(vector<point3> &vs)
     auto z = cross(x, _y);
     auto y = cross(z, x);
     auto of = oframe{vs[0], frame{x, y, z}};
-    for (auto &v : vs)
-        v = local(of, v);
+    for (auto &v : vs) v = local(of, v);
     return of;
 }

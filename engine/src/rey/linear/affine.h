@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "linear.h"
+#include <rey/linear/linear.h>
 
 struct t_vector2 {
     point2 o;

@@ -1,4 +1,4 @@
-#include "polyhedron.h"
+#include <rey/model/polyhedron.h>
 
 #include <cassert>
 #include <cmath>
@@ -61,7 +61,8 @@ bool in(const point2 &p, const polygon &g)
 }
 
 cylinder::cylinder(scalarT r, scalarT h, const oframe of)
-    : b(r, h, of), u(r, t_vector3(of.o + .5 * h * of.f.Z, of.f.Z)),
+    : b(r, h, of),
+      u(r, t_vector3(of.o + .5 * h * of.f.Z, of.f.Z)),
       d(r, t_vector3(of.o + -.5 * h * of.f.Z, -of.f.Z))
 {
 }

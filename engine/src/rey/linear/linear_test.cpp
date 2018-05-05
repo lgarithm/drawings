@@ -1,4 +1,4 @@
-#include "linear.h"
+#include <rey/linear/linear.h>
 
 #include <cassert>
 

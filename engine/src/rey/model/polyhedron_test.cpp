@@ -1,9 +1,9 @@
-#include "polyhedron.h"
+#include <rey/model/polyhedron.h>
 
 #include <algorithm>
 
 #include <rey/lang/constants.h>
-#include "solids.h"
+#include <rey/model/solids.h>
 #include <rey/testing/testing.h>
 
 using std::max_element;

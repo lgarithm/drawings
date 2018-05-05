@@ -1,4 +1,4 @@
-#include "model_surface.h"
+#include <rey/model/model_surface.h>
 
 #include <cassert>
 #include <cmath>
