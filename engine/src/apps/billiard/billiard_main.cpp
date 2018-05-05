@@ -2,7 +2,7 @@
 
 #include <type_traits>
 
-#include "rey.h"
+#include <rey/ray/rey.h>
 
 #define CONS(c)                                                                \
     c(scalarT size, const point3 &pos) : sphere(size, pos) {}

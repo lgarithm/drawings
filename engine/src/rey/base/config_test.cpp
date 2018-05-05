@@ -1,4 +1,4 @@
-#include "config.h"
+#include <rey/base/config.h>
 
 #include <cassert>
 #include <cmath>

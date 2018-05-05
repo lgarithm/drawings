@@ -6,7 +6,6 @@
 *.o
 *.out
 *.svg
-Makefile
 bin/*
 build/*
 doc/doc/*

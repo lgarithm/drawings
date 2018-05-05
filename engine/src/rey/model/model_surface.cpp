@@ -1,12 +1,12 @@
-#include "model_surface.h"
+#include <rey/model/model_surface.h>
 
 #include <cassert>
 
 #include <string>
 
-#include "arith.h"
-#include "debug.h"
-#include "guard.h"
+#include <rey/arith/arith.h>
+#include <rey/base/debug.h>
+#include <rey/base/guard.h>
 
 algebraic_surface::algebraic_surface() {}
 
@@ -23,7 +23,7 @@ quadratic_surface::quadratic_surface(const oframe &of) : algebraic_surface(of)
 {
 }
 
-maybe<scalarT> quadratic_surface::meet(const ray &r) const
+std::optional<scalarT> quadratic_surface::meet(const ray &r) const
 {
     const auto r_ = local(of, r);
     const auto e = equation(r_);

@@ -1,18 +1,18 @@
 #pragma once
 
 
-#include "affine.h"
-#include "guard.h" // for transitive closure
-#include "maybe.h"
-#include "model.h"
-#include "point.h"
+#include <rey/linear/affine.h>
+#include <rey/base/guard.h> // for transitive closure
+#include <rey/base/maybe.h>
+#include <rey/model/model.h>
+#include <rey/linear/point.h>
 
 struct plane : simple_object {
     t_vector3 n;
 
     plane(const t_vector3 &);
 
-    maybe<scalarT> meet(const ray &) const override;
+    std::optional<scalarT> meet(const ray &) const override;
     vector3 at(const point3 &) const override;
 };
 
@@ -57,7 +57,7 @@ struct sphere : simple_object {
 
     sphere(double, const point3 &);
 
-    maybe<scalarT> meet(const ray &) const override;
+    std::optional<scalarT> meet(const ray &) const override;
     vector3 at(const point3 &) const override;
 };
 
@@ -65,9 +65,9 @@ struct tetrahedron : object {
     triangle f[4];
     object *subs[4];
     tetrahedron(const point3 &, const point3 &, const point3 &, const point3 &);
-    maybe<intersection> intersect(const ray &) const override;
+    std::optional<intersection> intersect(const ray &) const override;
 };
 
-maybe<scalarT> r_dis(const t_vector3 &, const ray &);
+std::optional<scalarT> r_dis(const t_vector3 &, const ray &);
 
 

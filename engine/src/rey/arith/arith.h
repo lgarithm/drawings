@@ -2,10 +2,10 @@
 
 #include <cmath>
 
-#include "config.h"
-#include "tuple.h"
+#include <rey/base/config.h>
+#include <rey/linear/tuple.h>
 
-typedef SCALAR_T numericT;
+using numericT = SCALAR_T;
 
 template <typename T> bool zero(T x) { return fabs(x) < 1e-12; }
 
@@ -27,5 +27,3 @@ unsigned short positive_roots(const quad_eq &, numericT &, numericT &);
 bool min_positive_root(const quad_eq &e, numericT &x);
 
 static auto const radian = 180 / M_PI;
-
-

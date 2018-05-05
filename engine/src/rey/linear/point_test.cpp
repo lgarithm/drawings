@@ -1,9 +1,9 @@
-#include "point.h"
+#include <rey/linear/point.h>
 
 #include <cassert>
 #include <cmath>
 
-#include "testing.h"
+#include <rey/testing/testing.h>
 
 void test_0()
 {

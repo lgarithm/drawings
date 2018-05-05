@@ -1,11 +1,11 @@
-#include "model_surface.h"
+#include <rey/model/model_surface.h>
 
 #include <cassert>
 #include <cmath>
 
-#include "arith.h"
-#include "debug.h"
-#include "testing.h"
+#include <rey/arith/arith.h>
+#include <rey/base/debug.h>
+#include <rey/testing/testing.h>
 
 void test_1()
 {

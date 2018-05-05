@@ -1,4 +1,4 @@
-#include "material.h"
+#include <rey/optics/material.h>
 
 // TODO
 

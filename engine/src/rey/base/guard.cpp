@@ -1,4 +1,4 @@
-#include "guard.h"
+#include <rey/base/guard.h>
 
 #include <cassert>
 #include <cmath>

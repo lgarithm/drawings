@@ -1,8 +1,8 @@
-#include "linear.h"
+#include <rey/linear/linear.h>
 
 #include <cassert>
 
-#include "testing.h"
+#include <rey/testing/testing.h>
 
 void test_1()
 {

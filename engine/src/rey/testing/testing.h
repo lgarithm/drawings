@@ -4,7 +4,7 @@
 #include <cassert>
 #include <cmath>
 
-#include "logger.h"
+#include <rey/logger/logger.h>
 
 template <typename T> void assert_eq(T x, T y) { assert(x == y); }
 

@@ -1,10 +1,10 @@
 #pragma once
 
 
-#include "arith.h"
-#include "maybe.h"
-#include "model.h"
-#include "point.h"
+#include <rey/arith/arith.h>
+#include <rey/base/maybe.h>
+#include <rey/model/model.h>
+#include <rey/linear/point.h>
 
 struct algebraic_surface : simple_object {
     oframe of;
@@ -17,7 +17,7 @@ struct algebraic_surface : simple_object {
 };
 
 struct quadratic_surface : algebraic_surface {
-    maybe<scalarT> meet(const ray &) const override;
+    std::optional<scalarT> meet(const ray &) const override;
 
     quadratic_surface(const oframe &_ = oframe());
     virtual quad_eq equation(const ray &) const = 0;

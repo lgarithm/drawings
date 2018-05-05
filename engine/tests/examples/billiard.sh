@@ -1,3 +1,3 @@
-cmd=build/demo/billiard/billiard_main.out
+cmd=build/bin/billiard_main
 
 $cmd && mv output.bmp output/

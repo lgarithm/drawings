@@ -1,13 +1,15 @@
 #pragma once
 
 
-#include "bmp.h"
-#include "color.h"
-#include "display.h"
-#include "guard.h" // For transitive closure
-#include "model.h"
-#include "profile.h" // For transitive closure
-#include "view.h"
+#include <rey/bmp/bmp.h>
+#include <rey/optics/color.h>
+#include <rey/ray/display.h>
+#include <rey/base/guard.h>
+#include <rey/model/model.h>
+#include <rey/profile/profile.h> // For transitive closure
+#include <rey/model/view.h>
+
+
 
 struct interval {
     double lo, hi;

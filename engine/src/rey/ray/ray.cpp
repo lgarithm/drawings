@@ -1,14 +1,14 @@
-#include "ray.h"
+#include <rey/ray/ray.h>
 
 #include <cassert>
 #include <cmath>
 
 #include <algorithm>
 
-#include "color.h"
-#include "guard.h"
-#include "model.h"
-#include "profile.h"
+#include <rey/optics/color.h>
+#include <rey/base/guard.h>
+#include <rey/model/model.h>
+#include <rey/profile/profile.h>
 
 using std::max;
 using std::min;
@@ -37,11 +37,11 @@ static const shader default_shader(black, black);
     {                                                                          \
         TRACE_CODE;                                                            \
         const auto i = nearest(os, r);                                         \
-        if (i.just) {                                                          \
-            const auto p = r + i.it.d;                                         \
-            auto n = t_vector3{p, i.it.o->at(p)};                              \
+        if (i.has_value()) {                                                          \
+            const auto p = r + i.value().d;                                         \
+            auto n = t_vector3{p, i.value().o->at(p)};                              \
             n = n + 1e-6 * n.v;                                                \
-            return default_shader(surface{n, i.it.o->mt(p)},                   \
+            return default_shader(surface{n, i.value().o->mt(p)},                   \
                                   reflect(n.v, r.v), os, ls, dep);             \
         } else {                                                               \
             return default_shader.bgc;                                         \
@@ -70,7 +70,7 @@ color shader::operator()(const surface &s, const vector3 &r,
             const auto d = len(lv);
             const auto ldir = 1.0 / d * lv;
             const auto j = nearest(os, ray{s.n.o, ldir});
-            if (not j.just || d < j.it.d) {
+            if (not j.has_value() || d < j.value().d) {
                 nc +=
                     (max(0., dot(ldir, s.n.v)) * s.m.diffuse +
                      pow(max(0., dot(ldir, r)), s.m.roughness) * s.m.specular) *

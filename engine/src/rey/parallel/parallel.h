@@ -3,12 +3,12 @@
 
 #include <vector>
 
-#include "config.h" // for HAS_STD_THREAD
-#include "debug.h"
-#include "display.h"
-#include "model.h"
-#include "ray.h"
-#include "view.h"
+#include <rey/base/config.h> // for HAS_STD_THREAD
+#include <rey/base/debug.h>
+#include <rey/ray/display.h>
+#include <rey/model/model.h>
+#include <rey/ray/ray.h>
+#include <rey/model/view.h>
 
 struct result {
     clip c;

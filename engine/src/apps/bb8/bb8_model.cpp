@@ -1,10 +1,10 @@
-#include "bb8_model.h"
+#include <apps/bb8/bb8_model.h>
 
 #include <cmath>
 
 #include <algorithm>
 
-#include "rey.h"
+#include <rey/ray/rey.h>
 
 using std::max;
 using std::min;
@@ -67,7 +67,7 @@ bb8::bb8(double size, const oframe &of)
 {
 }
 
-maybe<intersection> bb8::intersect(const ray &r) const
+std::optional<intersection> bb8::intersect(const ray &r) const
 {
-    return min(body.intersect(r), head.intersect(r));
+    return nearest<std::initializer_list<const object *>>({&body, &head}, r);
 }

@@ -1,6 +1,6 @@
-#include "arith.h"
+#include <rey/arith/arith.h>
 
-#include "testing.h"
+#include <rey/testing/testing.h>
 
 void test_1()
 {

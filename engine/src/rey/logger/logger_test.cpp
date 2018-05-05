@@ -1,8 +1,8 @@
-#include "logger.h"
+#include <rey/logger/logger.h>
 
 #include <cstdio>
 
-#include "testing.h"
+#include <rey/testing/testing.h>
 
 void test_1()
 {

@@ -1,14 +1,14 @@
-#include "r2d2_model.h"
+#include <apps/r2d2/r2d2_model.h>
 
 #include <algorithm>
 
-#include "rey.h"
+#include <rey/ray/rey.h>
 
 using namespace std;
 
 r2d2_head::r2d2_head(scalarT r, const oframe &of) : sphere(r, of.o), of(of) {}
 
-maybe<scalarT> r2d2_head::meet(const ray &r) const
+std::optional<scalarT> r2d2_head::meet(const ray &r) const
 {
     const auto t = sphere::meet(r);
     const auto f = [&](scalarT d) {
@@ -46,13 +46,9 @@ material r2d2_body::mt(const point3 &p) const
     auto q = local(of, p);
     auto d1 = atan2(q.y, q.x) * radian;
     if (-2 < q.z && q.z < 1.5) {
-        if (90 - 15 < d1 && d1 < 90 + 15) {
-            m.diffuse = blue;
-        }
+        if (90 - 15 < d1 && d1 < 90 + 15) { m.diffuse = blue; }
     } else if ((1.8 < q.z && q.z < 2.4) || (2.6 < q.z && q.z < 3.2)) {
-        if (90 - 30 < d1 && d1 < 90 + 30) {
-            m.diffuse = blue;
-        }
+        if (90 - 30 < d1 && d1 < 90 + 30) { m.diffuse = blue; }
     }
     return m;
 }
@@ -63,7 +59,8 @@ r2d2::r2d2(scalarT r, scalarT h, const oframe &of)
 {
 }
 
-maybe<intersection> r2d2::intersect(const ray &r) const
+std::optional<intersection> r2d2::intersect(const ray &r) const
 {
-    return min({body.intersect(r), head.intersect(r), bottom.intersect(r)});
+    return nearest<std::initializer_list<const object *>>(
+        {&body, &head, &bottom}, r);
 }

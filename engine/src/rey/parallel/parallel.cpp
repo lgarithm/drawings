@@ -1,4 +1,4 @@
-#include "parallel.h"
+#include <rey/parallel/parallel.h>
 
 #include <vector>
 #if HAS_STD_THREAD
@@ -7,7 +7,7 @@
 #include <thread>
 #endif
 
-#include "logger.h"
+#include <rey/logger/logger.h>
 
 using std::vector;
 #if HAS_STD_THREAD

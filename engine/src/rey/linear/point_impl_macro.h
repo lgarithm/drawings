@@ -1,8 +1,7 @@
 #pragma once
 
-
-#include "config.h"
-#include "tuple.h"
+#include <rey/base/config.h>
+#include <rey/linear/tuple.h>
 
 #define DEFINE_DET_2X2(T)                                                      \
     T det(T A, T B, T C, T D) { return A * D - B * C; }
@@ -14,7 +13,7 @@
                  det(p.X, p.Y, q.X, q.Y)};                                     \
     }
 
-typedef SCALAR_T scalarT;
+using scalarT = SCALAR_T;
 
 DEFINE_TUPLE_2(vector2, scalarT, x, y);
 DEFINE_TUPLE_3(vector3, scalarT, x, y, z);
@@ -58,5 +57,3 @@ scalarT vol6(const point3 &, const point3 &, const point3 &, const point3 &);
 scalarT area2(const point3 &, const point3 &, const point3 &);
 scalarT dis(const point3 &, const simplex2 &);
 bool in(const point3 &, const simplex2 &s);
-
-

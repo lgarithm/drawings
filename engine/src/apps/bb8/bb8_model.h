@@ -1,7 +1,6 @@
 #pragma once
 
-
-#include "rey.h"
+#include <rey/ray/rey.h>
 
 struct bb8_head : bound<sphere> {
     oframe of;
@@ -26,7 +25,5 @@ struct bb8 : object {
 
     bb8(double, const oframe &);
 
-    maybe<intersection> intersect(const ray &) const override;
+    std::optional<intersection> intersect(const ray &) const override;
 };
-
-

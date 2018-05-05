@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "color.h"
+#include <rey/optics/color.h>
 
 struct material {
     color diffuse;

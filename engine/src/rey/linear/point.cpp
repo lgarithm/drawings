@@ -1,4 +1,4 @@
-#include "point.h"
+#include <rey/linear/point.h>
 
 #include <cassert>
 #include <cmath>
@@ -6,7 +6,7 @@
 
 #include <algorithm>
 
-#include "arith.h"
+#include <rey/arith/arith.h>
 
 using std::next_permutation;
 

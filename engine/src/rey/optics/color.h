@@ -1,8 +1,8 @@
 #pragma once
 
-#include "config.h"
+#include <rey/base/config.h>
 
-typedef COLOR_T colorT;
+using colorT = COLOR_T;
 
 #ifdef USE_TEMPLATE
 
@@ -31,7 +31,7 @@ using color = colorT<colorT>;
 
 #else
 
-#include "tuple.h"
+#include <rey/linear/tuple.h>
 
 DEFINE_TUPLE_3(color, colorT, r, g, b);
 
@@ -41,7 +41,7 @@ DECLARE_TUPLE_3_MUL(color, r, g, b);
 DECLARE_TUPLE_3_INC(color, r, g, b);
 DECLARE_TUPLE_3_EQU(color, r, g, b);
 
-#endif // USE_TEMPLATE
+#endif  // USE_TEMPLATE
 
 struct RGB {
     unsigned char r, g, b;

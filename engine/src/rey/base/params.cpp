@@ -1,4 +1,4 @@
-#include "params.h"
+#include <rey/base/params.h>
 
 #include <cstdio>
 #include <cstring>
@@ -9,10 +9,10 @@
 #include <string>
 #include <vector>
 
-#include "display.h"
-#include "model-builtin.h"
-#include "model.h"
-#include "prog.h"
+#include <rey/ray/display.h>
+#include <rey/model/model-builtin.h>
+#include <rey/model/model.h>
+#include <rey/lang/prog.h>
 
 using std::endl;
 using std::map;
@@ -47,8 +47,8 @@ bool parse_division(const char *str, division &dd)
 bool parse_camera(const char *str, camera &c)
 {
     auto t = p_camera(str);
-    if (t.just) {
-        c.of = t.it.of;
+    if (t.has_value()) {
+        c.of = t.value().of;
         return true;
     }
     return false;

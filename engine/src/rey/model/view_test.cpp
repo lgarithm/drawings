@@ -1,6 +1,6 @@
-#include "view.h"
+#include <rey/model/view.h>
 
-#include "testing.h"
+#include <rey/testing/testing.h>
 
 void test_1()
 {

@@ -5,8 +5,8 @@
 
 #include <string>
 
-#include "model.h"
-#include "params.h"
+#include <rey/model/model.h>
+#include <rey/base/params.h>
 
 #define expand_c(c) c.r, c.g, c.b
 #define expand_v(v) v.x, v.y, v.z
