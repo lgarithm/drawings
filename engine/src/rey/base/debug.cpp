@@ -19,10 +19,7 @@ void info(const camera &cam)
     {
         const auto f = cam.of.frame;
         printf("\t.: %s\n", p_str(f.axises[1]));
-        printf("\n");
-
         printf("\t>: %s\n", p_str(f.axises[0]));
-
         printf("\t^: %s\n", p_str(f.axises[2]));
     }
     printf("\tnear %lf\n", cam.near);

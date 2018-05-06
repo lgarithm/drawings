@@ -28,6 +28,11 @@ inline color operator*(colorT r, const color &c)
     return rey::linear::tuple::_tuple_scale(r, c);
 }
 
+inline bool operator==(const color &c, const color &d)
+{
+    return rey::linear::tuple::_tuple_eq(c, d);
+}
+
 struct RGB {
     unsigned char r, g, b;
 };

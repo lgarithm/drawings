@@ -84,6 +84,15 @@ _tuple_t<T, n, K> _tuple_neg(const _tuple_t<T, n, K> &t)
     return r;
 }
 
+template <typename T, uint8_t n, typename K>
+bool _tuple_eq(const _tuple_t<T, n, K> &p, const _tuple_t<T, n, K> &q)
+{
+    for (int i = 0; i < n; ++i) {
+        if (p._val[i] != q._val[i]) { return false; }
+    }
+    return true;
+}
+
 template <typename T, uint8_t n, typename K1, typename K2>
 T _tuple_dot(const _tuple_t<T, n, K1> &p, const _tuple_t<T, n, K2> &q)
 {
