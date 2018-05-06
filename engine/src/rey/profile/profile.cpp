@@ -7,17 +7,14 @@
 
 #include <rey/model/model.h>
 
-using std::map;
-using std::string;
-
 void log_trace(const ray &r, int dep)
 {
-    printf("%d-th tracing ray{(%f, %f, %f) + (%f, %f, %f)t}\n", dep, r.o.x,
-           r.o.y, r.o.z, r.v.x, r.v.y, r.v.z);
+    printf("%d-th tracing ray{%s + %st}\n", dep, p_str(r.origin),
+           p_str(r.direction));
 }
 
-map<string, int> scope_logger::depth;
+std::map<std::string, int> scope_logger::depth;
 
-scope_logger::scope_logger(const string k) : k(k) { ++depth[k]; }
+scope_logger::scope_logger(const std::string k) : k(k) { ++depth[k]; }
 
 scope_logger::~scope_logger() { --depth[k]; }

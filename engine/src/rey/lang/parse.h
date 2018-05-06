@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <cctype>
 
 #include <istream>
@@ -34,15 +33,13 @@ char_matcher rb(')');
 inline std::istream &operator>>(std::istream &in, tokenizer &t)
 {
     t.str = "";
-    while (isalpha(in.peek()))
-        t.str += in.get();
+    while (isalpha(in.peek())) t.str += in.get();
     return in;
 }
 
 inline std::istream &operator>>(std::istream &in, skipper &s)
 {
-    while (s.chs.find(in.peek()) != -1)
-        in.get();
+    while (s.chs.find(in.peek()) != -1) in.get();
     return in;
 }
 
@@ -50,9 +47,7 @@ inline std::istream &operator>>(std::istream &in, exact_one &c)
 {
     char ch;
     in >> ch;
-    if (ch != c.ch) {
-        in.setstate(std::ios_base::failbit);
-    }
+    if (ch != c.ch) { in.setstate(std::ios_base::failbit); }
     return in;
 }
 
@@ -64,12 +59,10 @@ inline std::istream &operator>>(std::istream &in, char_matcher &c)
 
 template <typename T> std::istream &operator>>(std::istream &in, T &p)
 {
-    return in >> p.x >> comma >> p.y >> comma >> p.z;
+    return in >> p._val[0] >> comma >> p._val[0] >> comma >> p._val[0];
 }
 
 inline std::istream &operator>>(std::istream &in, color &c)
 {
-    return in >> c.r >> comma >> c.g >> comma >> c.b;
+    return in >> c._val[0] >> comma >> c._val[1] >> comma >> c._val[2];
 }
-
-

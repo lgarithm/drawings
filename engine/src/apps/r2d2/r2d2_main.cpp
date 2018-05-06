@@ -14,7 +14,7 @@ world *test_r2d2_1()
     auto h = 7;
     auto r = 3;
     auto of = oframe(origin, frame(-x_axis, -y_axis, z_axis));
-    of = of + .5 * h * of.f.Z;
+    of = of + .5 * h * of.frame.axises[2];
     *w += new r2d2(r, h, of);
     return w;
 }

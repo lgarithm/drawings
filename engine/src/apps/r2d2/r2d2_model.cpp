@@ -6,13 +6,15 @@
 
 using namespace std;
 
-r2d2_head::r2d2_head(scalarT r, const oframe &of) : sphere(r, of.o), of(of) {}
+r2d2_head::r2d2_head(scalarT r, const oframe &of) : sphere(r, of.origin), of(of)
+{
+}
 
 std::optional<scalarT> r2d2_head::meet(const ray &r) const
 {
     const auto t = sphere::meet(r);
     const auto f = [&](scalarT d) {
-        auto z = local(of, r + d).z;
+        const auto z = local(of, r + d)._val[2];
         return z > 0 ? just(d) : nothing<scalarT>();
     };
     return inject(t, f);
@@ -21,8 +23,8 @@ std::optional<scalarT> r2d2_head::meet(const ray &r) const
 material r2d2_head::mt(const point3 &p) const
 {
     material m;
-    auto q = norm(local(of, p) - origin);
-    auto g = asin(q.z) * radian;
+    const auto q = norm(local(of, p) - origin);
+    const auto g = asin(q._val[2]) * radian;
     if (g > 15) {
         if (g > 50 && g < 70) {
             m.diffuse = blue;
@@ -44,18 +46,21 @@ material r2d2_body::mt(const point3 &p) const
 {
     material m;
     auto q = local(of, p);
-    auto d1 = atan2(q.y, q.x) * radian;
-    if (-2 < q.z && q.z < 1.5) {
+    auto d1 = atan2(q._val[1], q._val[0]) * radian;
+    if (-2 < q._val[2] && q._val[2] < 1.5) {
         if (90 - 15 < d1 && d1 < 90 + 15) { m.diffuse = blue; }
-    } else if ((1.8 < q.z && q.z < 2.4) || (2.6 < q.z && q.z < 3.2)) {
+    } else if ((1.8 < q._val[2] && q._val[2] < 2.4) ||
+               (2.6 < q._val[2] && q._val[2] < 3.2)) {
         if (90 - 30 < d1 && d1 < 90 + 30) { m.diffuse = blue; }
     }
     return m;
 }
 
 r2d2::r2d2(scalarT r, scalarT h, const oframe &of)
-    : head(r, of + .5 * h * of.f.Z), body(r, h, of),
-      bottom(r, t_vector3(of.o + -.5 * h * of.f.Z, -of.f.Z))
+    : head(r, of + .5 * h * of.frame.axises[2]),
+      body(r, h, of),
+      bottom(r, t_vector3(of.origin + -.5 * h * of.frame.axises[2],
+                          -of.frame.axises[2]))
 {
 }
 

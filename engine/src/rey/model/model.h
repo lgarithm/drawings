@@ -6,12 +6,9 @@
 #include <vector>
 
 #include <rey/base/maybe.h>
-#include <rey/linear/affine.h>
-#include <rey/linear/point.h>
+#include <rey/linear/linear.hpp>
 #include <rey/optics/color.h>
 #include <rey/optics/material.h>
-
-using ray = t_vector3;
 
 struct neibourhood {
     virtual vector3 at(const point3 &) const = 0;

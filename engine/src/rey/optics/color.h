@@ -1,57 +1,43 @@
 #pragma once
 
 #include <rey/base/config.h>
+#include <rey/linear/linear.hpp>
 
 using colorT = COLOR_T;
 
-#ifdef USE_TEMPLATE
+struct Optics;
+using color = rey::linear::tuple::_tuple_t<colorT, 3, Optics>;
 
-template <typename T> struct colorT {
-    T r, g, b;
-};
-
-template <typename T> colorT<T> operator*(T b, const colorT<T> &c)
+inline color operator+(const color &c, const color &d)
 {
-    return colorT<T>{b * c.r, b * c.g, b * c.b};
+    return rey::linear::tuple::_tuple_add<Optics>(c, d);
 }
 
-template <typename T>
-colorT<T> operator+(const colorT<T> &p, const colorT<T> &q)
+inline void operator+=(color &c, const color &d)
 {
-    return colorT<T>{p.r + q.r, p.g + q.g, p.b + q.b};
+    return rey::linear::tuple::_tuple_inc(c, d);
 }
 
-template <typename T>
-colorT<T> operator*(const colorT<T> &p, const colorT<T> &q)
+inline color operator*(const color &c, const color &d)
 {
-    return colorT<T>{p.r * q.r, p.g * q.g, p.b * q.b};
+    return rey::linear::tuple::_tuple_mul<Optics>(c, d);
 }
 
-using color = colorT<colorT>;
-
-#else
-
-#include <rey/linear/tuple.h>
-
-DEFINE_TUPLE_3(color, colorT, r, g, b);
-
-DECLARE_TUPLE_3_SCALE(colorT, color, r, g, b);
-DECLARE_TUPLE_3_ADD(color, r, g, b);
-DECLARE_TUPLE_3_MUL(color, r, g, b);
-DECLARE_TUPLE_3_INC(color, r, g, b);
-DECLARE_TUPLE_3_EQU(color, r, g, b);
-
-#endif  // USE_TEMPLATE
+inline color operator*(colorT r, const color &c)
+{
+    return rey::linear::tuple::_tuple_scale(r, c);
+}
 
 struct RGB {
     unsigned char r, g, b;
 };
+
 RGB rgb(const color &);
 
-static const auto black = color{0, 0, 0};
-static const auto red = color{1, 0, 0};
-static const auto green = color{0, 1, 0};
-static const auto blue = color{0, 0, 1};
+static const auto black = color(0, 0, 0);
+static const auto red = color(1, 0, 0);
+static const auto green = color(0, 1, 0);
+static const auto blue = color(0, 0, 1);
 static const auto yellow = red + green;
 static const auto orange = red + .5 * green;
 static const auto white = red + green + blue;

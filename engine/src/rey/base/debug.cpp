@@ -15,22 +15,15 @@
 void info(const camera &cam)
 {
     printf("camera:\n");
-    printf("\tpos: ");
-    pp(cam.of.o);
-    printf("\n");
+    printf("\tpos: %s\n", p_str(cam.of.origin));
     {
-        auto f = cam.of.f;
-        printf("\t.: ");
-        pp(f.Y);
+        const auto f = cam.of.frame;
+        printf("\t.: %s\n", p_str(f.axises[1]));
         printf("\n");
 
-        printf("\t>: ");
-        pp(f.X);
-        printf("\n");
+        printf("\t>: %s\n", p_str(f.axises[0]));
 
-        printf("\t^: ");
-        pp(f.Z);
-        printf("\n");
+        printf("\t^: %s\n", p_str(f.axises[2]));
     }
     printf("\tnear %lf\n", cam.near);
     printf("\taov %lf\n", cam.aov);

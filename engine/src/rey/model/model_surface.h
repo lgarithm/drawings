@@ -1,10 +1,8 @@
 #pragma once
 
-
 #include <rey/arith/arith.h>
 #include <rey/base/maybe.h>
 #include <rey/model/model.h>
-#include <rey/linear/point.h>
 
 struct algebraic_surface : simple_object {
     oframe of;
@@ -52,5 +50,3 @@ struct bound_cylinder_surface : bound<cylinder_surface> {
     bound_cylinder_surface(scalarT, scalarT, const oframe &_ = oframe());
     bool in(const point3 &)const override;
 };
-
-

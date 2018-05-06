@@ -1,11 +1,10 @@
 #pragma once
-
-#include <rey/linear/affine.h>
+#include <rey/linear/linear.hpp>
 
 struct camera {
     oframe of;
-    scalarT near;
-    scalarT aov;
+    scalar_t near;
+    scalar_t aov;
     // TODO: scalarT far;
     // TODO: scalarT aspect = 1;
 
@@ -13,9 +12,9 @@ struct camera {
     camera(const oframe &);
 };
 
-camera top(scalarT = 10);
-camera bottom(scalarT = 10);
-camera front(scalarT = 10);
-camera back(scalarT = 10);
-camera left(scalarT = 10);
-camera right(scalarT = 10);
+camera top(scalar_t = 10);
+camera bottom(scalar_t = 10);
+camera front(scalar_t = 10);
+camera back(scalar_t = 10);
+camera left(scalar_t = 10);
+camera right(scalar_t = 10);

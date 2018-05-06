@@ -10,11 +10,6 @@
 #include <rey/optics/color.h>
 #include <rey/profile/profile.h>
 
-using std::max;
-using std::min;
-using std::unique_ptr;
-using std::vector;
-
 struct surface {
     t_vector3 n;
     material m;
@@ -27,51 +22,53 @@ struct tracer {
     tracer(const color &, const color &);
 
     color shade(const surface &, const vector3 &,
-                const vector<unique_ptr<object>> &, const vector<light> &,
-                int) const;
+                const std::vector<std::unique_ptr<object>> &,
+                const std::vector<light> &, int) const;
 
-    color trace(const ray &r, const vector<unique_ptr<object>> &os,
-                const vector<light> &ls, int dep) const;
+    color trace(const ray &r, const std::vector<std::unique_ptr<object>> &os,
+                const std::vector<light> &ls, int dep) const;
 };
 
 tracer::tracer(const color &b, const color &d) : bgc(b), def(d) {}
 
-color tracer::trace(const ray &r, const vector<unique_ptr<object>> &os,
-                    const vector<light> &ls, int dep) const
+color tracer::trace(const ray &r,
+                    const std::vector<std::unique_ptr<object>> &os,
+                    const std::vector<light> &ls, int dep) const
 {
     const auto i = nearest(os, r);
     if (i.has_value()) {
         const auto p = r + i.value().d;
         auto n = t_vector3{p, i.value().o->at(p)};
-        n = n + 1e-6 * n.v;
-        return shade(surface{n, i.value().o->mt(p)}, reflect(n.v, r.v), os, ls,
-                     dep);
+        n = n + 1e-6 * n.direction;
+        return shade(surface{n, i.value().o->mt(p)},
+                     reflect(n.direction, r.direction), os, ls, dep);
     }
     return bgc;
 }
 
 color tracer::shade(const surface &s, const vector3 &r,
-                    const vector<unique_ptr<object>> &os,
-                    const vector<light> &ls, int dep) const
+                    const std::vector<std::unique_ptr<object>> &os,
+                    const std::vector<light> &ls, int dep) const
 {
-    assert_unit(s.n.v, __FILE__, __func__);
+    assert_unit(s.n.direction, __FILE__, __func__);
     auto nc = def;
     {
         for (const auto &l : ls) {
-            const auto lv = l.pos - s.n.o;
+            const auto lv = l.pos - s.n.origin;
             const auto d = len(lv);
             const auto ldir = 1.0 / d * lv;
-            const auto j = nearest(os, ray{s.n.o, ldir});
+            const auto j = nearest(os, ray{s.n.origin, ldir});
             if (not j.has_value() || d < j.value().d) {
-                nc +=
-                    (max(0., dot(ldir, s.n.v)) * s.m.diffuse +
-                     pow(max(0., dot(ldir, r)), s.m.roughness) * s.m.specular) *
-                    l.col;
+                nc += (std::max(0., dot(ldir, s.n.direction)) * s.m.diffuse +
+                       std::pow(std::max(0., dot(ldir, r)), s.m.roughness) *
+                           s.m.specular) *
+                      l.col;
             }
         }
     }
     const auto rc =
-        dep > 0 ? s.m.reflection * trace(ray{s.n.o, r}, os, ls, dep - 1) : grey;
+        dep > 0 ? s.m.reflection * trace(ray{s.n.origin, r}, os, ls, dep - 1)
+                : grey;
     return nc + rc;
 }
 
@@ -86,7 +83,7 @@ color rasterize(const world &w, const env &e, const camera &cam,
     auto fc =
         point3{f(v.xr, i, d.width - 1), cam.near, f(v.yr, j, d.height - 1)};
     auto cc = global(cam.of, fc);
-    return default_tracer.trace(ray{cc, norm(cc - cam.of.o)}, w.objects,
+    return default_tracer.trace(ray{cc, norm(cc - cam.of.origin)}, w.objects,
                                 e.lights, dep);
 }
 
@@ -95,7 +92,7 @@ viewport fit(const camera &cam, const display &d)
     auto g = [&](scalarT a) { return 2 * cam.near * tan(.5 * a * M_PI / 180); };
     double W = g(cam.aov);
     double H = g(cam.aov);
-    double k = .5 * min(W / d.width, H / d.height);
+    double k = .5 * std::min(W / d.width, H / d.height);
     auto f = [](double l) { return interval{-l, l}; };
     return viewport{f(d.width * k), f(d.height * k)};
 }

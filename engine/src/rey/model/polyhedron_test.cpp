@@ -14,10 +14,12 @@ void test_1()
     auto h = 4.0;
     auto of = oframe();
     auto b = cylinder_surface(R, of);
-    auto u = plane(t_vector3(of.o + .5 * h * of.f.Z, of.f.Z));
-    auto d = plane(t_vector3(of.o + -.5 * h * of.f.Z, -of.f.Z));
+    auto u = plane(
+        t_vector3(of.origin + .5 * h * of.frame.axises[2], of.frame.axises[2]));
+    auto d = plane(t_vector3(of.origin + -.5 * h * of.frame.axises[2],
+                             -of.frame.axises[2]));
 
-    auto r = ray(origin + 3 * z_axis, -z_axis);
+    auto r = ray(origin + 3.0 * z_axis, -z_axis);
 
     auto t1 = b.meet(r);
     auto t2 = u.meet(r);
@@ -36,7 +38,7 @@ void test_2()
 {
     {
         auto c = new cylinder(3, 4);
-        auto r = ray(origin + 3 * z_axis, -z_axis);
+        auto r = ray(origin + 3.0 * z_axis, -z_axis);
         auto i = c->intersect(r);
         assert(i.has_value());
         assert(i.value().d == 1);

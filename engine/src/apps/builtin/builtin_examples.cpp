@@ -28,8 +28,8 @@ world *test_plane_1()
 world *test_plane_2()
 {
     auto w = new world;
-    auto r1 = 2 * (x_axis + 2 * z_axis);
-    auto r2 = 2 * (-x_axis + 2 * z_axis);
+    auto r1 = 2.0 * (x_axis + 2.0 * z_axis);
+    auto r2 = 2.0 * (-x_axis + 2.0 * z_axis);
     *w += new plane(t_vector3{origin + -r1, norm(r1)});
     *w += new plane(t_vector3{origin + -r2, norm(r2)});
     return w;
@@ -60,7 +60,7 @@ world *test_ellipsoid()
 {
     auto w = default_test_scene();
     auto e = new ellipsoid(3, 3, 2);
-    e->of.o = e->of.o + 5 * z_axis;
+    e->of.origin = e->of.origin + 5.0 * z_axis;
     *w += e;
     return w;
 }
@@ -69,7 +69,7 @@ world *test_ellipsoid_2()
 {
     auto w = new world;
     auto e = new ellipsoid(3, 3, 2);
-    auto f = new plane(t_vector3{origin + -5 * z_axis, z_axis});
+    auto f = new plane(t_vector3(origin + -5.0 * z_axis, z_axis));
     f->m.reflection = .2;
     f->m.diffuse = yellow;
 
@@ -83,8 +83,8 @@ world *test_cylinder_surface()
     auto w = default_test_scene();
     auto c1 = new cylinder_surface(3);
     auto c2 = new cylinder_surface(3);
-    c1->of.o = c1->of.o + -5 * x_axis;
-    c2->of.o = c2->of.o + 5 * x_axis;
+    c1->of.origin = c1->of.origin + -5.0 * x_axis;
+    c2->of.origin = c2->of.origin + 5.0 * x_axis;
     *w += c1;
     *w += c2;
     return w;
@@ -117,7 +117,7 @@ world *test_cylinder_2()
 {
     auto w = new world;
     auto of = oframe();
-    *w += new cylinder(2, 4, of + 5 * z_axis);
+    *w += new cylinder(2, 4, of + 5.0 * z_axis);
     *w += new Floor;
     return w;
 }

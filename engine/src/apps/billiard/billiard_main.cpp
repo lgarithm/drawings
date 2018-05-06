@@ -12,8 +12,8 @@ struct billiard : sphere {
 
     material mt(const point3 &p) const override
     {
-        auto q = norm(p - pos);
-        auto g = asin(q.z) * radian;
+        const auto q = norm(p - pos);
+        const auto g = asin(q._val[2]) * radian;
         if (fabs(g) > 35) {
             material m;
             m.diffuse = white;
