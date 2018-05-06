@@ -1,4 +1,6 @@
-cmd=build/bin/builtin_main
+BUILD_DIR=build/$(uname -s)
+
+cmd=$BUILD_DIR/bin/builtin_main
 
 cam='((0,-30,5), (0,0,0), (0,0,1))'
 red='(.3, 0, 0)'

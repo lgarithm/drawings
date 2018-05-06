@@ -1,4 +1,6 @@
-cmd=build/bin/bb8_main
+BUILD_DIR=build/$(uname -s)
+
+cmd=$BUILD_DIR/bin/bb8_main
 
 cam='((-10,-35, 15), (0,0,0), (0,0,1))'
 red='(.5,0,0)'

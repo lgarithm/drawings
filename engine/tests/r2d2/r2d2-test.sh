@@ -1,4 +1,6 @@
-cmd=build/bin/r2d2_main
+BUILD_DIR=build/$(uname -s)
+
+cmd=$BUILD_DIR/bin/r2d2_main
 
 cam='((-10,-35, 15), (0,0,0), (0,0,1))'
 grey='(.7,.7,.7)'
