@@ -1,5 +1,6 @@
 // Basic linear Algebra for 1,2,3,4-d
 #pragma once
+#include <cassert>
 #include <cmath>
 
 #include <rey/linear/tuple-tpl.hpp>
