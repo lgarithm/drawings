@@ -12,7 +12,7 @@ struct tracer_ctx_t {
     std::map<std::string, duration_t> total_durations;
     std::map<std::string, uint32_t> call_times;
 
-    tracer_ctx_t(const std::string &name) : name(name) {}
+    tracer_ctx_t(const std::string &name) : name(name), depth(0) {}
 
     ~tracer_ctx_t();
 

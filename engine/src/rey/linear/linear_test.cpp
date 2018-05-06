@@ -1,3 +1,5 @@
+#include <cstdio>
+
 #include <rey/linear/linear.hpp>
 
 void test_1()
@@ -8,6 +10,7 @@ void test_1()
     vector3 d = p - q;
     point3 r = p + 3.0 * d;
     double l = dot(p - o, q - o);
+    printf("%f\n", l);
 }
 
 int main()
