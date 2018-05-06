@@ -59,7 +59,7 @@ inline std::istream &operator>>(std::istream &in, char_matcher &c)
 
 template <typename T> std::istream &operator>>(std::istream &in, T &p)
 {
-    return in >> p._val[0] >> comma >> p._val[0] >> comma >> p._val[0];
+    return in >> p._val[0] >> comma >> p._val[1] >> comma >> p._val[2];
 }
 
 inline std::istream &operator>>(std::istream &in, color &c)
