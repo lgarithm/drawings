@@ -2,7 +2,9 @@
 
 set -e
 
-for t in $(find build/bin/*_test*); do
+BUILD_DIR=build/$(uname -s)
+
+for t in $(find $BUILD_DIR/bin/*_test*); do
     echo $t
     $t
 done
