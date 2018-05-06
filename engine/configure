@@ -5,20 +5,10 @@ set -e
 cd $(dirname $0)
 
 ROOT=$(pwd)
-BUILD_DIR=$(pwd)/build
+BUILD_DIR=$(pwd)/build/$(uname -s)
 mkdir -p $BUILD_DIR
 cd $BUILD_DIR
 
 CMAKE_FLAGS="-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_BUILD_TYPE=Release"
 
 cmake $CMAKE_FLAGS $ROOT
-
-
-
-# if [ $(uname) == "Darwin" ]; then
-#     NPROC=$(sysctl -n hw.ncpu)
-# else
-#     NPROC=$(nproc)
-# fi
-
-# make -j$NPROC
