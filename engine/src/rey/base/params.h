@@ -8,8 +8,8 @@
 #include <rey/model/model.h>
 #include <rey/model/primitives.h>
 #include <rey/model/view.h>
-#include <rey/ray/display.h>
-#include <rey/ray/ray.h>
+#include <rey/tracing/display.h>
+#include <rey/tracing/tracing.h>
 
 static const int max_width = 4096;
 static const int max_height = 4096;

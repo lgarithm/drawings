@@ -2,10 +2,7 @@
 
 #include <vector>
 
-#include <rey/linear/affine.h>
-#include <rey/linear/point.h>
-
-using std::vector;
+#include <rey/linear/linear.hpp>
 
 index_model cuboid(const point3 &p, const point3 &q)
 {
@@ -16,7 +13,8 @@ index_model cuboid(const point3 &p, const point3 &q)
         for (int i = 0; i < 2; ++i)
             for (int j = 0; j < 2; ++j)
                 for (int k = 0; k < 2; ++k)
-                    idx_m.vertices.push_back(point3{ps[i].x, ps[j].y, ps[k].z});
+                    idx_m.vertices.push_back(
+                        pos3(ps[i]._val[0], ps[j]._val[1], ps[k]._val[2]));
     }
 
     static const unsigned short _cube_faces_indexes[6][4] = {
@@ -38,7 +36,7 @@ index_model cuboid(const point3 &p, const point3 &q)
     return idx_m;
 }
 
-index_model cube(scalarT r, const point3 &o)
+index_model cube(scalar_t r, const point3 &o)
 {
     auto a = r / 2;
     auto p = vec3(a, a, a);
@@ -47,14 +45,14 @@ index_model cube(scalarT r, const point3 &o)
     return idx_m;
 }
 
-vector<point3> at(const index_model &idx_m, const face_index &fi)
+std::vector<point3> at(const index_model &idx_m, const face_index &fi)
 {
-    vector<point3> vs;
+    std::vector<point3> vs;
     for (auto i : fi.vi) vs.push_back(idx_m.vertices[i]);
     return vs;
 }
 
-oframe localize(vector<point3> &vs)
+oframe localize(std::vector<point3> &vs)
 {
     auto x = norm(vs[1] - vs[0]);
     auto _y = norm(vs[2] - vs[1]);

@@ -1,22 +1,20 @@
-#include <rey/linear/linear.h>
+#include <cstdio>
 
-#include <cassert>
-
-#include <rey/testing/testing.h>
+#include <rey/linear/linear.hpp>
 
 void test_1()
 {
-    auto a = vec3(-1, 0, 0);
-    auto b = vec3(0, -1, 0);
-    auto c = vec3(0, 0, -1);
-    auto f = frame{a, b, c};
-    auto p = pos3(1, 1, 1);
-    auto eq = global(f, p) == pos3(-1, -1, -1);
-    assert(eq);
+    point3 o = pos3(0, 0, 0);
+    point3 p = pos3(1, 2, 3);
+    point3 q = pos3(4, 5, 6);
+    vector3 d = p - q;
+    point3 r = p + 3.0 * d;
+    double l = dot(p - o, q - o);
+    printf("%f\n", l);
 }
 
 int main()
 {
-    test(1);
+    test_1();
     return 0;
 }

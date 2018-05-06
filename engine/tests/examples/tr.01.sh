@@ -1,4 +1,6 @@
-cmd=build/bin/example1_main
+BUILD_DIR=build/$(uname -s)
+
+cmd=$BUILD_DIR/bin/example1_main
 
 front='((0,-50,16), (0,0,20), (0,0,1))'
 lc='(.4, .2, .1)'

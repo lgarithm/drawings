@@ -19,3 +19,6 @@ view(){
     -n 6 \
     -o output/bb8.$1.01.bmp $@
 }
+
+mkdir -p output
+view example_1

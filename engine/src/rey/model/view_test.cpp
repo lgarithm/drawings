@@ -4,11 +4,11 @@
 
 void test_1()
 {
-    auto t = [](const camera &c, scalarT d) {
+    auto t = [](const camera &c, scalar_t d) {
         auto p = local(c.of, origin);
-        assert(p.x == 0);
-        assert(p.z == 0);
-        assert(p.y == d);
+        assert(p._val[0] == 0);
+        assert(p._val[2] == 0);
+        assert(p._val[1] == d);
     };
     t(top(99), 99);
     t(bottom(99), 99);

@@ -1,11 +1,9 @@
 #pragma once
 
-
-#include <rey/linear/affine.h>
-#include <rey/base/guard.h> // for transitive closure
+#include <rey/base/guard.h>
 #include <rey/base/maybe.h>
+#include <rey/linear/linear.hpp>
 #include <rey/model/model.h>
-#include <rey/linear/point.h>
 
 struct plane : simple_object {
     t_vector3 n;
@@ -69,5 +67,3 @@ struct tetrahedron : object {
 };
 
 std::optional<scalarT> r_dis(const t_vector3 &, const ray &);
-
-

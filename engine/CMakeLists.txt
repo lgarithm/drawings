@@ -5,6 +5,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
+# add_definitions(-ffast-math)
+# add_definitions(-ftree-vectorize)
+# add_definitions(-ftree-vectorizer-verbose=2)
+
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
 file(GLOB test_srcs src/rey/**/*_test.cpp)
@@ -13,6 +17,9 @@ list(REMOVE_ITEM all_srcs ${test_srcs})
 
 add_library(rey ${all_srcs})
 target_link_libraries(rey pthread)
+if(${CMAKE_SYSTEM} MATCHES "Linux")
+    target_link_libraries(rey stdc++fs)
+endif()
 
 foreach(src ${test_srcs})
     get_filename_component(base_name ${src} NAME)

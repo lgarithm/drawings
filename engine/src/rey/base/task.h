@@ -1,13 +1,13 @@
 #pragma once
 
-
+#include <experimental/filesystem>
 #include <string>
 #include <vector>
 
-#include <rey/ray/display.h>
 #include <rey/model/model.h>
-#include <rey/ray/ray.h>
 #include <rey/model/view.h>
+#include <rey/tracing/display.h>
+#include <rey/tracing/tracing.h>
 
 struct image_task {
     std::vector<std::string> args;
@@ -25,7 +25,7 @@ struct image_task {
     division dd;
 
     unsigned char *buffer;
-    std::string outfile;
+    std::experimental::filesystem::path outfile;
     int outfd;
     bool bmp_padding;
 
@@ -34,5 +34,3 @@ struct image_task {
 
     image_task();
 };
-
-

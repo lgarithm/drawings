@@ -1,4 +1,4 @@
-#include <rey/ray/display.h>
+#include <rey/tracing/display.h>
 
 #include <cassert>
 

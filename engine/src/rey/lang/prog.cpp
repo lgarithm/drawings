@@ -65,7 +65,9 @@ std::optional<color> p_color(const string &str)
         color c;
         if (ss >> c) {
             static const auto f = [](colorT x) { return 0 <= x && x <= 1; };
-            if (f(c.r) && f(c.g) && f(c.b)) { return just(c); }
+            if (f(c._val[0]) && f(c._val[1]) && f(c._val[1])) {
+                return just(c);
+            }
         }
     }
     return nothing<color>();

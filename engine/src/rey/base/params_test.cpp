@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include <rey/ray/display.h>
+#include <rey/tracing/display.h>
 #include <rey/model/model.h>
 #include <rey/testing/testing.h>
 

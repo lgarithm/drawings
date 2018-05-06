@@ -29,7 +29,7 @@ polyhedron unit_cube(scalarT u)
         auto vs = at(idx_m, it);
         auto of = localize(vs);
         polygon p;
-        for (auto &v : vs) p.vertices.push_back(point2{v.x, v.y});
+        for (auto &v : vs) p.vertices.push_back(pos2(v._val[0], v._val[1]));
         pd.faces.push_back(space_polygon(of, p.vertices));
     }
     return pd;
@@ -62,8 +62,10 @@ bool in(const point2 &p, const polygon &g)
 
 cylinder::cylinder(scalarT r, scalarT h, const oframe of)
     : b(r, h, of),
-      u(r, t_vector3(of.o + .5 * h * of.f.Z, of.f.Z)),
-      d(r, t_vector3(of.o + -.5 * h * of.f.Z, -of.f.Z))
+      u(r,
+        t_vector3(of.origin + .5 * h * of.frame.axises[2], of.frame.axises[2])),
+      d(r, t_vector3(of.origin + -.5 * h * of.frame.axises[2],
+                     -of.frame.axises[2]))
 {
 }
 
@@ -80,16 +82,18 @@ space_polygon::space_polygon(const oframe &of, const std::vector<point2> &vs)
 
 std::optional<scalarT> space_polygon::meet(const ray &r) const
 {
-    auto t = r_dis(t_vector3{of.o, of.f.Z}, r);
+    const auto t = r_dis(t_vector3(of.origin, of.frame.axises[2]), r);
     if (t.has_value()) {
         auto p = r + t.value();
         auto q = local(of, p);
-        if (in(point2{q.x, q.y}, *this)) { return just<scalarT>(t.value()); }
+        if (in(pos2(q._val[0], q._val[1]), *this)) {
+            return just<scalarT>(t.value());
+        }
     }
     return nothing<scalarT>();
 }
 
-vector3 space_polygon::at(const point3 &) const { return of.f.Z; }
+vector3 space_polygon::at(const point3 &) const { return of.frame.axises[2]; }
 
 std::optional<intersection> polyhedron::intersect(const ray &r) const
 {

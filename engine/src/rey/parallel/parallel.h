@@ -1,14 +1,13 @@
 #pragma once
 
-
 #include <vector>
 
-#include <rey/base/config.h> // for HAS_STD_THREAD
+#include <rey/base/config.h>  // for HAS_STD_THREAD
 #include <rey/base/debug.h>
-#include <rey/ray/display.h>
 #include <rey/model/model.h>
-#include <rey/ray/ray.h>
 #include <rey/model/view.h>
+#include <rey/tracing/display.h>
+#include <rey/tracing/tracing.h>
 
 struct result {
     clip c;
@@ -32,5 +31,3 @@ struct task {
 };
 
 void run_tasks(std::vector<task *> &, bool = false);
-
-

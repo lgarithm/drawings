@@ -52,7 +52,6 @@ void test_4()
 
 int main()
 {
-    if (not HAS_CPP_REGEX) { return 0; }
     test(1);
     test(2);
     test(3);

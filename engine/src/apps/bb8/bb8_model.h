@@ -1,6 +1,6 @@
 #pragma once
 
-#include <rey/ray/rey.h>
+#include <rey/rey>
 
 struct bb8_head : bound<sphere> {
     oframe of;
