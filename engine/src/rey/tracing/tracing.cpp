@@ -110,7 +110,7 @@ void engine::render(const scene_t &scene, const clip &c, unsigned char *p) const
     const auto vp = fit(scene.cam, d);
     for (unsigned short j = c.h.l; j < c.h.r; ++j) {
         for (unsigned short i = c.w.l; i < c.w.r; ++i) {
-            const auto pix = rgb(::rasterize(scene, d, v, i, j, dep));
+            const auto pix = rgb(::rasterize(scene, d, vp, i, j, dep));
             *p++ = pix.b;
             *p++ = pix.g;
             *p++ = pix.r;

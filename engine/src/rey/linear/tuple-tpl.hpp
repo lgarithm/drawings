@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdint>
 #include <functional>
+#include <numeric>
 #include <string>
 #include <utility>
 
@@ -93,12 +94,12 @@ bool _tuple_eq(const _tuple_t<T, n, K> &p, const _tuple_t<T, n, K> &q)
     return true;
 }
 
+// TODO: enfoce _mm_dp_pd
 template <typename T, uint8_t n, typename K1, typename K2>
 T _tuple_dot(const _tuple_t<T, n, K1> &p, const _tuple_t<T, n, K2> &q)
 {
-    T val = 0;
-    for (int i = 0; i < n; ++i) { val += p._val[i] * q._val[i]; }
-    return val;
+    return std::inner_product(p._val.begin(), p._val.end(), q._val.begin(),
+                              (T)0);
 }
 
 template <typename T, uint8_t n, typename K>
