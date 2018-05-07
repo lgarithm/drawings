@@ -7,15 +7,15 @@
 #include <rey/model/model.h>
 #include <rey/model/view.h>
 #include <rey/tracing/display.h>
+#include <rey/tracing/scene.hpp>
 #include <rey/tracing/tracing.h>
 
 struct image_task {
     std::vector<std::string> args;
 
-    camera cam;
+    scene_t scene;
     display d;
-    env lights;
-    world w;
+
     int dep;
 
     bool single;

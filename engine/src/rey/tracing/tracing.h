@@ -4,6 +4,7 @@
 #include <rey/model/view.h>
 #include <rey/optics/color.h>
 #include <rey/tracing/display.h>
+#include <rey/tracing/scene.hpp>
 
 struct interval {
     double lo, hi;

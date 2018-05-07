@@ -70,7 +70,8 @@ void create_render_tasks(const image_task &img_tsk, const engine &e,
             r->p = p;
             p += 3 * size(c);
         }
-        auto tsk = new task(e, img_tsk.w, img_tsk.lights, img_tsk.cam, c, r);
+        auto tsk = new task(e, img_tsk.scene.w, img_tsk.scene.lights,
+                            img_tsk.scene.cam, c, r);
         ts.push_back(tsk);
     }
     printf("\n");
@@ -122,8 +123,8 @@ void run(const image_task &img_tsk)
     if (img_tsk.t) return;
     engine e(img_tsk.dep, img_tsk.d);
     if (img_tsk.single) {
-        auto g = e.rasterize(img_tsk.w, img_tsk.lights, img_tsk.cam, img_tsk.i,
-                             img_tsk.j);
+        auto g = e.rasterize(img_tsk.scene.w, img_tsk.scene.lights,
+                             img_tsk.scene.cam, img_tsk.i, img_tsk.j);
         auto p = rgb(g);
         printf("pix[%d, %d] = %s # %02x %02x %02x | %d %d %d\n", img_tsk.j,
                img_tsk.i, p_str(g), p.r, p.g, p.b, p.r, p.g, p.b);

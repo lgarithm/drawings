@@ -88,7 +88,7 @@ bool parse_inline(int argc, const char *const argv[], image_task &cfg)
             int a;
             if (sscanf(argv[i], "%d", &a) == 1) {
                 if (0 < a && a < 180) {
-                    cfg.cam.aov = a;
+                    cfg.scene.cam.aov = a;
                     continue;
                 }
             }
@@ -101,7 +101,7 @@ bool parse_inline(int argc, const char *const argv[], image_task &cfg)
         }
         if (strcmp(argv[i], "-c") == 0) {
             if (++i >= argc) return false;
-            if (not parse_camera(argv[i], cfg.cam)) return false;
+            if (not parse_camera(argv[i], cfg.scene.cam)) return false;
             continue;
         }
         if (strcmp(argv[i], "-d") == 0) {
@@ -125,14 +125,14 @@ bool parse_inline(int argc, const char *const argv[], image_task &cfg)
             if (++i >= argc) return false;
             light l;
             if (not parse_light(argv[i], l)) return false;
-            cfg.lights.lights.push_back(l);
+            cfg.scene.lights.lights.push_back(l);
             continue;
         }
         if (strcmp(argv[i], "-m") == 0) {
             if (++i >= argc) return false;
             auto po = parse_model(argv[i]);
             if (po == nullptr) return false;
-            cfg.w += po;
+            cfg.scene.w += po;
             continue;
         }
         if (strcmp(argv[i], "-n") == 0) {
@@ -226,7 +226,7 @@ bool parse(int argc, const char *const argv[], image_task &cfg,
     }
     if (fn != nullptr) {
         unique_ptr<world> w(fn());
-        for (auto &it : w->objects) { cfg.w += it.release(); }
+        for (auto &it : w->objects) { cfg.scene.w += it.release(); }
     }
     return true;
 }

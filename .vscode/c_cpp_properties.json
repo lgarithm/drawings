@@ -27,7 +27,7 @@
                 "/System/Library/Frameworks",
                 "/Library/Frameworks"
             ],
-            "compilerPath": "/usr/bin/clang",
+            "compilerPath": "${env:HOME}/local/clang/bin/clang",
             "cStandard": "c11",
             "cppStandard": "c++17"
         },

@@ -1,8 +1,8 @@
 #pragma once
 
-
 #include <cassert>
 #include <cmath>
+#include <cstdio>
 
 #include <rey/logger/logger.h>
 
@@ -28,5 +28,3 @@ void assert_eq(double x, double y);
         slogger _("test_" #x);                                                 \
         test_##x();                                                            \
     }
-
-

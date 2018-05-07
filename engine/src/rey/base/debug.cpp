@@ -29,10 +29,10 @@ void info(const camera &cam)
 void show_image_task(const image_task &cfg)
 {
     printf("display: %d X %d\n", cfg.d.width, cfg.d.height);
-    info(cfg.cam);
+    info(cfg.scene.cam);
     printf("trace depth: %d\n", cfg.dep);
-    printf("%lu objects\n", cfg.w.objects.size());
-    printf("%lu lights\n", cfg.lights.lights.size());
+    printf("%lu objects\n", cfg.scene.w.objects.size());
+    printf("%lu lights\n", cfg.scene.lights.lights.size());
     for (auto &it : cfg.args) { printf("args: %s\n", it.c_str()); }
 }
 

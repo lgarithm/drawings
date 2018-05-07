@@ -6,8 +6,7 @@
 #include <rey/tracing/display.h>
 
 image_task::image_task()
-    : cam(observer(pos3(0, -20, 10), origin, z_axis)),
-      d(XGA),
+    : d(XGA),
       dep(0),
       single(false),
       i(0),
