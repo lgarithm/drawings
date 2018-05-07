@@ -19,14 +19,11 @@ struct task {
 
     const int id;
     const engine e;
-    const world &w;
-    const env l;
-    const camera cam;
+    const scene_t &scene;
     const clip c;
     result *r;
 
-    task(const engine &, const world &, const env &, const camera &,
-         const clip &, result *);
+    task(const engine &, const scene_t &, const clip &, result *);
     void operator()();
 };
 

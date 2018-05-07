@@ -1,17 +1,19 @@
 #pragma once
 
-
 #include <vector>
 
 struct display {
     unsigned short width, height;
 };
+
 struct division {
     unsigned short m, n;
 };
+
 struct range {
     unsigned short l, r;
 };
+
 struct clip {
     range w, h;
 };
@@ -40,5 +42,3 @@ unsigned size(const display &);
 unsigned size(const clip &);
 display from_clip(const clip &);
 clip full(const display &);
-
-

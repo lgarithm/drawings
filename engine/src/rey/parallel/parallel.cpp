@@ -1,5 +1,7 @@
 #include <rey/parallel/parallel.h>
 
+#include <cstdio>
+
 #include <vector>
 #if HAS_STD_THREAD
 #include <atomic>
@@ -21,17 +23,16 @@ mutex wrt;
 namespace
 {
 clogger lo;
-} // namespace
+}  // namespace
 
-task::task(const engine &e, const world &w, const env &l, const camera &cam,
-           const clip &c, result *r)
-    : id(++Id), e(e), w(w), l(l), cam(cam), c(c), r(r)
+task::task(const engine &e, const scene_t &scene, const clip &c, result *r)
+    : id(++Id), e(e), scene(scene), c(c), r(r)
 {
 }
 
 void task::operator()()
 {
-    e.render(w, l, cam, c, r->p);
+    e.render(scene, c, r->p);
     r->c = c;
 }
 
@@ -69,9 +70,7 @@ void run_in_threads(vector<task *> &tasks, int m)
             }
         });
     }
-    for (auto &it : ts) {
-        it->join();
-    }
+    for (auto &it : ts) { it->join(); }
     printf("\n");
 }
 #endif

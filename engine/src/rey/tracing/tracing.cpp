@@ -67,24 +67,25 @@ color tracer::shade(const surface &s, const vector3 &r,
         }
     }
     const auto rc =
-        dep > 0 ? s.m.reflection * trace(ray{s.n.origin, r}, os, ls, dep - 1)
+        dep > 0 ? s.m.reflection * trace(ray(s.n.origin, r), os, ls, dep - 1)
                 : grey;
     return nc + rc;
 }
 
 static const tracer default_tracer(black, black);
 
-color rasterize(const world &w, const env &e, const camera &cam,
-                const display &d, const viewport &v, int i, int j, int dep)
+color rasterize(const scene_t &scene, const display &d, const viewport &vp,
+                int i, int j, int dep)
 {
     static const auto f = [](const interval &r, int i, int n) {
         return ((n - i) * r.lo + i * r.hi) / n;
     };
-    auto fc =
-        point3{f(v.xr, i, d.width - 1), cam.near, f(v.yr, j, d.height - 1)};
-    auto cc = global(cam.of, fc);
-    return default_tracer.trace(ray{cc, norm(cc - cam.of.origin)}, w.objects,
-                                e.lights, dep);
+    const auto fc = pos3(f(vp.xr, i, d.width - 1),  //
+                         scene.cam.near,            //
+                         f(vp.yr, j, d.height - 1));
+    auto cc = global(scene.cam.of, fc);
+    return default_tracer.trace(ray(cc, norm(cc - scene.cam.of.origin)),
+                                scene.w.objects, scene.lights.lights, dep);
 }
 
 viewport fit(const camera &cam, const display &d)
@@ -99,19 +100,17 @@ viewport fit(const camera &cam, const display &d)
 
 engine::engine(int dep, const display d) : dep(dep), d(d) {}
 
-color engine::rasterize(const world &w, const env &e, const camera &cam, int i,
-                        int j) const
+color engine::rasterize(const scene_t &scene, int i, int j) const
 {
-    return ::rasterize(w, e, cam, d, fit(cam, d), i, j, dep);
+    return ::rasterize(scene, d, fit(scene.cam, d), i, j, dep);
 }
 
-void engine::render(const world &w, const env &e, const camera &cam,
-                    const clip &c, unsigned char *p) const
+void engine::render(const scene_t &scene, const clip &c, unsigned char *p) const
 {
-    const auto v = fit(cam, d);
+    const auto vp = fit(scene.cam, d);
     for (unsigned short j = c.h.l; j < c.h.r; ++j) {
         for (unsigned short i = c.w.l; i < c.w.r; ++i) {
-            auto pix = rgb(::rasterize(w, e, cam, d, v, i, j, dep));
+            const auto pix = rgb(::rasterize(scene, d, v, i, j, dep));
             *p++ = pix.b;
             *p++ = pix.g;
             *p++ = pix.r;
@@ -119,9 +118,7 @@ void engine::render(const world &w, const env &e, const camera &cam,
     }
 }
 
-void engine::render(const world &w, const env &e, const camera &cam,
-                    unsigned char *buffer) const
+void engine::render(const scene_t &scene, unsigned char *buffer) const
 {
-    return render(w, e, cam, clip{range{0, d.width}, range{0, d.height}},
-                  buffer);
+    return render(scene, clip{range{0, d.width}, range{0, d.height}}, buffer);
 }
