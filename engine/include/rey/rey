@@ -1,7 +1,5 @@
-/* mode: c++ */
-
+// -*- mode: c++ -*-
 #pragma once
-
 #include <rey/arith/arith.h>
 #include <rey/base/app.h>
 #include <rey/base/debug.h>
@@ -9,3 +7,4 @@
 #include <rey/model/model-builtin.h>
 #include <rey/model/model.h>
 #include <rey/tracing/tracing.h>
+#include <ttl/experimental/low_rank_tensor>
